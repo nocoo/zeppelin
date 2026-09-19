@@ -49,7 +49,7 @@ function home() {
       <div class="hero-rail"><span class="mono">001 — DEEP SPACE DIVISION</span><span class="mono">ORIGINAL SPACECRAFT DESIGN</span></div>
       <div class="hero-copy"><p class="eyebrow"><span class="small-cross">＋</span> HW 护卫系列 / ESCORT CLASS</p><h1 id="hero-title">BEYOND<br>THE <span>FRONTIER.</span></h1><p class="hero-chinese">越过边界。<span>驶向未知。</span></p><p class="hero-description">从最后一道防线，到下一段航程。<br>探索 Zeppelin 次世代太空舰队。</p><a class="button button-yellow" href="#fleet">进入舰队档案 ${arrow}</a></div>
       <div class="hero-visual"><span class="hero-model" aria-hidden="true">HW–01</span><div class="target-ring" aria-hidden="true"></div>${picture("hw-01", "three-quarter", "hero-ship", true)}<div class="hero-callout mono"><span>01 / QUAD-ENGINE SYSTEM</span><span>四引擎推进架构</span></div><div class="hero-identity"><span class="mono">HULL IDENTIFICATION</span><strong>227</strong><span>HW-01A 小型护卫舰 · 历史模型 227</span></div><a class="hero-detail mono" href="#vessel/hw-01">检视舰船 / INSPECT VESSEL ${arrow}</a></div>
-      <div class="hero-bottom"><span class="mono"><i class="live-dot"></i> FLEET SYSTEM / ONLINE</span><span class="mono">17 SERIES <span class="line-progress"></span> FLEET INDEX</span><a href="#fleet" class="mono">SCROLL TO EXPLORE ↓</a></div>
+      <div class="hero-bottom"><span class="mono"><i class="live-dot"></i> FLEET SYSTEM / ONLINE</span><span class="mono">17 SERIES <span class="line-progress"></span> FLEET INDEX</span><button type="button" class="hero-motion">暂停动效</button><a href="#fleet" class="mono">SCROLL TO EXPLORE ↓</a></div>
     </section>
     ${stripe("立入禁止 / 深空作业区域")}
     <section id="fleet" class="fleet-section section-pad" aria-labelledby="fleet-heading"><div class="section-heading"><div><p class="eyebrow">01 / FLEET DIRECTORY</p><h2 id="fleet-heading">舰队<span>档案</span><sup>[ ${series.length} 系列 ]</sup></h2></div><p class="section-intro">不同任务，同一片星海。<br>主战、区控与体系支援，按轨道任务编成。</p></div><div class="fleet-toolbar"><div class="filters" role="group" aria-label="按舰队系列筛选"><button type="button" data-filter="all" aria-pressed="true">全部系列 <span>${series.length}</span></button>${series.map((family) => `<button type="button" data-filter="${family.code}" aria-pressed="false">${family.code} / ${family.name} <span>${fleet.filter((item) => item.series === family.code).length}</span></button>`).join("")}</div><span class="mono fleet-count" aria-live="polite">${series.length} SERIES / ${fleet.filter((item) => item.model).length} MODELS</span></div><div class="fleet-grid">${directory()}</div><p class="fleet-note"><span class="note-square"></span>依据《太空舰队：型号 · 舷号 · 编成规范》草案 A。未命名的系列只预留目录；规划型号使用明确占位，尺寸未知。现有三型保留历史模型视图，舷号与型号独立记录。</p></section>
@@ -57,6 +57,10 @@ function home() {
     <section id="archive" class="archive section-pad" aria-labelledby="archive-heading"><div><p class="eyebrow">03 / ENGINEERING RECORD</p><h2 id="archive-heading">看得见的结构。<br><span>经得起检视的细节。</span></h2><p>已渲染型号提供七个统一标准视角。<br>前后、左右、顶底与三分之四透视，完整阅读一艘舰。</p><a class="text-link" href="#vessel/hw-01">打开标准视图 ${arrow}</a></div><div class="archive-preview">${picture("hw-01", "top")}<span class="mono archive-label">HW-01 / DORSAL PROJECTION</span><span class="archive-dimension mono">61.1 M</span><span class="cross top-left" aria-hidden="true">＋</span><span class="cross bottom-right" aria-hidden="true">＋</span></div></section>
     <div class="closing-band"><span class="mono">THE NEXT FRONTIER IS UNDER CONSTRUCTION.</span><span>下一段航程，正在建造。</span><span aria-hidden="true">↗</span></div>
   </main>${footer()}`;
+  app.querySelector(".hero-motion").addEventListener("click", (event) => {
+    const paused = app.querySelector(".hero").classList.toggle("motion-paused");
+    event.currentTarget.textContent = paused ? "继续动效" : "暂停动效";
+  });
   app.querySelectorAll("[data-filter]").forEach((button) =>
     button.addEventListener("click", () => {
       const filtered = fleet.filter(

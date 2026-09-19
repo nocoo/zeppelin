@@ -347,6 +347,37 @@ button[hidden],
   transform: rotate(8deg);
   pointer-events: auto;
 }
+.hero-ship img {
+  transform-origin: 55% 55%;
+  animation: hero-drift 10s ease-in-out infinite;
+}
+@keyframes hero-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  35% {
+    transform: translate3d(0.4%, -1.2%, 0) rotate(0.4deg) scale(1.006);
+  }
+  70% {
+    transform: translate3d(-1%, -0.3%, 0) rotate(-0.35deg) scale(1.018);
+  }
+}
+.hero.motion-paused .hero-ship img {
+  animation-play-state: paused;
+}
+.hero-motion {
+  min-height: 44px;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.hero-motion:hover {
+  color: var(--yellow);
+}
 .hero-identity {
   position: absolute;
   right: 9%;
@@ -1947,6 +1978,9 @@ footer {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-motion {
+    display: none;
+  }
   html {
     scroll-behavior: auto;
   }
