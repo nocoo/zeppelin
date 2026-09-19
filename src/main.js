@@ -1,4 +1,7 @@
 import "./style.css";
+import brand from "../public/brand.json";
+import packageInfo from "../package.json";
+const { version } = packageInfo;
 import { fleet, series, viewLabels } from "./fleet.js";
 let manifest;
 
@@ -16,8 +19,9 @@ const offline =
   import.meta.env.DEV &&
   new URLSearchParams(location.search).get("assets") === "offline";
 const arrow = '<span aria-hidden="true">↗</span>';
-const icon =
-  '<svg viewBox="0 0 34 30" aria-hidden="true"><path d="M3 3h28L17 15h14L3 27h28" fill="none" stroke="currentColor" stroke-width="5"/></svg>';
+const icon = `<img class="brand-mark" src="${brand.header.url}" width="40" height="40" alt="" />`;
+const githubIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.87c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.93.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>';
+const hexlyIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 8.66 5v10L12 22l-8.66-5V7Z"/><path d="M12 2v20M3.34 7l17.32 10m0-10L3.34 17"/></svg>';
 const badge = (ship) =>
   `<span class="status ${ship.state}"><span aria-hidden="true"></span>${ship.status}</span>`;
 const source = (id, view) => manifest.vessels[id].views[view];
@@ -31,7 +35,7 @@ function picture(id, view, className = "", eager = false) {
   return `<div class="asset ${className}" data-asset="${id}/${view}"><img src="${offline ? base + asset.thumbnail.path : asset.url}" width="${asset.width}" height="${asset.height}" alt="${ship.asset.model} ${ship.asset.number} 号${ship.name}历史模型，${viewLabels[view][0]}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"><div class="asset-error" role="status" hidden><span class="mono">SIGNAL LOST / 载入中断</span><p>高清视图暂时无法载入</p><button type="button" class="retry">重新载入 ↻</button></div></div>`;
 }
 function header() {
-  return `<header class="site-header"><a class="brand" href="#" aria-label="Zeppelin 首页">${icon}<span>ZEPPELIN<span class="brand-caption">FLEET ARCHIVE</span></span></a><nav aria-label="主导航"><a href="#fleet" class="nav-active">舰队档案 <span>FLEET</span></a><a href="#doctrine">设计理念 <span>DOCTRINE</span></a><a href="#archive">工程记录 <span>ARCHIVE</span></a></nav><span class="header-code mono"><i></i>地外航行计划<span>EST. 2026 / VOL. 01</span></span></header>`;
+  return `<header class="site-header"><a class="brand" href="#" aria-label="Zeppelin 首页">${icon}<span>ZEPPELIN<span class="brand-caption">FLEET ARCHIVE</span></span><small class="brand-version mono">v${version}</small></a><nav aria-label="主导航"><a href="#fleet" class="nav-active">舰队档案 <span>FLEET</span></a><a href="#doctrine">设计理念 <span>DOCTRINE</span></a><a href="#archive">工程记录 <span>ARCHIVE</span></a></nav><span class="header-code mono"><i></i>地外航行计划<span>EST. 2026 / VOL. 01</span></span><div class="header-actions"><a class="header-action" href="https://github.com/nocoo/zeppelin" target="_blank" rel="noopener noreferrer" aria-label="Zeppelin GitHub 仓库（新标签页）" aria-describedby="github-tip">${githubIcon}<span class="header-tooltip" id="github-tip" role="tooltip">GitHub 仓库</span></a><a class="header-action" href="https://hexly.ai/projects/zeppelin" target="_blank" rel="noopener noreferrer" aria-label="在 hexly.ai 查看 Zeppelin（新标签页）" aria-describedby="hexly-tip">${hexlyIcon}<span class="header-tooltip" id="hexly-tip" role="tooltip">在 hexly.ai 查看 Zeppelin</span></a></div></header>`;
 }
 const footer = () =>
   `<footer><a class="footer-wordmark" href="#">ZEPPELIN<span>＋</span></a><div><span class="mono">BUILT FOR THE DISTANCE.</span><p>把想象，铸造成抵达的力量。</p></div><div class="footer-meta mono"><span>原创科幻舰船 · 视觉设计档案</span><span>© ${new Date().getFullYear()} ZEPPELIN FLEET PROGRAM</span><a href="https://github.com/nocoo/zeppelin" target="_blank" rel="noreferrer">项目源代码 ${arrow}</a></div></footer>`;

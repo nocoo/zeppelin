@@ -2,6 +2,23 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { fleet, series, viewLabels } from "../../src/fleet.js";
 import manifest from "../../public/assets/manifest.json" with { type: "json" };
+import packageInfo from "../../package.json" with { type: "json" };
+const { version } = packageInfo;
+
+test("homepage navigation exposes the project identity, version and family links", async ({ page }) => {
+  for (const path of ["/", "/#fleet"]) {
+    await page.goto(path);
+    await expect(page.locator(".brand-version")).toHaveText(`v${version}`);
+    const links = page.locator(".header-actions a");
+    await expect(links).toHaveCount(2);
+    await expect(links.nth(0)).toHaveAttribute("href", "https://github.com/nocoo/zeppelin");
+    await expect(links.nth(1)).toHaveAttribute("href", "https://hexly.ai/projects/zeppelin");
+    await expect(links.nth(1)).toHaveAttribute("target", "_blank");
+    await links.nth(1).focus();
+    await expect(page.locator("#hexly-tip")).toBeVisible();
+    expect(await links.nth(1).evaluate((element) => getComputedStyle(element).cursor)).toBe("pointer");
+  }
+});
 
 // Real immutable URLs, deterministic local thumbnail bytes. Live HD is independently GET/hash verified.
 test.beforeEach(async ({ page }) => {

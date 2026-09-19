@@ -110,10 +110,10 @@ button[hidden],
   align-items: center;
   gap: 13px;
 }
-.brand svg {
+.brand-mark {
   width: 30px;
   height: 32px;
-  color: var(--yellow);
+  object-fit: contain;
 }
 .brand > span {
   font-family: var(--display);
@@ -1568,7 +1568,7 @@ footer {
   .brand > span {
     font-size: 27px;
   }
-  .brand svg {
+  .brand-mark {
     width: 24px;
   }
   .brand-caption {
@@ -2044,4 +2044,23 @@ footer {
 /* Give the isolated hero a solid backdrop so black render canvases blend away. */
 .hero {
   background-color: var(--bg);
+}
+
+/* Homepage identity and family links. */
+.brand-mark { width: 40px; height: 40px; flex: none; }
+.brand-version { color: var(--muted); white-space: nowrap; }
+.header-actions { display: flex; gap: 4px; flex: none; }
+.header-action { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; }
+.header-action:hover, .header-action:focus-visible { color: var(--yellow); background: var(--panel); }
+.header-action svg { width: 18px; height: 18px; pointer-events: none; }
+.header-tooltip { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; padding: 7px 10px; border: 1px solid var(--line); background: var(--panel); color: #edeee8; font-size: 12px; white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .12s .12s; }
+.header-action:hover .header-tooltip, .header-action:focus-visible .header-tooltip { opacity: 1; visibility: visible; }
+@media (max-width: 1050px) { .header-code { display: none; } }
+@media (max-width: 760px) {
+  .site-header { height: auto; min-height: 96px; flex-wrap: wrap; gap: 12px; padding-top: 14px; padding-bottom: 10px; }
+  .site-header nav { order: 3; width: 100%; justify-content: space-between; height: 26px; }
+  .site-header nav a:last-child { display: flex; }
+  .brand { gap: 8px; }
+  .brand-mark { width: 32px; height: 32px; }
+  .brand-version { font-size: 8px; }
 }

@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "study": "https://github.com/nocoo/hexly.ai/tree/main/artwork/logo-family/zeppelin/2026-09-19-01",
+  "model": "gpt-image-2.5-sunburst",
+  "series": "material",
+  "source": "Owner-delegated identity acceptance; a symbolic vessel, separate from documented fleet models",
+  "master": {
+    "url": "https://h.no.mt/logos/family/zeppelin/2026-09-19-01/01/transparent.png",
+    "sha256": "fc2e1895bd279635e0d1e7180387adef421fe972391a91641f5e2e654520ac26",
+    "bytes": 2824917,
+    "localPath": "logo.png",
+    "width": 2048,
+    "height": 2048
+  },
+  "presentation": {
+    "url": "https://h.no.mt/logos/family/zeppelin/2026-09-19-01/01/rounded.png",
+    "sha256": "1d3e51155cafb5b583f7bbde60d8de42a0738fdaf7814ba72275e5ade1d3a7a4",
+    "bytes": 4384286,
+    "localPath": "assets/brand/icon-rounded.png"
+  },
+  "square": {
+    "url": "https://h.no.mt/logos/family/zeppelin/2026-09-19-01/01/icon.png",
+    "sha256": "f548adbda1a844b05a1b1e3a3989724699e56b3ffaee284aa4f5e08d25e7a5b8",
+    "bytes": 4445257,
+    "localPath": "assets/brand/icon.png"
+  },
+  "header": {
+    "url": "https://h.no.mt/logos/family/zeppelin/2026-09-19-01/01/transparent-128.png",
+    "sha256": "0849199e66722b9a9c566b5b7e3cd5ef87f429b077d94b69b767a00fb24866e7",
+    "bytes": 14058,
+    "width": 128,
+    "height": 128
+  },
+  "favicon": {
+    "url": "https://h.no.mt/logos/family/zeppelin/2026-09-19-01/01/favicon.ico",
+    "sha256": "c0d12be0cf6233704e113ca50ca3fb75c64b1790e52ebba11015dfc2e843ed51",
+    "bytes": 74881
+  },
+  "social": {
+    "url": "https://h.no.mt/projects/zeppelin/identity/v1.0.0/zeppelin-dc345e2328cb.jpg",
+    "sha256": "dc345e2328cb3792c67b0be24b82ebc74681266aab0815b856bcb5f18da5bc99",
+    "bytes": 51345
+  }
+}

@@ -1,4 +1,6 @@
-# ZEPPELIN · 次世代舰队档案
+<p align="center"><img src="https://h.no.mt/logos/family/zeppelin/2026-09-19-01/01/rounded.png" width="128" height="128" alt="Zeppelin titanium spacecraft Logo" /></p>
+<h1 align="center">ZEPPELIN · 次世代舰队档案</h1>
+<p align="center"><a href="https://zeppelin.hexly.ai">Website</a> · <a href="https://hexly.ai/projects/zeppelin">Hexly archive</a> · <a href="https://status.hexly.ai">Service status</a></p>
 
 黑色工业科幻舰队展示站。按任务划分 17 个系列、15 个明确型号，另为尚未命名型号的 10 个系列保留独立入口，共 25 个档案。Vite + 原生 JavaScript/CSS，无前端运行时框架；Cloudflare Worker 提供健康接口并托管静态站点。
 
@@ -48,7 +50,7 @@ macOS 浏览器测试使用已安装的 Google Chrome；Linux/CI 先运行 `npx 
 {
   "status": "ok",
   "name": "zeppelin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "revision": "<完整 Git SHA>"
 }
 ```
@@ -86,3 +88,7 @@ Barlow Condensed 字体来自 Fontsource 5.3.0，采用 SIL OFL 1.1，见 [许�
 项目全称 **Zeppelin**，仓库 https://github.com/nocoo/zeppelin，本地目录 `~/workspace/personal/zeppelin`。日常开发、人工验收和截图使用 **https://zeppelin.dev.hexly.ai**，由 Caddy 转发到 loopback 7052。Vite 固定端口并仅额外允许该域名；dev 与 preview 不可同时占用 7052。Playwright 浏览器测试独占 27052，不复用已有服务；17052 用于本地 Worker 验证。分配已核对 nmem、Caddy 与实际 bind，并记录在 `zeppelin-local-ports`。
 
 Caddy 映射保存在本机 `/opt/homebrew/etc/Caddyfile` 及 `workflow/caddy/Caddyfile`；复用现有 `*.dev.hexly.ai` 的本机 mkcert 证书和通配 DNS。证书及私钥不进入本仓库。v1.0.0 已发布的不可变资产仍保留最初的 `zep-*` 内容地址和来源记录，仓库、页面名称及开发域名使用全拼。
+
+## Identity
+
+The titanium spacecraft identity, transparent header/favicons and presentation masters are pinned in [the brand receipt](public/brand.json). See [usage and source records](docs/brand.md). High-resolution identity binaries stay in immutable R2 storage alongside the fleet media; the Git asset gate remains unchanged.
