@@ -30,7 +30,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run preview -- --port 27052 --strictPort",
+    command: "wrangler dev --local --port 27052 --inspector-port 0",
     url: "http://127.0.0.1:27052",
     reuseExistingServer: false,
   },

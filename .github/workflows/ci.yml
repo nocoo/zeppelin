@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  workflows:
+    uses: nocoo/base-ci/.github/workflows/workflow-lint.yml@ad43150de3a2be2fa464b5cd2f921dc4fa9f8f0f
+    with:
+      required-reusable-workflow: nocoo/base-ci/.github/workflows/deploy-worker.yml
+
+  quality:
+    uses: nocoo/base-ci/.github/workflows/quality.yml@ad43150de3a2be2fa464b5cd2f921dc4fa9f8f0f
+    with:
+      package-manager: npm
+      runtime-version: "11.19.0"
+      node-version: "26.8.1"
+      install-policy: project
+      test-command: npm run check
+      typecheck: false
+      lint: false
+      disabled-check-reasons: |-
+        {
+          "typecheck": "Plain JavaScript project without TypeScript; Vite and Wrangler validate both bundles.",
+          "lint": "No lint configuration; existing asset, source and browser checks remain required."
+        }
+      build: true
+      build-command: |
+        npm run build
+        npm run deploy:check
+      artifact-name: zeppelin-static-site
+      artifact-paths: dist
+      lockfiles: package-lock.json
+
+  browser:
+    name: Worker HTTP and browser tests
+    uses: nocoo/base-ci/.github/workflows/test-job.yml@ad43150de3a2be2fa464b5cd2f921dc4fa9f8f0f
+    with:
+      runtime: npm
+      runtime-version: "11.19.0"
+      node-version: "26.8.1"
+      install-policy: project
+      browser: chromium
+      pre-command: npm run build
+      command: npm test
+      env-json: '{"CI":"true", "WRANGLER_SEND_METRICS":"false"}'
+      artifact-name: zeppelin-browser-evidence
+      artifact-path: test-results
+      timeout-minutes: 15
