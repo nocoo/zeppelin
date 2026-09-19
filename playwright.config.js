@@ -3,7 +3,10 @@ export default defineConfig({
   testDir: "./tests/browser",
   fullyParallel: true,
   workers: 2,
-  reporter: "list",
+  reporter: [
+    ["list"],
+    ["junit", { outputFile: "test-results/results.xml" }],
+  ],
   use: {
     baseURL: "http://127.0.0.1:27052",
     trace: "retain-on-failure",
