@@ -47,3 +47,7 @@ Hexly 先探测地址，只在不存在时上传，完整 GET 验证 MIME、字�
 `npm run check` 校验标准视图完整性、系列/舷号、不可变 URL 与 hash12 对应、所有本地缩略图哈希/尺寸、版本发布记录及 Git index。针对非法 Manifest、错误编号、隐藏 HD、伪装 Blender 和强制添加大文件有负向测试。`npm run assets:verify` 重新对全部在线原始 URL 执行完整 GET，核对状态/MIME/Cache-Control/字节/SHA/分辨率；历史记录不等于当前在线可用性。
 
 浏览器测试用真实 CDN URL 和验证过的本地缩略图作为网络 fixture，避免在线波动影响交互测试；实时 CDN 验证独立执行。开发显式 `?assets=offline` 带醒目提示；生产编译移除该模式。图片错误可见、可重试，不存在自动切换缩略图的线上路径。
+
+### Website mark exception (2026-09-19)
+
+The owner requested no Logo in Zeppelin site chrome. README retains the adopted rounded spacecraft presentation; the homepage uses its text wordmark and the vessel workspace/sidebar has no brand image. Transparent browser/favicon and social metadata assets retain their established roles. `public/brand.json` remains the immutable source receipt; its header derivative is available but not rendered.

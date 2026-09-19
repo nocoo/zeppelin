@@ -110,11 +110,6 @@ button[hidden],
   align-items: center;
   gap: 13px;
 }
-.brand-mark {
-  width: 30px;
-  height: 32px;
-  object-fit: contain;
-}
 .brand > span {
   font-family: var(--display);
   font-size: 32px;
@@ -1568,9 +1563,6 @@ footer {
   .brand > span {
     font-size: 27px;
   }
-  .brand-mark {
-    width: 24px;
-  }
   .brand-caption {
     font-size: 6px;
   }
@@ -2047,7 +2039,6 @@ footer {
 }
 
 /* Homepage identity and family links. */
-.brand-mark { width: 40px; height: 40px; flex: none; }
 .brand-version { color: var(--muted); white-space: nowrap; }
 .header-actions { display: flex; gap: 4px; flex: none; }
 .header-action { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; }
@@ -2061,6 +2052,5 @@ footer {
   .site-header nav { order: 3; width: 100%; justify-content: space-between; height: 26px; }
   .site-header nav a:last-child { display: flex; }
   .brand { gap: 8px; }
-  .brand-mark { width: 32px; height: 32px; }
   .brand-version { font-size: 8px; }
 }

@@ -50,7 +50,7 @@ macOS 浏览器测试使用已安装的 Google Chrome；Linux/CI 先运行 `npx 
 {
   "status": "ok",
   "name": "zeppelin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "revision": "<完整 Git SHA>"
 }
 ```
@@ -92,3 +92,5 @@ Caddy 映射保存在本机 `/opt/homebrew/etc/Caddyfile` 及 `workflow/caddy/Ca
 ## Identity
 
 The titanium spacecraft identity, transparent header/favicons and presentation masters are pinned in [the brand receipt](public/brand.json). See [usage and source records](docs/brand.md). High-resolution identity binaries stay in immutable R2 storage alongside the fleet media; the Git asset gate remains unchanged.
+
+Logo 的圆角展示图用于本 README；透明前景用于浏览器图标。按项目约定，站点正文与舰船详情侧栏不放置项目 Logo，首页保留文字站名与 GitHub / Hexly 入口。品牌主文件及校验信息见 `public/brand.json`。
