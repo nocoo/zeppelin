@@ -1,0 +1,614 @@
+{
+  "schemaVersion": 1,
+  "model": "HW-01",
+  "series": "HW",
+  "number": "227",
+  "source": {
+    "filename": "HW-01.blend",
+    "sha256": "a7f324514fb953fb42c197783aba08872468b6f0eff937e27576d3925e797a12",
+    "scene": "HW-01 · 远航"
+  },
+  "blender": "5.2.2 LTS",
+  "rendererSha256": "9a54847ff21b9e6ca3428267670809f8098aa657e3563464cf65a42a55406382",
+  "coordinates": {
+    "forward": "-Y",
+    "starboard": "+X",
+    "up": "+Z",
+    "units": "m",
+    "scale": 1
+  },
+  "bounds": {
+    "min": [
+      -21.809646606445312,
+      -32.387001037597656,
+      -7.410000324249268
+    ],
+    "max": [
+      21.809646606445312,
+      28.707000732421875,
+      16.5
+    ],
+    "width": 43.619293212890625,
+    "length": 61.09400177001953,
+    "height": 23.90999984741211
+  },
+  "render": {
+    "engine": "CYCLES",
+    "device": "metal",
+    "samples": 64,
+    "seed": 227,
+    "denoise": true,
+    "width": 2560,
+    "height": 1920,
+    "maxBounces": 12,
+    "transmissionBounces": 10,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "exposure": 0,
+    "gamma": 1,
+    "worldColor": [
+      0.002,
+      0.002,
+      0.002
+    ],
+    "worldStrength": 0.25,
+    "lights": [
+      {
+        "name": "key",
+        "location": [
+          -48.87520217895508,
+          -62.93400192260742,
+          96.18600463867188
+        ],
+        "power_w": 205286.234375,
+        "size_m": 51.929901123046875,
+        "color": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "name": "fill",
+        "location": [
+          61.09400177001953,
+          -20.168201446533203,
+          35.092002868652344
+        ],
+        "power_w": 93311.9296875,
+        "size_m": 61.09400177001953,
+        "color": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "name": "rim",
+        "location": [
+          18.328201293945312,
+          59.25400161743164,
+          65.63899993896484
+        ],
+        "power_w": 279935.78125,
+        "size_m": 42.76580047607422,
+        "color": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "name": "underside",
+        "location": [
+          -24.43760108947754,
+          10.378800392150879,
+          -56.54900360107422
+        ],
+        "power_w": 130636.6953125,
+        "size_m": 48.87520217895508,
+        "color": [
+          1,
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  "views": {
+    "front": {
+      "file": "front.webp",
+      "sha256": "daf2d43eecade7174ae6c9f20ecb7ad779337f388ca9f294fdbe697487805668",
+      "bytes": 124716,
+      "width": 2560,
+      "height": 1920,
+      "camera": {
+        "type": "ORTHO",
+        "lensMm": 70,
+        "sensorWidthMm": 36,
+        "orthoScale": 90.41912078857422,
+        "location": [
+          0,
+          -154.5749969482422,
+          4.545000076293945
+        ],
+        "target": [
+          0,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "matrixWorld": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1.6292068494294654e-7,
+            -1,
+            -154.5749969482422
+          ],
+          [
+            0,
+            1,
+            -1.6292068494294654e-7,
+            4.545000076293945
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "pngSha256": "46c338ba2e3fa40d2f951a6a9984a0376959afe4c23b4678d8830e768924abd2",
+      "project": "hexly-ai",
+      "kind": "screenshots",
+      "asset": "zep-hw-01",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/front-daf2d43eecad.webp",
+      "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/front-daf2d43eecad.webp",
+      "filename": "front.webp",
+      "contentType": "image/webp",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "thumbnail": {
+        "path": "assets/thumbnails/hw-01-front.webp",
+        "sha256": "955ff2199a5d3c0da867007e5593f572ae1a9763b7ab7dea2ef09d6d362d7ed7",
+        "bytes": 8668,
+        "width": 640,
+        "height": 480
+      },
+      "action": "reused",
+      "verifiedAt": "2026-09-19T01:46:49.428Z"
+    },
+    "rear": {
+      "file": "rear.webp",
+      "sha256": "4acadc61204f3c88a21741e77ca5283b07114c8069bbc5b767e826cc21856736",
+      "bytes": 113296,
+      "width": 2560,
+      "height": 1920,
+      "camera": {
+        "type": "ORTHO",
+        "lensMm": 70,
+        "sensorWidthMm": 36,
+        "orthoScale": 90.41912078857422,
+        "location": [
+          0,
+          150.89500427246094,
+          4.545000076293945
+        ],
+        "target": [
+          0,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "matrixWorld": [
+          [
+            -1,
+            1.5099581673894136e-7,
+            1.509957741063772e-7,
+            0
+          ],
+          [
+            1.5099580252808664e-7,
+            1.629206565212371e-7,
+            1,
+            150.89500427246094
+          ],
+          [
+            1.5099578831723193e-7,
+            1,
+            -1.6292068494294654e-7,
+            4.545000076293945
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "pngSha256": "77739ceb769ca1aa8318f5dcb38289f79ba0646b09788ad112cc607b6e0b4327",
+      "project": "hexly-ai",
+      "kind": "screenshots",
+      "asset": "zep-hw-01",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/rear-4acadc61204f.webp",
+      "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/rear-4acadc61204f.webp",
+      "filename": "rear.webp",
+      "contentType": "image/webp",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "thumbnail": {
+        "path": "assets/thumbnails/hw-01-rear.webp",
+        "sha256": "822a9e3a0e9872e2ea9a724f4ea19fc0180d3d794a26d800d777803ffcf716a7",
+        "bytes": 7992,
+        "width": 640,
+        "height": 480
+      },
+      "action": "reused",
+      "verifiedAt": "2026-09-19T01:46:50.022Z"
+    },
+    "port": {
+      "file": "port.webp",
+      "sha256": "1a9a8a295960f4350fd9361a3671d8cf453c8e9ec39e0b9e13ae0666e5c9b399",
+      "bytes": 145454,
+      "width": 2560,
+      "height": 1920,
+      "camera": {
+        "type": "ORTHO",
+        "lensMm": 70,
+        "sensorWidthMm": 36,
+        "orthoScale": 90.41912078857422,
+        "location": [
+          -152.73500061035156,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "target": [
+          0,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "matrixWorld": [
+          [
+            -4.371138828673793e-8,
+            -4.371138828673793e-8,
+            -1,
+            -152.73500061035156
+          ],
+          [
+            -1,
+            1.910685676922942e-15,
+            4.371138828673793e-8,
+            -1.8400001525878906
+          ],
+          [
+            0,
+            1,
+            -4.371138828673793e-8,
+            4.545000076293945
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "pngSha256": "0dcdbbd48301289ba33c1f331b368940cff109371e426eb3d1ff6708a1da1cba",
+      "project": "hexly-ai",
+      "kind": "screenshots",
+      "asset": "zep-hw-01",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/port-1a9a8a295960.webp",
+      "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/port-1a9a8a295960.webp",
+      "filename": "port.webp",
+      "contentType": "image/webp",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "thumbnail": {
+        "path": "assets/thumbnails/hw-01-port.webp",
+        "sha256": "4ff4701d4efca63c53092cf31425c9cb1edaee47958dafd13fe9471eccbf7834",
+        "bytes": 10052,
+        "width": 640,
+        "height": 480
+      },
+      "action": "reused",
+      "verifiedAt": "2026-09-19T01:46:50.624Z"
+    },
+    "starboard": {
+      "file": "starboard.webp",
+      "sha256": "b2c82a03a569c726691a5539a43259e04c148b172f818e83881639597255878c",
+      "bytes": 140414,
+      "width": 2560,
+      "height": 1920,
+      "camera": {
+        "type": "ORTHO",
+        "lensMm": 70,
+        "sensorWidthMm": 36,
+        "orthoScale": 90.41912078857422,
+        "location": [
+          152.73500061035156,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "target": [
+          0,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "matrixWorld": [
+          [
+            -4.371138828673793e-8,
+            4.371138828673793e-8,
+            1,
+            152.73500061035156
+          ],
+          [
+            1,
+            1.910685676922942e-15,
+            4.371138828673793e-8,
+            -1.8400001525878906
+          ],
+          [
+            0,
+            1,
+            -4.371138828673793e-8,
+            4.545000076293945
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "pngSha256": "76860693f3aabf87ed0d2cfcf24d9a86aecdde910466ae9d1e73843fe4bb3198",
+      "project": "hexly-ai",
+      "kind": "screenshots",
+      "asset": "zep-hw-01",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/starboard-b2c82a03a569.webp",
+      "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/starboard-b2c82a03a569.webp",
+      "filename": "starboard.webp",
+      "contentType": "image/webp",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "thumbnail": {
+        "path": "assets/thumbnails/hw-01-starboard.webp",
+        "sha256": "44e7722f47daa9a4ff0e737d5991692961e345a84468d20e7dd76accdbb683af",
+        "bytes": 9760,
+        "width": 640,
+        "height": 480
+      },
+      "action": "reused",
+      "verifiedAt": "2026-09-19T01:46:51.420Z"
+    },
+    "top": {
+      "file": "top.webp",
+      "sha256": "119c40cc62d76d31b90f5552a209117519a2f22e7eada6cbfb57e47824245deb",
+      "bytes": 262344,
+      "width": 2560,
+      "height": 1920,
+      "camera": {
+        "type": "ORTHO",
+        "lensMm": 70,
+        "sensorWidthMm": 36,
+        "orthoScale": 90.41912078857422,
+        "location": [
+          0,
+          -1.8400001525878906,
+          157.27999877929688
+        ],
+        "target": [
+          0,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "matrixWorld": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            -1.8400001525878906
+          ],
+          [
+            0,
+            0,
+            1,
+            157.27999877929688
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "pngSha256": "00cc614862bc86f25ebe16b83842c18ae97b0fd0c78ec5c1ae6f7143e7fc57dd",
+      "project": "hexly-ai",
+      "kind": "screenshots",
+      "asset": "zep-hw-01",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/top-119c40cc62d7.webp",
+      "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/top-119c40cc62d7.webp",
+      "filename": "top.webp",
+      "contentType": "image/webp",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "thumbnail": {
+        "path": "assets/thumbnails/hw-01-top.webp",
+        "sha256": "00564210b1b92c8818bf4ac1a3d57cf3d867ad3163a159698e837c8081eea60b",
+        "bytes": 17868,
+        "width": 640,
+        "height": 480
+      },
+      "action": "reused",
+      "verifiedAt": "2026-09-19T01:46:52.229Z"
+    },
+    "bottom": {
+      "file": "bottom.webp",
+      "sha256": "2642e7a46e9173187b8a538ba3fc49c406a6089bb360b4a39f2df8c65ae00209",
+      "bytes": 219266,
+      "width": 2560,
+      "height": 1920,
+      "camera": {
+        "type": "ORTHO",
+        "lensMm": 70,
+        "sensorWidthMm": 36,
+        "orthoScale": 90.41912078857422,
+        "location": [
+          0,
+          -1.8400001525878906,
+          -148.19000244140625
+        ],
+        "target": [
+          0,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "matrixWorld": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            -1.5099580252808664e-7,
+            -1.8400001525878906
+          ],
+          [
+            0,
+            1.5099580252808664e-7,
+            -1,
+            -148.19000244140625
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "pngSha256": "7e51ee5cafb199232bfc5aa1ee6e62371c005212020430c7394bad7d923e5abf",
+      "project": "hexly-ai",
+      "kind": "screenshots",
+      "asset": "zep-hw-01",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/bottom-2642e7a46e91.webp",
+      "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/bottom-2642e7a46e91.webp",
+      "filename": "bottom.webp",
+      "contentType": "image/webp",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "thumbnail": {
+        "path": "assets/thumbnails/hw-01-bottom.webp",
+        "sha256": "587316832491b52d1a2d8947e411f539af85e787af4e6bdd168872982619d6f4",
+        "bytes": 14142,
+        "width": 640,
+        "height": 480
+      },
+      "action": "reused",
+      "verifiedAt": "2026-09-19T01:46:53.299Z"
+    },
+    "three-quarter": {
+      "file": "three-quarter.webp",
+      "sha256": "c33f3d0971f17f94d64434a29213db05c19c5479f6ff40bf4ee18882b1908fa0",
+      "bytes": 327286,
+      "width": 2560,
+      "height": 1920,
+      "camera": {
+        "type": "PERSP",
+        "lensMm": 70,
+        "sensorWidthMm": 36,
+        "orthoScale": 90.41912078857422,
+        "location": [
+          79.13624572753906,
+          -108.67393493652344,
+          79.72442626953125
+        ],
+        "target": [
+          0,
+          -1.8400001525878906,
+          4.545000076293945
+        ],
+        "matrixWorld": [
+          [
+            0.8035572171211243,
+            -0.292983740568161,
+            0.5181276798248291,
+            79.13624572753906
+          ],
+          [
+            0.5952274799346924,
+            0.395528107881546,
+            -0.6994724869728088,
+            -108.67393493652344
+          ],
+          [
+            -1.4383072510781858e-8,
+            0.8704699873924255,
+            0.4922214448451996,
+            79.72442626953125
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "pngSha256": "bac99cb344ce85960c82e830abc781cffe7114ea7fe1ce23a7a2695316c9ec1a",
+      "project": "hexly-ai",
+      "kind": "screenshots",
+      "asset": "zep-hw-01",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/three-quarter-c33f3d0971f1.webp",
+      "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-hw-01/v1.0.0/three-quarter-c33f3d0971f1.webp",
+      "filename": "three-quarter.webp",
+      "contentType": "image/webp",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "thumbnail": {
+        "path": "assets/thumbnails/hw-01-three-quarter.webp",
+        "sha256": "7ab06da796619814bd8a68999d44765a98bde90e14ff211f284999011523211f",
+        "bytes": 20820,
+        "width": 640,
+        "height": 480
+      },
+      "action": "uploaded",
+      "verifiedAt": "2026-09-19T01:46:57.294Z"
+    }
+  },
+  "version": "1.0.0",
+  "publisher": {
+    "repository": "https://github.com/nocoo/hexly.ai",
+    "commit": "bb8d2a7c8609db0a13dd3702e1961fb03cae5531",
+    "helper": "scripts/media-r2.ts",
+    "helperSha256": "7ce65b630e77d7056b4dc52f1d6d4d84eda137cecc0058d34fbb1c4abc1cfc19",
+    "bucket": "hexlyai",
+    "origin": "https://h.no.mt",
+    "project": "hexly-ai",
+    "consumerProject": "zep"
+  }
+}

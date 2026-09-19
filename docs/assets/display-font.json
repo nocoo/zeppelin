@@ -1,0 +1,18 @@
+{
+  "project": "hexly-ai",
+  "kind": "fonts",
+  "asset": "zep-display",
+  "version": "1.0.0",
+  "bucket": "hexlyai",
+  "key": "projects/hexly-ai/fonts/zep-display/v1.0.0/barlow-condensed-latin-2515494e8cc2.woff2",
+  "url": "https://h.no.mt/projects/hexly-ai/fonts/zep-display/v1.0.0/barlow-condensed-latin-2515494e8cc2.woff2",
+  "filename": "barlow-condensed-latin.woff2",
+  "bytes": 22464,
+  "sha256": "2515494e8cc2ca07c86ea78766cfa104b796aa6ed5d66821c01d51dbb0b52bce",
+  "contentType": "font/woff2",
+  "cacheControl": "public, max-age=31536000, immutable",
+  "action": "uploaded",
+  "source": "https://cdn.jsdelivr.net/fontsource/fonts/barlow-condensed@5.3.0/latin-800-normal.woff2",
+  "license": "SIL OFL 1.1",
+  "usage": "Archive only; site uses pinned Fontsource URL with public CORS"
+}
