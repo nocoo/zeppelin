@@ -30,6 +30,8 @@ test("directory filters, ship identity, direct routes and back navigation", asyn
   await page.getByRole("link", { name: "进入 YS-01A 档案" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("YS-01");
   await expect(page.locator(".vessel-sidebar")).toContainText("5001");
+  if (page.viewportSize().width <= 760)
+    await page.getByRole("button", { name: "舰型数据 ＋" }).click();
   await expect(page.locator(".prototype-notice")).toBeVisible();
   await page.reload();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("YS-01");
@@ -185,27 +187,85 @@ test("planned views are explicit placeholders with unknown dimensions and no dow
   expect(requests).toEqual([]);
 });
 
-test("viewer dominates desktop layout and stacks ahead of metadata on mobile", async ({
+test("detail fills the viewport, keeps data accessible and restores home scrolling", async ({
   page,
 }) => {
-  await page.goto("/#vessel/ht-01");
-  const viewer = await page.locator(".viewer").boundingBox();
-  const sidebar = await page.locator(".vessel-sidebar").boundingBox();
-  if (page.viewportSize().width > 1050) {
-    expect(viewer.width / (viewer.width + sidebar.width)).toBeGreaterThan(0.7);
-    expect(sidebar.x).toBeGreaterThan(viewer.x + viewer.width);
-    expect(Math.abs(sidebar.y - viewer.y)).toBeLessThan(2);
-    await page.setViewportSize({ width: 820, height: 1180 });
-    const tabletViewer = await page.locator(".viewer").boundingBox();
-    const tabletInfo = await page.locator(".vessel-sidebar").boundingBox();
-    expect(tabletViewer.width).toBeGreaterThan(820 * 0.9);
-    expect(tabletInfo.y).toBeGreaterThan(tabletViewer.y + tabletViewer.height);
-  } else {
-    expect(sidebar.y).toBeGreaterThan(viewer.y + viewer.height);
+  await page.goto("/#vessel/hw-01");
+  await expect(page.locator(".site-header, footer")).toHaveCount(0);
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#main")).toBeFocused();
+  await expect(page).toHaveURL(/#vessel\/hw-01$/);
+  for (const size of [
+    page.viewportSize(),
+    { width: 820, height: 1180 },
+    { width: 844, height: 390 },
+    { width: 320, height: 568 },
+  ]) {
+    await page.setViewportSize(size);
+    const toggle = page.locator(".data-toggle");
+    if (await toggle.isVisible()) {
+      await expect(page.locator(".vessel-sidebar")).not.toBeVisible();
+      const viewer = await page.locator(".viewer").boundingBox();
+      expect(viewer.width).toBeGreaterThan(size.width * 0.95);
+    } else {
+      const viewer = await page.locator(".viewer").boundingBox();
+      const sidebar = await page.locator(".vessel-sidebar").boundingBox();
+      if (size.width > 1050)
+        expect(viewer.width / (viewer.width + sidebar.width)).toBeGreaterThan(
+          0.7,
+        );
+      expect(sidebar.x).toBeGreaterThanOrEqual(viewer.x + viewer.width - 1);
+      expect(Math.abs(sidebar.y - viewer.y)).toBeLessThan(2);
+    }
+    await page.locator('[data-view="port"]').click();
+    for (const control of await page
+      .locator("[data-view], .back-to-fleet, .expand-view")
+      .all())
+      await expect(control).toBeInViewport({ ratio: 1 });
+    if (await toggle.isVisible()) await toggle.click();
+    for (const group of ["mission", "record", "identification"]) {
+      const button = page.locator(`[data-panel="${group}"]`);
+      await button.focus();
+      await page.keyboard.press("Enter");
+      await expect(button).toHaveAttribute("aria-pressed", "true");
+      await expect(page.locator(`#panel-${group}`)).toBeVisible();
+      await expect(page.locator(".data-panel:visible")).toHaveCount(1);
+    }
+    // Small heights and zoom must still expose the final data row via keyboard.
+    const panel = page.locator("#panel-identification");
+    await panel.focus();
+    await page.keyboard.press("End");
+    await expect(panel.locator("dd").last()).toBeInViewport({ ratio: 1 });
+    for (const link of await page.locator(".vessel-next a").all())
+      await expect(link).toBeInViewport({ ratio: 1 });
+    if (await toggle.isVisible()) {
+      await toggle.click();
+      await expect(page.locator('[data-view="port"]')).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+    }
+    await page.locator(".viewer-stage").hover();
+    await page.mouse.wheel(0, 800);
+    expect(
+      await page.evaluate(() => ({
+        fits:
+          document.documentElement.scrollHeight <= innerHeight &&
+          document.documentElement.scrollWidth <= innerWidth,
+        top: scrollY,
+      })),
+    ).toEqual({ fits: true, top: 0 });
   }
+  await page.getByRole("button", { name: "舰型数据 ＋" }).click();
+  await page.getByRole("link", { name: /^下一档案：/ }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("HW-02A");
+  await expect(page.locator(".viewer")).toBeVisible();
+  await page.getByRole("link", { name: "← 舰队档案" }).click();
+  await expect(page.locator(".site-header")).toBeAttached();
+  await expect(page.locator("html")).not.toHaveClass(/detail-mode/);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
   expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
+    await page.evaluate(() => document.documentElement.scrollHeight > innerHeight),
   ).toBe(true);
 });

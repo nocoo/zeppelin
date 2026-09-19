@@ -3,6 +3,14 @@ import { fleet, series, viewLabels } from "./fleet.js";
 let manifest;
 
 const app = document.querySelector("#app");
+document.querySelector(".skip-link").addEventListener("click", (event) => {
+  const main = app.querySelector("#main");
+  if (!main) return;
+  event.preventDefault();
+  main.focus({ preventScroll: true });
+  if (!document.documentElement.classList.contains("detail-mode"))
+    main.scrollIntoView();
+});
 const base = import.meta.env.BASE_URL;
 const offline =
   import.meta.env.DEV &&
@@ -22,8 +30,8 @@ function picture(id, view, className = "", eager = false) {
   const asset = source(id, view);
   return `<div class="asset ${className}" data-asset="${id}/${view}"><img src="${offline ? base + asset.thumbnail.path : asset.url}" width="${asset.width}" height="${asset.height}" alt="${ship.asset.model} ${ship.asset.number} 号${ship.name}历史模型，${viewLabels[view][0]}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"><div class="asset-error" role="status" hidden><span class="mono">SIGNAL LOST / 载入中断</span><p>高清视图暂时无法载入</p><button type="button" class="retry">重新载入 ↻</button></div></div>`;
 }
-function header(detail = false) {
-  return `<header class="site-header"><a class="brand" href="#" aria-label="Zeppelin 首页">${icon}<span>ZEPPELIN<span class="brand-caption">FLEET ARCHIVE</span></span></a><nav aria-label="主导航"><a href="#fleet" ${!detail ? 'class="nav-active"' : ""}>舰队档案 <span>FLEET</span></a><a href="#doctrine">设计理念 <span>DOCTRINE</span></a><a href="#archive">工程记录 <span>ARCHIVE</span></a></nav><span class="header-code mono"><i></i>地外航行计划<span>EST. 2026 / VOL. 01</span></span></header>`;
+function header() {
+  return `<header class="site-header"><a class="brand" href="#" aria-label="Zeppelin 首页">${icon}<span>ZEPPELIN<span class="brand-caption">FLEET ARCHIVE</span></span></a><nav aria-label="主导航"><a href="#fleet" class="nav-active">舰队档案 <span>FLEET</span></a><a href="#doctrine">设计理念 <span>DOCTRINE</span></a><a href="#archive">工程记录 <span>ARCHIVE</span></a></nav><span class="header-code mono"><i></i>地外航行计划<span>EST. 2026 / VOL. 01</span></span></header>`;
 }
 const footer = () =>
   `<footer><a class="footer-wordmark" href="#">ZEPPELIN<span>＋</span></a><div><span class="mono">BUILT FOR THE DISTANCE.</span><p>把想象，铸造成抵达的力量。</p></div><div class="footer-meta mono"><span>原创科幻舰船 · 视觉设计档案</span><span>© ${new Date().getFullYear()} ZEPPELIN FLEET PROGRAM</span><a href="https://github.com/nocoo/zeppelin" target="_blank" rel="noreferrer">项目源代码 ${arrow}</a></div></footer>`;
@@ -105,9 +113,8 @@ function detail(ship) {
     ...ship.specs,
   ];
   document.title = `${displayModel(ship)} · ${ship.name} — ZEPPELIN`;
-  app.innerHTML = `${header(true)}<main id="main" class="vessel-main" tabindex="-1">
-    <div class="detail-breadcrumb mono"><a href="#fleet">← 舰队档案</a><span>${family.group} / ${ship.series} / DRAFT A</span></div>
-    <div class="vessel-heading"><div><h1>${displayModel(ship)}</h1><span>${ship.name}</span></div>${badge(ship)}</div>
+  app.innerHTML = `<main id="main" class="vessel-main" tabindex="-1">
+    <div class="vessel-toolbar"><a class="back-to-fleet mono" href="#fleet">← 舰队档案</a><div class="vessel-heading"><h1>${displayModel(ship)}</h1><span>${ship.name}</span></div><span class="workspace-code mono">${ship.series} / VESSEL INSPECTOR</span><button type="button" class="data-toggle" aria-expanded="false" aria-controls="vessel-data">舰型数据 ＋</button></div>
     <div class="detail-workspace">
       <section class="viewer" aria-labelledby="viewer-heading"><div class="viewer-top"><h2 id="viewer-heading" class="mono">STANDARD VIEW / 标准视图</h2><span class="mono">${ship.asset ? "2560 × 1920 / 07 VIEWS" : "待制作 / 07 VIEW SLOTS"}</span></div><div class="viewer-stage"><div id="active-view">${picture(ship.id, "three-quarter", "", true)}</div><span class="viewer-axis mono" aria-hidden="true">Z ↑<br>Y ↙ &nbsp; X →</span><div class="viewer-caption" aria-live="polite"><span class="mono">PERSPECTIVE${ship.asset ? " / 70 MM" : " / PENDING"}</span><strong>三分之四</strong></div>${ship.asset ? '<button type="button" class="expand-view" aria-label="放大当前高清视图">⤢ <span>放大视图</span></button>' : '<span class="pending-view mono">尚无高清视图</span>'}<span class="cross top-left" aria-hidden="true">＋</span><span class="cross bottom-right" aria-hidden="true">＋</span></div><div class="view-controls" role="group" aria-label="舰船标准视图">${Object.entries(
         viewLabels,
@@ -119,13 +126,28 @@ function detail(ship) {
         .join(
           "",
         )}</div><div class="viewer-foot mono"><span>${ship.asset ? `SOURCE MODEL / ${ship.asset.model} · ${ship.asset.number}` : "DESIGN PENDING / 无模型数据"}</span><span>${ship.asset ? "可切换视角 · 点击放大" : "标准视角预留 · 比例未知"}</span></div></section>
-      <aside class="vessel-sidebar" aria-label="舰型信息"><section class="sidebar-section"><h2 class="sidebar-title mono">01 / IDENTIFICATION</h2><dl class="compact-specs">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>${ship.series === "QS" ? '<p class="sidebar-note">¹ 轻型 QS 可依编制归入 2xxx；具体百位划分待舰籍细则确定。</p>' : ""}</section>
-      <section class="sidebar-section"><h2 class="sidebar-title mono">02 / 任务与编成</h2><p class="mission-copy">${ship.description}</p><dl class="compact-specs mission-specs"><div><dt>编队位置</dt><dd>${family.formation}</dd></div><div><dt>任务分组</dt><dd>${family.group}${family.optional ? " · 可选线" : ""}</dd></div></dl></section>
-      ${ship.features.length ? `<details class="sidebar-section design-details"><summary>03 / 模型设计细节 <span>＋</span></summary><ol>${ship.features.map(([, title, description]) => `<li><h3>${title}</h3><p>${description}</p></li>`).join("")}</ol></details>` : ""}
-      <section class="sidebar-section record-section"><h2 class="sidebar-title mono">${ship.features.length ? "04" : "03"} / 档案状态</h2>${ship.state === "development" ? '<p class="prototype-notice">原型制作中 · 当前视图为在制模型快照，细节可能随设计迭代。</p>' : ""}${ship.asset ? `<p class="sidebar-note">历史渲染标识：${ship.asset.model} / ${ship.asset.number}。目录采用草案 A 型号，图中标识保留原始状态${ship.series === "HW" ? "；原三位舷号 227 尚未重编为四位" : ""}。尺寸为旧模型记录。</p>` : `<p class="sidebar-note">${ship.model ? "规划型号，尚无模型或渲染。" : "规范只定义了该系列，型号尚未分配。"}标准视图为显式占位，尺寸与工程参数未知。</p>`}<p class="sidebar-note">来源：型号 · 舷号 · 编成规范<br>草案 A / 2026.09.19</p></section>
+      <aside id="vessel-data" class="vessel-sidebar" aria-label="舰型信息"><div class="sidebar-heading"><h2 class="mono">舰型数据 / ${ship.series}</h2>${badge(ship)}</div>
+      <div class="data-controls" role="group" aria-label="舰型数据分组"><button type="button" id="data-identification" data-panel="identification" aria-controls="panel-identification" aria-pressed="true">01 参数</button><button type="button" id="data-mission" data-panel="mission" aria-controls="panel-mission" aria-pressed="false">02 任务</button><button type="button" id="data-record" data-panel="record" aria-controls="panel-record" aria-pressed="false">03 档案</button></div>
+      <section id="panel-identification" class="data-panel" aria-labelledby="data-identification" tabindex="0">${ship.state === "development" ? '<p class="prototype-notice">原型制作中 · 当前视图为在制模型快照，细节可能随设计迭代。</p>' : ""}<dl class="compact-specs">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>${ship.series === "QS" ? '<p class="sidebar-note">¹ 轻型 QS 可依编制归入 2xxx；具体百位划分待舰籍细则确定。</p>' : ""}</section>
+      <section id="panel-mission" class="data-panel" aria-labelledby="data-mission" tabindex="0" hidden><h2 class="sidebar-title mono">MISSION / 任务与编成</h2><p class="mission-copy">${ship.description}</p><dl class="compact-specs mission-specs"><div><dt>编队位置</dt><dd>${family.formation}</dd></div><div><dt>任务分组</dt><dd>${family.group}${family.optional ? " · 可选线" : ""}</dd></div></dl>${ship.features.length ? `<div class="design-details"><h2 class="sidebar-title mono">STRUCTURE / 模型设计细节</h2><ol>${ship.features.map(([, title, description]) => `<li><h3>${title}</h3><p>${description}</p></li>`).join("")}</ol></div>` : ""}</section>
+      <section id="panel-record" class="data-panel" aria-labelledby="data-record" tabindex="0" hidden><h2 class="sidebar-title mono">RECORD / 档案状态</h2>${ship.asset ? `<p class="sidebar-note">历史渲染标识：${ship.asset.model} / ${ship.asset.number}。目录采用草案 A 型号，图中标识保留原始状态${ship.series === "HW" ? "；原三位舷号 227 尚未重编为四位" : ""}。尺寸为旧模型记录。</p>` : `<p class="sidebar-note">${ship.model ? "规划型号，尚无模型或渲染。" : "规范只定义了该系列，型号尚未分配。"}标准视图为显式占位，尺寸与工程参数未知。</p>`}<p class="sidebar-note">来源：型号 · 舷号 · 编成规范<br>草案 A / 2026.09.19</p></section>
+      <nav class="vessel-next" aria-label="相邻档案">${neighbors.map((item, i) => `<a href="#vessel/${item.id}" aria-label="${i ? "下一" : "上一"}档案：${displayModel(item)} ${item.name}"><span class="mono">${i ? "下一档案 →" : "← 上一档案"}</span><strong>${displayModel(item)}</strong></a>`).join("")}</nav>
       </aside>
-    </div><nav class="vessel-next" aria-label="相邻档案">${neighbors.map((item, i) => `<a href="#vessel/${item.id}"><span class="mono">${i ? "下一档案 →" : "← 上一档案"}</span><strong>${displayModel(item)}<small>${item.name}</small></strong></a>`).join("")}</nav>
-    </main>${footer()}${ship.asset ? '<dialog class="lightbox" aria-label="高清舰船视图"><form method="dialog"><button class="close-lightbox" aria-label="关闭放大视图">关闭 ESC ×</button></form><div class="lightbox-image"></div><p class="mono lightbox-caption"></p><a class="text-link lightbox-original" target="_blank" rel="noreferrer">打开高清原图 ↗</a></dialog>' : ""}`;
+    </div></main>${ship.asset ? '<dialog class="lightbox" aria-label="高清舰船视图"><form method="dialog"><button class="close-lightbox" aria-label="关闭放大视图">关闭 ESC ×</button></form><div class="lightbox-image"></div><p class="mono lightbox-caption"></p><a class="text-link lightbox-original" target="_blank" rel="noreferrer">打开高清原图 ↗</a></dialog>' : ""}`;
+  app.querySelector(".data-toggle").addEventListener("click", (event) => {
+    const open = app.querySelector(".vessel-main").classList.toggle("data-open");
+    event.currentTarget.setAttribute("aria-expanded", String(open));
+    event.currentTarget.textContent = open ? "返回预览 ×" : "舰型数据 ＋";
+  });
+  app.querySelectorAll("[data-panel]").forEach((button) =>
+    button.addEventListener("click", () => {
+      app.querySelectorAll("[data-panel]").forEach((item) => {
+        const active = item === button;
+        item.setAttribute("aria-pressed", String(active));
+        app.querySelector(`#panel-${item.dataset.panel}`).hidden = !active;
+      });
+    }),
+  );
   let current = "three-quarter";
   app.querySelectorAll("[data-view]").forEach((button) =>
     button.addEventListener("click", () => {
@@ -204,6 +226,7 @@ function render() {
   const next = ship ? ship.id : "home";
   if (route !== next) {
     document.body.classList.remove("modal-open");
+    document.documentElement.classList.toggle("detail-mode", Boolean(ship));
     ship ? detail(ship) : home();
     bindImages();
     if (offline)
@@ -212,7 +235,7 @@ function render() {
         '<div class="offline-banner" role="status">离线开发预览 · 当前使用本地缩略图，不代表高清发布效果。</div>',
       );
     route = next;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     if (render.initialized)
       app.querySelector("#main").focus({ preventScroll: true });
   }
