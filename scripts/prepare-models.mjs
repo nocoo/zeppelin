@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile, writeFile, mkdir, rename } from "node:fs/promises";
-import model from "../docs/assets/hw-01/3d-v1.0.0.json" with { type: "json" };
+import { models } from "../src/models.js";
 
 export function validateModel(bytes, asset) {
   assert.equal(bytes.length, asset.bytes, "Model size mismatch");
@@ -16,14 +16,13 @@ export function validateModel(bytes, asset) {
 }
 
 if (import.meta.main) {
-  await mkdir("public/assets/models", { recursive: true });
-  for (const asset of Object.values(model.assets)) {
+  await mkdir(".local/models", { recursive: true });
+  for (const asset of Object.values(models).flatMap(({ model }) => Object.values(model.assets))) {
     assert.match(
       asset.path,
-      /^assets\/models\/hw-01a-(overview|detail)-[a-f0-9]{12}\.glb$/,
+      /^assets\/models\/[a-z]{2}-\d{2}[a-z]-(overview|detail)-[a-f0-9]{12}\.glb$/,
     );
-    assert.ok(asset.bytes < 25 * 1024 * 1024);
-    const path = `public/${asset.path}`;
+    const path = `.local/models/${asset.path.split("/").at(-1)}`;
     let bytes;
     try {
       bytes = await readFile(path);
@@ -53,6 +52,6 @@ if (import.meta.main) {
     await rename(`${path}.tmp`, path);
   }
   console.info(
-    "HW-01A models verified and prepared for same-origin static delivery",
+    "CDN models verified and cached for browser test fixtures",
   );
 }

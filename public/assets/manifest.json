@@ -617,16 +617,16 @@
     },
     "ys-01": {
       "schemaVersion": 1,
-      "model": "YS-01",
+      "model": "YS-01A",
       "series": "YS",
       "number": "5001",
       "source": {
-        "filename": "YS-01.blend",
-        "sha256": "00147c95d2efe4b1cd5122fa55b6fbc79e8ca54fd8ca4f277443ae3c3655bfb4",
-        "scene": "YS-01 · 外观"
+        "filename": "YS-01A.blend",
+        "sha256": "b090626c078f092d42e0086debd76aac55e9a9ab39ede9f6a83353fcc02a0e66",
+        "scene": "YS-01A · 外观"
       },
       "blender": "5.2.2 LTS",
-      "rendererSha256": "9a54847ff21b9e6ca3428267670809f8098aa657e3563464cf65a42a55406382",
+      "rendererSha256": "4be8028bee86a7d789dca558b39e7949ebae66deace5cc0658d800f608037cab",
       "coordinates": {
         "forward": "-Y",
         "starboard": "+X",
@@ -636,16 +636,16 @@
       },
       "bounds": {
         "min": [
-          -5.387119293212891,
+          -6.048999786376953,
           -7.365000247955322,
           -2.109999895095825
         ],
         "max": [
-          5.387119293212891,
+          6.048999786376953,
           6.65500020980835,
           2.325000047683716
         ],
-        "width": 10.774238586425781,
+        "width": 12.097999572753906,
         "length": 14.020000457763672,
         "height": 4.434999942779541
       },
@@ -735,8 +735,8 @@
       "views": {
         "front": {
           "file": "front.webp",
-          "sha256": "207dcea9eef8d6761674cfaacefbaf0229e504a2359230fd89da05e7612e7fe8",
-          "bytes": 92008,
+          "sha256": "a6ef1b4fc63a96e92f70ba9bde430c122c042b909b84f047a35d249b16ea3e10",
+          "bytes": 94958,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -781,31 +781,31 @@
               ]
             ]
           },
-          "pngSha256": "179117b1de7579dc65e06e63830ca95e17344320d4b4c1f97e695dc7e81faa65",
+          "pngSha256": "659237dd9fff7228c9a5858af92757eb872a9d7209b2555f6342de3ef18d3747",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-01",
-          "version": "1.0.0",
+          "asset": "zep-ys-01a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/front-207dcea9eef8.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/front-207dcea9eef8.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/front-a6ef1b4fc63a.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/front-a6ef1b4fc63a.webp",
           "filename": "front.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-01-front.webp",
-            "sha256": "f0c6c05c20111ff36fb8e0ca3a92802ff6b88336c69a8ab5d0542e8e7aa31de0",
-            "bytes": 8598,
+            "sha256": "032b3e6388ada47dec58c8167f5ab06a5492ccd5f5c8299a866eccc269be5d97",
+            "bytes": 8404,
             "width": 640,
             "height": 480
           },
-          "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:49:49.851Z"
+          "action": "reused",
+          "verifiedAt": "2026-09-19T08:13:34.890Z"
         },
         "rear": {
           "file": "rear.webp",
-          "sha256": "49bda9b41973722053dd50aa50935391c194ffaaa6c80a0603aa5f758a6023ae",
-          "bytes": 83696,
+          "sha256": "591cabef68aed8ab9dc87435204bba64b200d874f4f26d95239b1b15ec0160b8",
+          "bytes": 83330,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -850,31 +850,31 @@
               ]
             ]
           },
-          "pngSha256": "74a874479f8fd6c7c904813f9f76c93d410bfa4dc1a2dc24e4066273ee300155",
+          "pngSha256": "963b2f4e7464d49e102a8552b16c551802724d6060fa860c64a90315b86454b3",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-01",
-          "version": "1.0.0",
+          "asset": "zep-ys-01a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/rear-49bda9b41973.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/rear-49bda9b41973.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/rear-591cabef68ae.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/rear-591cabef68ae.webp",
           "filename": "rear.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-01-rear.webp",
-            "sha256": "fde35d40afbb80f60e4506b4ba2c2e0e7930606849a1441cedf8f6052dca4a24",
-            "bytes": 7358,
+            "sha256": "6f5a1871b907c6e945d63a1a34331d7dba2e3a75ec2f62b3ee58cd30560911b1",
+            "bytes": 7294,
             "width": 640,
             "height": 480
           },
-          "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:49:53.241Z"
+          "action": "reused",
+          "verifiedAt": "2026-09-19T08:13:35.211Z"
         },
         "port": {
           "file": "port.webp",
-          "sha256": "621a174b5b055d483033b06396a76e00d61c59cca0fa7bdbd8f6f9c3acdf93e4",
-          "bytes": 89840,
+          "sha256": "fa5d0849493df91c3a22482dcaebd0706eebb988ea73eeac6f5220fb85235ca3",
+          "bytes": 95012,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -919,31 +919,31 @@
               ]
             ]
           },
-          "pngSha256": "951bb728ad528fd012004b901de1ecff2632d48b97ff1c856af9b1216496a470",
+          "pngSha256": "5d6b27152b5297d3cfff7a072eb8ae2dbc1883a0f6a84b31db1c46f8a1b4ce98",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-01",
-          "version": "1.0.0",
+          "asset": "zep-ys-01a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/port-621a174b5b05.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/port-621a174b5b05.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/port-fa5d0849493d.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/port-fa5d0849493d.webp",
           "filename": "port.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-01-port.webp",
-            "sha256": "42b1173ce88f0520c8df70e68351d4ac47e58a9763a32bcf8c3048ef413aa938",
-            "bytes": 8596,
+            "sha256": "7ed99ba45a011b436449d8f50cd35370d53d83774819ab53a8ce4573b4d8c809",
+            "bytes": 8962,
             "width": 640,
             "height": 480
           },
-          "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:49:56.823Z"
+          "action": "reused",
+          "verifiedAt": "2026-09-19T08:13:35.527Z"
         },
         "starboard": {
           "file": "starboard.webp",
-          "sha256": "d78fea496465fea40b9e513a09c55a3af305492e3638a036c0e2147b99b29c60",
-          "bytes": 94010,
+          "sha256": "fb3add5e00c4468b6d07ab8522738c19d94155e6df728a5819680f57c214692b",
+          "bytes": 97066,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -988,31 +988,31 @@
               ]
             ]
           },
-          "pngSha256": "66fab5475da135dd64980418399f65ce52473ab23d713203b4abd48ffc4bd0c2",
+          "pngSha256": "b03f4f47ce9ed4d61fcb15cd5c098c1e6fd136aa6a82e82d969a2ace8957d996",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-01",
-          "version": "1.0.0",
+          "asset": "zep-ys-01a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/starboard-d78fea496465.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/starboard-d78fea496465.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/starboard-fb3add5e00c4.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/starboard-fb3add5e00c4.webp",
           "filename": "starboard.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-01-starboard.webp",
-            "sha256": "d6dcef8419709d54dcdd59ae500edf1828076263893df822747824950d9afc25",
-            "bytes": 8662,
+            "sha256": "c5b8da2d212b4bb3ceeee123fa765e22879176551329cd69480519e1b31776d1",
+            "bytes": 8770,
             "width": 640,
             "height": 480
           },
-          "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:50:00.774Z"
+          "action": "reused",
+          "verifiedAt": "2026-09-19T08:13:35.819Z"
         },
         "top": {
           "file": "top.webp",
-          "sha256": "cc20614ab46d1a2e369758244047064402786aeab3820f53fd944f92639b8fa2",
-          "bytes": 148610,
+          "sha256": "9ad886dc6a6809d8c0dd9484adb5846122da8775826e323f728cdfd2dc3e4288",
+          "bytes": 157736,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1057,31 +1057,31 @@
               ]
             ]
           },
-          "pngSha256": "18815c63d4ba8e4c0b386b07c2c67efe3a0799beafabad2d30e35dbcc0d72742",
+          "pngSha256": "18e04af5063664a3259fbeb08c72e58183e4dd150c8762cb4f4b406e49e8f52c",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-01",
-          "version": "1.0.0",
+          "asset": "zep-ys-01a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/top-cc20614ab46d.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/top-cc20614ab46d.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/top-9ad886dc6a68.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/top-9ad886dc6a68.webp",
           "filename": "top.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-01-top.webp",
-            "sha256": "1346d3ae17ba2c086dcba1afe172f134e92f2298ef303d9c00c3196271de4446",
-            "bytes": 14210,
+            "sha256": "695fca51a4140b726178c92af8a86f9191139f0c51534f4108cfe9cbe6346b58",
+            "bytes": 14546,
             "width": 640,
             "height": 480
           },
-          "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:50:05.334Z"
+          "action": "reused",
+          "verifiedAt": "2026-09-19T08:13:36.135Z"
         },
         "bottom": {
           "file": "bottom.webp",
-          "sha256": "564a687e6da8b962d651d7d876160c5301f34470888dba19af97c4bcc7bd3823",
-          "bytes": 125276,
+          "sha256": "02f87551c285c7af0c86e3749112ad491eb515f1038aaa9ac17afb9621455c1c",
+          "bytes": 114962,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1126,31 +1126,31 @@
               ]
             ]
           },
-          "pngSha256": "be0bbe9d5dd54a84760db9b70947a9d34c0cf17d6e00dbe828312e2c5c5540df",
+          "pngSha256": "7e9e68dfeb8589067f2b44c7507b7e3c4784727ae3169790cb1263da00e126b0",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-01",
-          "version": "1.0.0",
+          "asset": "zep-ys-01a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/bottom-564a687e6da8.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/bottom-564a687e6da8.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/bottom-02f87551c285.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/bottom-02f87551c285.webp",
           "filename": "bottom.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-01-bottom.webp",
-            "sha256": "0e7db7a936ccd06a8358a355211b3f925f6af119be4c51ef36d0cf856d3f1f4c",
-            "bytes": 12328,
+            "sha256": "2cdaa901befd0e44d4b22f4f94499eddd9c96c5c2d52ee81fddd9c9f9528ca2f",
+            "bytes": 11008,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:50:10.872Z"
+          "verifiedAt": "2026-09-19T08:13:38.627Z"
         },
         "three-quarter": {
           "file": "three-quarter.webp",
-          "sha256": "47ee1824df0d4a291a078f2264df96aafe4009aef0c3473825b853af0f854d91",
-          "bytes": 208590,
+          "sha256": "433a9258c2742f7778f6ca22ec6df79a84ca00e1ebacffa9585d3b62e7fe9a8d",
+          "bytes": 227036,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1195,32 +1195,32 @@
               ]
             ]
           },
-          "pngSha256": "4cea310101009bf8e83759ff28673aff1c9b572c6c9f0ed14b4bd167e0ea2e86",
+          "pngSha256": "e1900786ef0e2225763f7ebcfd40ebb0fe73011c59283edc80b6b0588109ee23",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-01",
-          "version": "1.0.0",
+          "asset": "zep-ys-01a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/three-quarter-47ee1824df0d.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01/v1.0.0/three-quarter-47ee1824df0d.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/three-quarter-433a9258c274.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-01a/v1.1.0/three-quarter-433a9258c274.webp",
           "filename": "three-quarter.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-01-three-quarter.webp",
-            "sha256": "878d4c509952c1d9b353cac5bc20fab29d465d74462836dae644cadcf51dca5e",
-            "bytes": 19692,
+            "sha256": "84b09d1213ea560c29a3622fba889cbcbad824814284a66eb4b7ddbec7b49a70",
+            "bytes": 19816,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:50:14.562Z"
+          "verifiedAt": "2026-09-19T08:13:40.954Z"
         }
       },
-      "version": "1.0.0",
+      "version": "1.1.0",
       "publisher": {
         "repository": "https://github.com/nocoo/hexly.ai",
-        "commit": "bb8d2a7c8609db0a13dd3702e1961fb03cae5531",
+        "commit": "54edbd7b4c1c298d5a3919ea74b254066f1457dd",
         "helper": "scripts/media-r2.ts",
         "helperSha256": "7ce65b630e77d7056b4dc52f1d6d4d84eda137cecc0058d34fbb1c4abc1cfc19",
         "bucket": "hexlyai",
@@ -1231,16 +1231,16 @@
     },
     "ys-02": {
       "schemaVersion": 1,
-      "model": "YS-02",
+      "model": "YS-02A",
       "series": "YS",
       "number": "5002",
       "source": {
-        "filename": "YS-02.blend",
-        "sha256": "99287f86fc562e18b1a55f147b895cd45981509edc2b19dd5542a0ca304f686d",
-        "scene": "YS-02 · 外观"
+        "filename": "YS-02A.blend",
+        "sha256": "436081d5b86acc7cf7850957a760631fc34548dbdacce73f8ed967ef3d3af908",
+        "scene": "YS-02A · 外观"
       },
       "blender": "5.2.2 LTS",
-      "rendererSha256": "9a54847ff21b9e6ca3428267670809f8098aa657e3563464cf65a42a55406382",
+      "rendererSha256": "4be8028bee86a7d789dca558b39e7949ebae66deace5cc0658d800f608037cab",
       "coordinates": {
         "forward": "-Y",
         "starboard": "+X",
@@ -1250,16 +1250,16 @@
       },
       "bounds": {
         "min": [
-          -8.655801773071289,
+          -9.348999977111816,
           -13.029999732971191,
           -3.009999990463257
         ],
         "max": [
-          8.655801773071289,
+          9.348999977111816,
           13.625,
           5.490000247955322
         ],
-        "width": 17.311603546142578,
+        "width": 18.697999954223633,
         "length": 26.654998779296875,
         "height": 8.5
       },
@@ -1349,8 +1349,8 @@
       "views": {
         "front": {
           "file": "front.webp",
-          "sha256": "941c3113ec7696e9cdec83428bd7e05fd4f8fea71565ac53fdfb97cac2902cda",
-          "bytes": 71806,
+          "sha256": "96e98c054c99e32ff8e3f457cd435787361f936c468b445e11240f36deba20a5",
+          "bytes": 69302,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1395,31 +1395,31 @@
               ]
             ]
           },
-          "pngSha256": "fed9a242ce5fa67b3d3d53e2711df9be338126bc9bba4e20d057472aee0a1792",
+          "pngSha256": "f88cc22f17eea9038aa4827ca1fd9b10159ee9cbd6fabbf29d63a54b502a1be7",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-02",
-          "version": "1.0.0",
+          "asset": "zep-ys-02a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/front-941c3113ec76.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/front-941c3113ec76.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/front-96e98c054c99.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/front-96e98c054c99.webp",
           "filename": "front.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-02-front.webp",
-            "sha256": "5c3e8d1dcedc278388e4adf2f93eb1b129ea50f56ac05b813222ecd6d7632663",
-            "bytes": 6338,
+            "sha256": "115829225ef181b54fae76ac0e26bb44ecbb8aa4a90a0baefda0597f9f14cc77",
+            "bytes": 5862,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:54:54.871Z"
+          "verifiedAt": "2026-09-19T08:13:48.101Z"
         },
         "rear": {
           "file": "rear.webp",
-          "sha256": "ede5bbfc64161a5646a936cc15699a4c8f3d6e6a84194eed13f229a38834be2c",
-          "bytes": 70950,
+          "sha256": "9216427f8102c0f68a57f3a2513b929183127ba0da9454e89242b7f200b6eb92",
+          "bytes": 65368,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1464,31 +1464,31 @@
               ]
             ]
           },
-          "pngSha256": "f02428ef704f1a1ced5b106da7b95c9e9e10c73722119fd6e8b3fd6bda03cac5",
+          "pngSha256": "0d5f9f47fdad553777f101f219a81b4150944aba5200ec6be2555f685b14acf2",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-02",
-          "version": "1.0.0",
+          "asset": "zep-ys-02a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/rear-ede5bbfc6416.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/rear-ede5bbfc6416.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/rear-9216427f8102.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/rear-9216427f8102.webp",
           "filename": "rear.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-02-rear.webp",
-            "sha256": "c6b09e963c80dc1cea6819c8ffedb3403999bac8472aab3bdaf10be56a010df0",
-            "bytes": 6050,
+            "sha256": "4814f6327048787b521b99d08b68ca50c2ae6b58121846fbf1a5d410662ef063",
+            "bytes": 5512,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:54:57.886Z"
+          "verifiedAt": "2026-09-19T08:13:50.210Z"
         },
         "port": {
           "file": "port.webp",
-          "sha256": "d1f8e078bfaa3c3e0e5bd60daa7b70714e1be4c4405ba479bcf2ce69cc85f0f1",
-          "bytes": 104324,
+          "sha256": "9fb4c0e0235de161381e7245149545499c9fbbd25b17e861d201af7e7675db8a",
+          "bytes": 98936,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1533,31 +1533,31 @@
               ]
             ]
           },
-          "pngSha256": "51fd49115fb8905491d6dcf017c5bd50760e68b7554335a4bf9ea40f122b1dd8",
+          "pngSha256": "6beabfa6d5d9c7cb7b38f0c888f6fa978157f1d70f52574d5131022768522f9d",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-02",
-          "version": "1.0.0",
+          "asset": "zep-ys-02a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/port-d1f8e078bfaa.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/port-d1f8e078bfaa.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/port-9fb4c0e0235d.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/port-9fb4c0e0235d.webp",
           "filename": "port.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-02-port.webp",
-            "sha256": "8807271bbbfce79fde54a047239507fcb23b937038d99085f11d380401f07ae9",
-            "bytes": 9252,
+            "sha256": "94ce7591af65bb5e9ff6e4539f4c7dcfd7a7341a67c8ec1ecb7f6fcb21cd5f56",
+            "bytes": 8316,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:55:00.580Z"
+          "verifiedAt": "2026-09-19T08:13:52.371Z"
         },
         "starboard": {
           "file": "starboard.webp",
-          "sha256": "fa7efd8428bbd34062019b040734a686c84f50fe4ecda06c8c702db9e3b2d6db",
-          "bytes": 105724,
+          "sha256": "d798ce08f5844a100275c343cbf39af97505cd4ee8ea2a2919e9b6ec2b9bf703",
+          "bytes": 97224,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1602,31 +1602,31 @@
               ]
             ]
           },
-          "pngSha256": "79ebee6f35c2d9729f823478b6c2e1378ea8289ae4d28ca2431af2378bedca14",
+          "pngSha256": "8a429af83c9e32312c91a1dd2520ed46afa337b92a2012335f20620a90914109",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-02",
-          "version": "1.0.0",
+          "asset": "zep-ys-02a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/starboard-fa7efd8428bb.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/starboard-fa7efd8428bb.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/starboard-d798ce08f584.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/starboard-d798ce08f584.webp",
           "filename": "starboard.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-02-starboard.webp",
-            "sha256": "6c4a812434042f847c6abc8e93bc2b9b024d24e5a4530bd53919ca55343b0571",
-            "bytes": 9316,
+            "sha256": "aac55f8f5703e9de62504bb580d1ab9d683757abe16aaedfeca3212857d6479b",
+            "bytes": 8156,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:55:04.959Z"
+          "verifiedAt": "2026-09-19T08:13:55.205Z"
         },
         "top": {
           "file": "top.webp",
-          "sha256": "ec14fbab232f3743a376d9311f50dda27749d80353b5ebbed3049e96c9b32ef4",
-          "bytes": 149732,
+          "sha256": "6c544f2b9718d5257182ced96b4276b63fc857283bf2a8d5e5db4870b24b570c",
+          "bytes": 143852,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1671,31 +1671,31 @@
               ]
             ]
           },
-          "pngSha256": "ef4a460d6c87eb08ee0a584995b56f340ba332c3d613c6536b4dc41e5f38991a",
+          "pngSha256": "406ad8eebc60ca51325edecb927ceb043d4a372fb463078fc8532086751895a0",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-02",
-          "version": "1.0.0",
+          "asset": "zep-ys-02a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/top-ec14fbab232f.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/top-ec14fbab232f.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/top-6c544f2b9718.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/top-6c544f2b9718.webp",
           "filename": "top.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-02-top.webp",
-            "sha256": "279a7db8d2de0e621f79589864f966d7806cf5dee8ae2b1062778e7590fd744e",
-            "bytes": 13250,
+            "sha256": "6f1cd956d3fe84bc2fe24a1900349f4e20a3d8c6e9ec0218d2f870ad0eda67b2",
+            "bytes": 11696,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:55:08.461Z"
+          "verifiedAt": "2026-09-19T08:13:58.967Z"
         },
         "bottom": {
           "file": "bottom.webp",
-          "sha256": "43ce64bf15a324b964b5b7a7955f72fbabf4bcc39bcea0f110c786ab13c22179",
-          "bytes": 115064,
+          "sha256": "4438010392d93ab5cefa7b411ac93ecd0c890a65166f1f20b3b14a7e6fd30283",
+          "bytes": 101224,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1740,31 +1740,31 @@
               ]
             ]
           },
-          "pngSha256": "09fbc494a422c551a21034fe443daf5e0255d49b278f6446febdded58dcbaf66",
+          "pngSha256": "bacedc6c9f7c75ccd85751ce8a0b0959582b2d0c445e39c778824d6e81369303",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-02",
-          "version": "1.0.0",
+          "asset": "zep-ys-02a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/bottom-43ce64bf15a3.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/bottom-43ce64bf15a3.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/bottom-4438010392d9.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/bottom-4438010392d9.webp",
           "filename": "bottom.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-02-bottom.webp",
-            "sha256": "de9b601e6512ebd06156cfe7952c7036392e633f29869572e8d634df6f51e8d4",
-            "bytes": 9696,
+            "sha256": "45ba47609bb9614f21743a3e1c269b098e2f73602d43d1fbe2e4fd0c61f9b63e",
+            "bytes": 7962,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:55:11.523Z"
+          "verifiedAt": "2026-09-19T08:14:04.552Z"
         },
         "three-quarter": {
           "file": "three-quarter.webp",
-          "sha256": "cae86b34dc9dadec360b2adeb4142eb5177c4047cabaf12bf3fe17bd736ad8b0",
-          "bytes": 215684,
+          "sha256": "74bd91b7cb617d20bba8652d354b04ae10ef613ef51d6c04d2250231c8f2437d",
+          "bytes": 219426,
           "width": 2560,
           "height": 1920,
           "camera": {
@@ -1809,32 +1809,32 @@
               ]
             ]
           },
-          "pngSha256": "b883c0e17b41c1ba1bae1d56bcb0d6c8bcab3b120e3c6a62c88d92779839f517",
+          "pngSha256": "cba163a9796e11dcc1454f937d5cd454e2bcbc5eb42c1c429e8a510807531a66",
           "project": "hexly-ai",
           "kind": "screenshots",
-          "asset": "zep-ys-02",
-          "version": "1.0.0",
+          "asset": "zep-ys-02a",
+          "version": "1.1.0",
           "bucket": "hexlyai",
-          "key": "projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/three-quarter-cae86b34dc9d.webp",
-          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02/v1.0.0/three-quarter-cae86b34dc9d.webp",
+          "key": "projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/three-quarter-74bd91b7cb61.webp",
+          "url": "https://h.no.mt/projects/hexly-ai/screenshots/zep-ys-02a/v1.1.0/three-quarter-74bd91b7cb61.webp",
           "filename": "three-quarter.webp",
           "contentType": "image/webp",
           "cacheControl": "public, max-age=31536000, immutable",
           "thumbnail": {
             "path": "assets/thumbnails/ys-02-three-quarter.webp",
-            "sha256": "d2063d30c82661aa92d2ed0cefb0ef332507abd935d35bafaaf0df344e3c3804",
-            "bytes": 18026,
+            "sha256": "2dcf2ded5d6552cdb366516cfe6a6e231da070ea760116347859f353c7b91fb5",
+            "bytes": 16190,
             "width": 640,
             "height": 480
           },
           "action": "uploaded",
-          "verifiedAt": "2026-09-19T01:55:16.719Z"
+          "verifiedAt": "2026-09-19T08:14:06.845Z"
         }
       },
-      "version": "1.0.0",
+      "version": "1.1.0",
       "publisher": {
         "repository": "https://github.com/nocoo/hexly.ai",
-        "commit": "66b14cc2a91a44bec7cb211e8d2cfd8752c40011",
+        "commit": "54edbd7b4c1c298d5a3919ea74b254066f1457dd",
         "helper": "scripts/media-r2.ts",
         "helperSha256": "7ce65b630e77d7056b4dc52f1d6d4d84eda137cecc0058d34fbb1c4abc1cfc19",
         "bucket": "hexlyai",

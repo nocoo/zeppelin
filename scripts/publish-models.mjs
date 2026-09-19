@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile, writeFile, realpath, rename } from "node:fs/promises";
+import { readFile, writeFile, realpath, rename, mkdir } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
@@ -11,6 +11,7 @@ const { values } = parseArgs({
     input: { type: "string" },
     hexly: { type: "string" },
     publish: { type: "boolean" },
+    version: { type: "string", default: "1.0.0" },
   },
 });
 assert.ok(
@@ -24,10 +25,13 @@ const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const exported = JSON.parse(
   await readFile(join(input, "model-manifest.json"), "utf8"),
 );
-assert.equal(exported.model, "HW-01A");
+assert.match(exported.model, /^[A-Z]{2}-\d{2}[A-Z]$/);
+assert.match(values.version, /^\d+\.\d+\.\d+$/);
+const slug = exported.model.toLowerCase();
+const id = slug.replace(/[a-z]$/, "");
 assert.equal(
   exported.exporterSha256,
-  hash(await readFile(join(root, "scripts/export-hw-01.py"))),
+  hash(await readFile(join(root, "scripts/export-model.py"))),
 );
 const helper = resolve(values.hexly, "scripts/media-r2.ts");
 const { planMedia, publishMedia, mediaTypes } = await import(
@@ -37,7 +41,7 @@ const { planMedia, publishMedia, mediaTypes } = await import(
 mediaTypes[".glb"] = "model/gltf-binary";
 const manifest = {
   ...exported,
-  version: "1.0.0",
+  version: values.version,
   publisher: {
     repository: "https://github.com/nocoo/hexly.ai",
     commit: execFileSync(
@@ -51,26 +55,22 @@ const manifest = {
   assets: {},
 };
 for (const [lod, asset] of Object.entries(exported.assets)) {
-  assert.equal(asset.file, `hw-01a-${lod}.glb`);
+  assert.equal(asset.file, `${slug}-${lod}.glb`);
   const file = join(input, asset.file),
     bytes = await readFile(file);
   assert.equal(hash(bytes), asset.sha256);
   assert.equal(bytes.length, asset.bytes);
-  assert.ok(
-    bytes.length < 25 * 1024 * 1024,
-    "Static asset exceeds Worker limit",
-  );
   const plan = await planMedia({
     project: "hexly-ai",
     kind: "documents",
-    asset: "zeppelin-hw-01a-3d",
+    asset: `zeppelin-${slug}-3d`,
     version: manifest.version,
     file,
   });
   manifest.assets[lod] = {
     ...asset,
     ...plan,
-    path: `assets/models/hw-01a-${lod}-${asset.sha256.slice(0, 12)}.glb`,
+    path: `assets/models/${slug}-${lod}-${asset.sha256.slice(0, 12)}.glb`,
   };
 }
 await writeFile(
@@ -80,7 +80,8 @@ await writeFile(
 if (!values.publish) {
   console.info(`Plan ready: ${join(input, "publication-plan.json")}`);
 } else {
-  const record = join(root, "docs/assets/hw-01/3d-v1.0.0.json");
+  const record = join(root, `docs/assets/${id}/3d-v${manifest.version}.json`);
+  await mkdir(join(root, "docs/assets", id), { recursive: true });
   let previous;
   try {
     previous = JSON.parse(await readFile(record, "utf8"));

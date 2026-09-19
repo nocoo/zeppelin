@@ -36,7 +36,7 @@ export async function checkEntry(path, bytes) {
   if (meta && meta.format !== "svg") {
     assert.match(
       path,
-      /^public\/assets\/thumbnails\/(hw|ys)-\d{2}-(front|rear|port|starboard|top|bottom|three-quarter)\.webp$/,
+      /^public\/assets\/thumbnails\/[a-z]{2}-\d{2}-(front|rear|port|starboard|top|bottom|three-quarter)\.webp$/,
       "Only named fleet thumbnails may be tracked",
     );
     assert.equal(meta.format, "webp");

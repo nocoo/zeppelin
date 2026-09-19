@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "blender": "5.2.2 LTS",
+  "scope": "geometry-and-renders",
+  "surface_standard": "Approved HW light grey / curved nacelles and shoulders / fitted service panels / light wear",
+  "engine_bridges": 2,
+  "render_validation": "PASS",
+  "model": {
+    "model": "YS-01A",
+    "pennant": "5001",
+    "objects": 863,
+    "mesh_vertices": 61328,
+    "scenes": 2,
+    "dimensions_xyz_m": [
+      12.1,
+      14.02,
+      4.43
+    ],
+    "crew": 2,
+    "passengers": 6,
+    "cargo_modules": 0,
+    "weapons": 0,
+    "main_engines": 2,
+    "rcs_nozzles": 24,
+    "clearance_rays": 282,
+    "renders": 7,
+    "packed_fonts": true,
+    "external_libraries": 0,
+    "sha256": "b090626c078f092d42e0086debd76aac55e9a9ab39ede9f6a83353fcc02a0e66"
+  }
+}

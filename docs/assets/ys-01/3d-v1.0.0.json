@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "model": "YS-01A",
+  "number": "5001",
+  "source": {
+    "filename": "YS-01A.blend",
+    "sha256": "b090626c078f092d42e0086debd76aac55e9a9ab39ede9f6a83353fcc02a0e66",
+    "scene": "YS-01A · 外观",
+    "scenes": [
+      "YS-01A · 外观",
+      "YS-01A · 内部剖视"
+    ]
+  },
+  "bounds": {
+    "min": [
+      -6.048999786376953,
+      -7.365000247955322,
+      -2.109999895095825
+    ],
+    "max": [
+      6.048999786376953,
+      6.65500020980835,
+      2.325000047683716
+    ],
+    "center": [
+      0,
+      -0.35500001907348633,
+      0.10750007629394531
+    ],
+    "size": [
+      12.097999572753906,
+      14.020000457763672,
+      4.434999942779541
+    ]
+  },
+  "blender": "5.2.2 LTS",
+  "exporterSha256": "80db1ef02655e61fe30f7948707ec23920ccf02a7c807dddce54180007b4d6ee",
+  "sourceObjects": 849,
+  "coordinates": "glTF +Y up; source (x,y,z) -> (x,z,-y), metres",
+  "materials": 21,
+  "colorBake": "Cycles EMIT 4096px colour atlas from source Base Color; 2048px tangent normal atlas with procedural bump",
+  "limitations": [
+    "Procedural materials use finite-resolution baked textures; real-time lighting differs from Cycles.",
+    "View-dependent exhaust is approximated by translucent emission."
+  ],
+  "assets": {
+    "detail": {
+      "file": "ys-01a-detail.glb",
+      "sha256": "5623f6d93d04c36ff6b022821a9ec5c1a5fbd01242eaa23337d0cef0d0ef04c4",
+      "bytes": 6418388,
+      "vertices": 254544,
+      "triangles": 423493,
+      "project": "hexly-ai",
+      "kind": "documents",
+      "asset": "zeppelin-ys-01a-3d",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/documents/zeppelin-ys-01a-3d/v1.0.0/ys-01a-detail-5623f6d93d04.glb",
+      "url": "https://h.no.mt/projects/hexly-ai/documents/zeppelin-ys-01a-3d/v1.0.0/ys-01a-detail-5623f6d93d04.glb",
+      "filename": "ys-01a-detail.glb",
+      "contentType": "model/gltf-binary",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "path": "assets/models/ys-01a-detail-5623f6d93d04.glb",
+      "action": "uploaded",
+      "verifiedAt": "2026-09-19T08:08:47.710Z"
+    },
+    "overview": {
+      "file": "ys-01a-overview.glb",
+      "sha256": "0d79c4183b047e1f44bb6efceb8b8704883b9d69f5857c98e8f67896d85e28c8",
+      "bytes": 2512140,
+      "vertices": 82824,
+      "triangles": 135515,
+      "project": "hexly-ai",
+      "kind": "documents",
+      "asset": "zeppelin-ys-01a-3d",
+      "version": "1.0.0",
+      "bucket": "hexlyai",
+      "key": "projects/hexly-ai/documents/zeppelin-ys-01a-3d/v1.0.0/ys-01a-overview-0d79c4183b04.glb",
+      "url": "https://h.no.mt/projects/hexly-ai/documents/zeppelin-ys-01a-3d/v1.0.0/ys-01a-overview-0d79c4183b04.glb",
+      "filename": "ys-01a-overview.glb",
+      "contentType": "model/gltf-binary",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "path": "assets/models/ys-01a-overview-0d79c4183b04.glb",
+      "action": "uploaded",
+      "verifiedAt": "2026-09-19T08:08:54.002Z"
+    }
+  },
+  "version": "1.0.0",
+  "publisher": {
+    "repository": "https://github.com/nocoo/hexly.ai",
+    "commit": "536e41451602436429262295f439a4b10498e2cb",
+    "helper": "scripts/media-r2.ts",
+    "helperSha256": "7ce65b630e77d7056b4dc52f1d6d4d84eda137cecc0058d34fbb1c4abc1cfc19"
+  }
+}

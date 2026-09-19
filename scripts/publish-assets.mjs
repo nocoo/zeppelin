@@ -47,6 +47,7 @@ const source = JSON.parse(
   await readFile(join(input, "render-manifest.json"), "utf8"),
 );
 validateVessel(source, false);
+const id = source.model.toLowerCase().replace(/[a-z]$/, "");
 const { planMedia, publishMedia } = await import(
   pathToFileURL(join(hexly, "scripts/media-r2.ts"))
 );
@@ -106,7 +107,7 @@ for (const name of views) {
     pngSha256: view.sha256,
     ...plan,
     thumbnail: {
-      path: `assets/thumbnails/${source.model.toLowerCase()}-${name}.webp`,
+      path: `assets/thumbnails/${id}-${name}.webp`,
       sha256: hash(thumb),
       bytes: thumb.length,
       width: thumbMeta.width,
@@ -146,7 +147,7 @@ try {
   const historyPath = join(
     root,
     "docs/assets",
-    source.model.toLowerCase(),
+    id,
     `v${values.version}.json`,
   );
   let previous;
@@ -170,9 +171,9 @@ try {
   }
   validateVessel(exported);
   // Revalidation leaves the original versioned receipt byte-for-byte intact.
-  manifest.vessels[source.model.toLowerCase()] = previous ?? exported;
+  manifest.vessels[id] = previous ?? exported;
   await mkdir(join(root, "public/assets/thumbnails"), { recursive: true });
-  await mkdir(join(root, "docs/assets", source.model.toLowerCase()), {
+  await mkdir(join(root, "docs/assets", id), {
     recursive: true,
   });
   if (!previous)

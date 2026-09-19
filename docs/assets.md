@@ -1,8 +1,8 @@
 # 标准视图与公共资产契约
 
-## 源与制作状态
+## 历史源与制作状态
 
-来源为用户 Google Drive `zeppelin/太空时代/飞行器/{HW-01,YS-01,YS-02}/` 中的独立 `.blend`。HW-01 是 NC-01 的正式型号迁移，舷号 227；不改写 NC-01 安全副本。YS-01/5001 与 YS-02/5002 为在制运输系列，网站保留原型状态，当前发布只代表记录的源文件哈希。
+初始图片 v1.0.0 来源为用户 Google Drive `zeppelin/太空时代/飞行器/{HW-01,YS-01,YS-02}/` 中的独立 `.blend`。HW-01 是 NC-01 的正式型号迁移，舷号 227；不改写 NC-01 安全副本。当时 YS-01/5001 与 YS-02/5002 为在制运输系列。当前 YS-01A/5001 与 YS-02A/5002 已由用户确认定稿，网站采用新尺寸、3D 模型及图片 v1.1.0；原始发布记录仍保留。
 
 外部生产目录存放 PNG 母版、`render-manifest.json`、WebP 和 `plan.json`。输入输出均使用绝对路径；脚本拒绝向 Zeppelin 仓库内渲染。只读打开源文件，禁止执行嵌入脚本，不调用保存；前后核对源 SHA-256。文件发生并发变化则整组失败。
 
@@ -20,7 +20,7 @@
 
 只读审查基线：Hexly `bb8d2a7c8609db0a13dd3702e1961fb03cae5531`，`scripts/media-r2.ts`、`src/data/media-storage.json`、`docs/21-asset-storage.md` 与 `hexly-r2-media` Skill。Zeppelin **直接导入**现有 `planMedia` / `publishMedia`，不复制上传实现，不创建桶、网关或凭据系统。发布记录保存实际被调用辅助文件 SHA-256 与仓库 revision。
 
-现有存储为 `hexlyai`，公开域名 `https://h.no.mt`。Zeppelin 尚未登记 Hexly catalogue，因此使用发布器已有的共享项目 `hexly-ai`，独立资产 ID `zep-hw-01` / `zep-ys-01` / `zep-ys-02`，消费项目仍明确记录 `zep`。不伪造目录登记或改动 Hexly 文件。命名如下，地址由 `planMedia` 生成而非猜测：
+现有存储为 `hexlyai`，公开域名 `https://h.no.mt`。初始资产使用发布器已有的共享项目 `hexly-ai`，独立资产 ID `zep-hw-01` / `zep-ys-01` / `zep-ys-02`，消费项目仍明确记录 `zep`。不伪造目录登记或改动 Hexly 文件。命名如下，地址由 `planMedia` 生成而非猜测：
 
 ```text
 projects/hexly-ai/screenshots/zep-<model>/v<X.Y.Z>/<view>-<sha256前12位>.webp
@@ -58,17 +58,19 @@ The owner requested no Logo in Zeppelin site chrome. README retains the adopted 
 
 细节版保留约 138 万三角面，按材质无损合并绘制批次；从源材质节点烘焙 4096px Base Color 与 2048px 切线法线，保留程序化涂装和微表面凹凸。全览再将几何减至约 44 万三角面，贴图降至 1024px。两档均使用 Draco 压缩，玻璃、金属度、粗糙度和自发光采用源 PBR 参数；实时玻璃粗糙度作透射适配，尾焰使用半透明发光近似。有限分辨率贴图与实时反射不等同于 Cycles 光线追踪。
 
-```sh
-/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup \
-  --disable-autoexec --python-exit-code 1 --python scripts/export-hw-01.py -- \
-  --blend '/external/HW-01A.blend' --output '/external/empty-export-directory'
-node scripts/publish-models.mjs --input /external/empty-export-directory \
-  --hexly /path/to/hexly.ai
-# 审阅 publication-plan.json 后，在资产发布授权范围内加 --publish。
-```
+`scripts/export-hw-01.py` 保留首版导出逻辑；后续资产更新使用通用 `scripts/export-model.py` 并提升模型资产版本，见[舰型上线 Skill](../.agents/skills/zeppelin-vessel-release/SKILL.md)。
 
 发布复用 Hexly `planMedia` / `publishMedia`，仅在调用进程中登记 `model/gltf-binary` MIME，不修改 Hexly 源码、存储配置或 CORS。GLB 使用独立版本和内容哈希地址，上传后完整 GET/hash 验证，完成两档后才安装发布记录。源 `.blend`、烘焙贴图和 GLB 母版均留在外部目录。
 
-`npm run models:prepare` 从发布记录下载并验证 GLB 的长度、头部和 SHA-256，写入忽略的 `public/assets/models/`；dev/build 自动执行并复用已验证缓存。构建将模型作为**同源**静态资源交付，避免依赖共享 CDN 的跨域白名单。单个 GLB 小于 Workers Static Assets 的 25 MiB 限制。Git 仅保存代码与记录，资产门禁同时阻止 GLB 扩展名和伪装的 GLB 头部。
+网页直接读取发布记录中的 CDN URL，按需下载全览或细节 GLB；生产与开发域名的跨域许可已通过实际响应核对。CSP `connect-src` 明确允许 `https://h.no.mt`。GLB 不进入 `public/`、Vite `dist/` 或 Git。`npm run models:prepare` 只下载到 `.local/models/` 并核对长度、GLB 头和 SHA-256，供浏览器测试拦截相同 CDN URL，避免 CI 依赖在线波动。
 
-网页仅在 HW-01A 详情加载 Three.js，全览先加载，进入细节后才请求完整模型；不自动降级成低精度细节。七个全览方向可旋转与缩放；七个局部视角锁定距离，关闭平移与双指手势，单指/鼠标拖动和方向键旋转，Home 或复位按钮恢复预设方向。视口尺寸变化只调整构图适配。切换范围复用已解码模型，离开舰型释放 WebGL、贴图、几何和解码线程；加载错误可重试，WebGL 不可用仍可进入标准图片视图。
+网页仅在具备 3D 发布记录的舰型详情加载 Three.js，全览先加载，进入细节后才请求完整模型；不自动降级成低精度细节。七个全览方向可旋转与缩放；七个局部视角锁定距离，关闭平移与双指手势，单指/鼠标拖动和方向键旋转，Home 或复位按钮恢复预设方向。视口尺寸变化只调整构图适配。切换范围复用已解码模型，离开舰型释放 WebGL、贴图、几何和解码线程；加载错误可重试，WebGL 不可用仍可进入标准图片视图。
+
+
+## YS 定稿与后续新型号
+
+定稿验证报告保存在 `docs/assets/ys-01/final-v1.0.0.json`、`docs/assets/ys-02/final-v1.0.0.json`，分别绑定实际源 SHA。YS-01A：14.02 × 12.10 × 4.43 米、2 驾驶 + 6 乘员；YS-02A：26.65 × 18.70 × 8.50 米、2 驾驶 + 12 乘员、4 货箱、1 座自卫炮。尺寸为航行构型，均含附属结构。
+
+通用 `scripts/export-model.py` 支持型号、舷号、外观场景及附加剖视场景。共享几何求值一次，烘焙 4096 色彩 / 2048 法线图集；仅按源场景可见性拆分 GLB 节点，通过 `sourceScenes` 保留驾驶舱、客舱、下层货舱和展开尾门的真实状态。全览只保留外观场景并简化几何，细节按相机切换原生场景。`src/models.js` 是舰型 3D 发布记录及相机的唯一登记入口，渲染器不含舰型专用分支。
+
+七视图图片仍使用版本化内容地址；定稿型号带 A 后缀，路由、缩略图文件和记录目录保留稳定 ID（如 `ys-01`）。新款操作入口：[舰型上线 Skill](../.agents/skills/zeppelin-vessel-release/SKILL.md)，根目录 `CLAUDE.md` 提供发现索引。Actions 保持轻量，不添加逐视角和多分辨率长遍历。

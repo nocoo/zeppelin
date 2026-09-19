@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { routeModels } from "./model-assets.mjs";
 import AxeBuilder from "@axe-core/playwright";
 import { fleet, series, viewLabels } from "../../src/fleet.js";
 import manifest from "../../public/assets/manifest.json" with { type: "json" };
@@ -22,6 +23,7 @@ test("homepage navigation exposes the project identity, version and family links
 
 // Real immutable URLs, deterministic local thumbnail bytes. Live HD is independently GET/hash verified.
 test.beforeEach(async ({ page }) => {
+  await routeModels(page);
   for (const ship of Object.values(manifest.vessels)) {
     for (const view of Object.values(ship.views)) {
       await page.route(view.url, (route) =>
@@ -49,7 +51,8 @@ test("directory filters, ship identity, direct routes and back navigation", asyn
   await expect(page.locator(".vessel-sidebar")).toContainText("5001");
   if (page.viewportSize().width <= 760)
     await page.getByRole("button", { name: "舰型数据 ＋" }).click();
-  await expect(page.locator(".prototype-notice")).toBeVisible();
+  await expect(page.locator(".prototype-notice")).toHaveCount(0);
+  await expect(page.locator(".vessel-sidebar")).toContainText("设计定型");
   await page.reload();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("YS-01");
   await page.getByRole("link", { name: "← 舰队档案" }).click();
@@ -63,8 +66,7 @@ for (const id of ["hw-01", "ys-01", "ys-02"]) {
     page,
   }) => {
     await page.goto(`/#vessel/${id}`);
-    if (id === "hw-01")
-      await page.getByRole("button", { name: "标准视图", exact: true }).click();
+    await page.getByRole("button", { name: "标准视图", exact: true }).click();
     for (const view of Object.keys(manifest.vessels[id].views)) {
       const button = page.locator(`[data-view="${view}"]`);
       await button.click();

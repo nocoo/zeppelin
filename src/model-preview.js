@@ -5,62 +5,9 @@ import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import decoderJS from "three/addons/libs/draco/gltf/draco_wasm_wrapper.js?url";
 import decoderWasm from "three/addons/libs/draco/gltf/draco_decoder.wasm?url";
-import model from "../docs/assets/hw-01/3d-v1.0.0.json";
 
 // Source coordinates are Blender metres (+Z up, bow -Y). glTF is +Y up.
 const xyz = ([x, y, z]) => new THREE.Vector3(x, z, -y);
-const center = [0, -1.84, 4.545];
-const views = {
-  "three-quarter": { label: "全舰 · 三分之四", direction: [1, -1.35, 0.95] },
-  front: { label: "全舰 · 船首", direction: [0, -1, 0] },
-  rear: { label: "全舰 · 舰尾", direction: [0, 1, 0] },
-  port: { label: "全舰 · 左舷", direction: [-1, 0, 0] },
-  starboard: { label: "全舰 · 右舷", direction: [1, 0, 0] },
-  top: { label: "全舰 · 顶部", direction: [0, 0, 1] },
-  bottom: { label: "全舰 · 腹部", direction: [0, 0, -1] },
-  bow: {
-    label: "船首玻璃舱",
-    target: [0, -28.5, 0.4],
-    direction: [8, -16.5, 11.6],
-    span: 17,
-  },
-  bridge: {
-    label: "指挥塔",
-    target: [0, 11.5, 9.2],
-    direction: [34, -37.5, 19.8],
-    span: 24,
-  },
-  weapons: {
-    label: "甲板武器",
-    target: [0, -3, 5.8],
-    direction: [27, -33, 22.2],
-    span: 25,
-  },
-  flank: {
-    label: "舷侧设备",
-    target: [8, -14.5, 0.1],
-    direction: [40, -19.5, 11.9],
-    span: 20,
-  },
-  engine: {
-    label: "引擎机械舱",
-    target: [16, 16, 1.2],
-    direction: [28, 16, 11.8],
-    span: 19,
-  },
-  stern: {
-    label: "舰尾玻璃舱",
-    target: [0, 25.8, 0.3],
-    direction: [7, 18.2, 10.7],
-    span: 16.5,
-  },
-  ventral: {
-    label: "腹部推进器",
-    target: [0, 7, -4.8],
-    direction: [25, -29, -25],
-    span: 31,
-  },
-};
 
 function release(root) {
   const geometries = new Set(),
@@ -83,7 +30,9 @@ function release(root) {
   });
 }
 
-export function createModelPreview(host) {
+export function createModelPreview(host, config) {
+  const { model, center, views } = config;
+  const length = config.span / 1.24;
   const canvas = host.querySelector("canvas");
   const status = host.querySelector(".model-status");
   const message = status.querySelector("p");
@@ -101,7 +50,7 @@ export function createModelPreview(host) {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 600);
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.02, length * 12);
   const controls = new OrbitControls(camera, canvas);
   controls.enablePan = false;
   controls.rotateSpeed = 0.65;
@@ -125,19 +74,19 @@ export function createModelPreview(host) {
     [[-0.4, 0.2, -1], 1],
   ]) {
     const light = new THREE.DirectionalLight(0xffffff, intensity);
-    light.position.copy(xyz(position).multiplyScalar(61));
+    light.position.copy(xyz(position).multiplyScalar(length));
     light.target.position.copy(xyz(center));
     scene.add(light, light.target);
     if (intensity === 3.5) {
       light.castShadow = true;
       light.shadow.mapSize.set(2048, 2048);
       Object.assign(light.shadow.camera, {
-        left: -42,
-        right: 42,
-        top: 42,
-        bottom: -42,
+        left: -length * .7,
+        right: length * .7,
+        top: length * .7,
+        bottom: -length * .7,
         near: 1,
-        far: 240,
+        far: length * 4,
       });
       light.shadow.normalBias = 0.035;
       light.shadow.bias = -0.0001;
@@ -164,7 +113,7 @@ export function createModelPreview(host) {
   function pose(preserveZoom = false) {
     const view = views[current],
       detail = Boolean(view.target);
-    const span = view.span || 76;
+    const span = view.span || config.span;
     // Fit the narrower viewport dimension. This is framing on resize, never user zoom in details.
     const distance =
       span /
@@ -249,7 +198,7 @@ export function createModelPreview(host) {
     if (cache.has(lod)) return cache.get(lod);
     const pending = (async () => {
       const response = await fetch(
-        `${import.meta.env.BASE_URL}${model.assets[lod].path}`,
+        model.assets[lod].url,
         { signal: abort.signal },
       );
       if (!response.ok) throw new Error(`Model HTTP ${response.status}`);
@@ -316,6 +265,10 @@ export function createModelPreview(host) {
       if (active && active !== object) scene.remove(active);
       active = object;
       scene.add(object);
+      object.traverse((part) => {
+        if (part.userData.sourceScenes)
+          part.visible = part.userData.sourceScenes.includes(views[name].scene || model.source.scene);
+      });
       object.visible = true;
       status.hidden = true;
       host.dataset.state = "ready";
@@ -323,7 +276,7 @@ export function createModelPreview(host) {
     } catch (error) {
       if (disposed || ticket !== generation) return;
       fail("3D 模型暂时无法载入。可重试，或切换标准视图。");
-      console.error("HW-01 3D preview", error);
+      console.error(`${model.model} 3D preview`, error);
     }
   }
   const reset = () => pose();

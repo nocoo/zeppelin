@@ -2,6 +2,7 @@ import "./style.css";
 import packageInfo from "../package.json";
 const { version } = packageInfo;
 import { fleet, series, viewLabels } from "./fleet.js";
+import { models } from "./models.js";
 let manifest;
 let disposePreview = () => {};
 
@@ -31,7 +32,7 @@ function picture(id, view, className = "", eager = false) {
   if (!ship.asset)
     return `<div class="view-placeholder ${className}" data-placeholder="${id}/${view}" role="img" aria-label="${displayModel(ship)} ${viewLabels[view][0]}占位，设计视图待制作，尺寸未知"><span class="placeholder-code" aria-hidden="true">${ship.series}</span><div class="placeholder-reticle" aria-hidden="true"></div><div class="placeholder-message"><span class="mono">AWAITING DESIGN / ${viewLabels[view][1]}</span><strong>设计视图待制作</strong><span>${ship.model || "型号待定"} · 尺寸未知</span></div><span class="placeholder-foot mono">PLACEHOLDER / NO GEOMETRY DATA</span></div>`;
   const asset = source(id, view);
-  return `<div class="asset ${className}" data-asset="${id}/${view}"><img src="${offline ? base + asset.thumbnail.path : asset.url}" width="${asset.width}" height="${asset.height}" alt="${ship.asset.model} ${ship.asset.number} 号${ship.name}历史模型，${viewLabels[view][0]}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"><div class="asset-error" role="status" hidden><span class="mono">SIGNAL LOST / 载入中断</span><p>高清视图暂时无法载入</p><button type="button" class="retry">重新载入 ↻</button></div></div>`;
+  return `<div class="asset ${className}" data-asset="${id}/${view}"><img src="${offline ? base + asset.thumbnail.path : asset.url}" width="${asset.width}" height="${asset.height}" alt="${ship.asset.model} ${ship.asset.number} 号${ship.name}${ship.asset.model !== ship.model ? "历史模型" : "定稿模型"}，${viewLabels[view][0]}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"><div class="asset-error" role="status" hidden><span class="mono">SIGNAL LOST / 载入中断</span><p>高清视图暂时无法载入</p><button type="button" class="retry">重新载入 ↻</button></div></div>`;
 }
 function header() {
   return `<header class="site-header"><a class="brand" href="#" aria-label="Zeppelin 首页"><span>ZEPPELIN<span class="brand-caption">FLEET ARCHIVE</span></span><small class="brand-version mono">v${version}</small></a><nav aria-label="主导航"><a href="#fleet" class="nav-active">舰队档案 <span>FLEET</span></a><a href="#doctrine">设计理念 <span>DOCTRINE</span></a><a href="#archive">工程记录 <span>ARCHIVE</span></a></nav><span class="header-code mono"><i></i>地外航行计划<span>EST. 2026 / VOL. 01</span></span><div class="header-actions"><a class="header-action" href="https://github.com/nocoo/zeppelin" target="_blank" rel="noopener noreferrer" aria-label="Zeppelin GitHub 仓库（新标签页）" aria-describedby="github-tip">${githubIcon}<span class="header-tooltip" id="github-tip" role="tooltip">GitHub 仓库</span></a><a class="header-action" href="https://hexly.ai/projects/zeppelin" target="_blank" rel="noopener noreferrer" aria-label="在 hexly.ai 查看 Zeppelin（新标签页）" aria-describedby="hexly-tip">${hexlyIcon}<span class="header-tooltip" id="hexly-tip" role="tooltip">在 hexly.ai 查看 Zeppelin</span></a></div></header>`;
@@ -63,7 +64,7 @@ function home() {
       <div class="hero-bottom"><span class="mono"><i class="live-dot"></i> FLEET SYSTEM / ONLINE</span><span class="mono">17 SERIES <span class="line-progress"></span> FLEET INDEX</span><button type="button" class="hero-motion">暂停动效</button><a href="#fleet" class="mono">SCROLL TO EXPLORE ↓</a></div>
     </section>
     ${stripe("立入禁止 / 深空作业区域")}
-    <section id="fleet" class="fleet-section section-pad" aria-labelledby="fleet-heading"><div class="section-heading"><div><p class="eyebrow">01 / FLEET DIRECTORY</p><h2 id="fleet-heading">舰队<span>档案</span><sup>[ ${series.length} 系列 ]</sup></h2></div><p class="section-intro">不同任务，同一片星海。<br>主战、区控与体系支援，按轨道任务编成。</p></div><div class="fleet-toolbar"><div class="filters" role="group" aria-label="按舰队系列筛选"><button type="button" data-filter="all" aria-pressed="true">全部系列 <span>${series.length}</span></button>${series.map((family) => `<button type="button" data-filter="${family.code}" aria-pressed="false">${family.code} / ${family.name} <span>${fleet.filter((item) => item.series === family.code).length}</span></button>`).join("")}</div><span class="mono fleet-count" aria-live="polite">${series.length} SERIES / ${fleet.filter((item) => item.model).length} MODELS</span></div><div class="fleet-grid">${directory()}</div><p class="fleet-note"><span class="note-square"></span>依据《太空舰队：型号 · 舷号 · 编成规范》草案 A。未命名的系列只预留目录；规划型号使用明确占位，尺寸未知。现有三型保留历史模型视图，舷号与型号独立记录。</p></section>
+    <section id="fleet" class="fleet-section section-pad" aria-labelledby="fleet-heading"><div class="section-heading"><div><p class="eyebrow">01 / FLEET DIRECTORY</p><h2 id="fleet-heading">舰队<span>档案</span><sup>[ ${series.length} 系列 ]</sup></h2></div><p class="section-intro">不同任务，同一片星海。<br>主战、区控与体系支援，按轨道任务编成。</p></div><div class="fleet-toolbar"><div class="filters" role="group" aria-label="按舰队系列筛选"><button type="button" data-filter="all" aria-pressed="true">全部系列 <span>${series.length}</span></button>${series.map((family) => `<button type="button" data-filter="${family.code}" aria-pressed="false">${family.code} / ${family.name} <span>${fleet.filter((item) => item.series === family.code).length}</span></button>`).join("")}</div><span class="mono fleet-count" aria-live="polite">${series.length} SERIES / ${fleet.filter((item) => item.model).length} MODELS</span></div><div class="fleet-grid">${directory()}</div><p class="fleet-note"><span class="note-square"></span>依据《太空舰队：型号 · 舷号 · 编成规范》草案 A。未命名的系列只预留目录；规划型号使用明确占位，尺寸未知。YS-01A 与 YS-02A 已设计定型；型号与舷号独立记录。</p></section>
     <section id="doctrine" class="doctrine section-pad" aria-labelledby="doctrine-heading"><div class="doctrine-title"><p class="eyebrow">02 / DESIGN DOCTRINE</p><h2 id="doctrine-heading">太空很远。<br>工程<span>很近。</span></h2><span class="mono">FORM FOLLOWS MISSION.</span></div><div class="doctrine-body"><p class="large-copy">每一道装甲缝，<br>都有它存在的理由。</p><p>我们相信，可信的未来来自可读的结构。压力舱、承力骨架、推进阵列与检修通道，让想象落在真实的机械逻辑之上。</p><div class="principles"><div><span class="mono">01 — STRUCTURE</span><h3>结构先行</h3><p>轮廓由任务与承力关系塑造。</p></div><div><span class="mono">02 — IDENTITY</span><h3>家族秩序</h3><p>用系列、型号与舷号建立识别。</p></div><div><span class="mono">03 — SCALE</span><h3>人的尺度</h3><p>从一席驾驶舱，到一段深空航程。</p></div></div></div></section>
     <section id="archive" class="archive section-pad" aria-labelledby="archive-heading"><div><p class="eyebrow">03 / ENGINEERING RECORD</p><h2 id="archive-heading">看得见的结构。<br><span>经得起检视的细节。</span></h2><p>已渲染型号提供七个统一标准视角。<br>前后、左右、顶底与三分之四透视，完整阅读一艘舰。</p><a class="text-link" href="#vessel/hw-01">打开标准视图 ${arrow}</a></div><div class="archive-preview">${picture("hw-01", "top")}<span class="mono archive-label">HW-01 / DORSAL PROJECTION</span><span class="archive-dimension mono">61.1 M</span><span class="cross top-left" aria-hidden="true">＋</span><span class="cross bottom-right" aria-hidden="true">＋</span></div></section>
     <div class="closing-band"><span class="mono">THE NEXT FRONTIER IS UNDER CONSTRUCTION.</span><span>下一段航程，正在建造。</span><span aria-hidden="true">↗</span></div>
@@ -133,11 +134,11 @@ function detail(ship) {
       <div class="data-controls" role="group" aria-label="舰型数据分组"><button type="button" id="data-identification" data-panel="identification" aria-controls="panel-identification" aria-pressed="true">01 参数</button><button type="button" id="data-mission" data-panel="mission" aria-controls="panel-mission" aria-pressed="false">02 任务</button><button type="button" id="data-record" data-panel="record" aria-controls="panel-record" aria-pressed="false">03 档案</button></div>
       <section id="panel-identification" class="data-panel" aria-labelledby="data-identification" tabindex="0">${ship.state === "development" ? '<p class="prototype-notice">原型制作中 · 当前视图为在制模型快照，细节可能随设计迭代。</p>' : ""}<dl class="compact-specs">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>${ship.series === "QS" ? '<p class="sidebar-note">¹ 轻型 QS 可依编制归入 2xxx；具体百位划分待舰籍细则确定。</p>' : ""}</section>
       <section id="panel-mission" class="data-panel" aria-labelledby="data-mission" tabindex="0" hidden><h2 class="sidebar-title mono">MISSION / 任务与编成</h2><p class="mission-copy">${ship.description}</p><dl class="compact-specs mission-specs"><div><dt>编队位置</dt><dd>${family.formation}</dd></div><div><dt>任务分组</dt><dd>${family.group}${family.optional ? " · 可选线" : ""}</dd></div></dl>${ship.features.length ? `<div class="design-details"><h2 class="sidebar-title mono">STRUCTURE / 模型设计细节</h2><ol>${ship.features.map(([, title, description]) => `<li><h3>${title}</h3><p>${description}</p></li>`).join("")}</ol></div>` : ""}</section>
-      <section id="panel-record" class="data-panel" aria-labelledby="data-record" tabindex="0" hidden><h2 class="sidebar-title mono">RECORD / 档案状态</h2>${ship.asset ? `<p class="sidebar-note">历史渲染标识：${ship.asset.model} / ${ship.asset.number}。目录采用草案 A 型号，图中标识保留原始状态${ship.series === "HW" ? "；新版 3D 模型已采用四位舷号 2227" : ""}。尺寸为旧模型记录。</p>` : `<p class="sidebar-note">${ship.model ? "规划型号，尚无模型或渲染。" : "规范只定义了该系列，型号尚未分配。"}标准视图为显式占位，尺寸与工程参数未知。</p>`}<p class="sidebar-note">来源：型号 · 舷号 · 编成规范<br>草案 A / 2026.09.19</p></section>
+      <section id="panel-record" class="data-panel" aria-labelledby="data-record" tabindex="0" hidden><h2 class="sidebar-title mono">RECORD / 档案状态</h2>${ship.asset ? `<p class="sidebar-note">${ship.asset.model !== ship.model ? `历史渲染标识：${ship.asset.model} / ${ship.asset.number}。3D 采用 ${ship.model} / ${ship.number}，标准图片保留原始标识。` : `定稿模型：${ship.model} / ${ship.number}。尺寸采用航行构型的实际外包尺寸，包含附属结构；展开尾门不计入舰长。`}</p>` : `<p class="sidebar-note">${ship.model ? "规划型号，尚无模型或渲染。" : "规范只定义了该系列，型号尚未分配。"}标准视图为显式占位，尺寸与工程参数未知。</p>`}<p class="sidebar-note">来源：型号 · 舷号 · 编成规范<br>草案 A / 2026.09.19</p></section>
       <nav class="vessel-next" aria-label="相邻档案">${neighbors.map((item, i) => `<a href="#vessel/${item.id}" aria-label="${i ? "下一" : "上一"}档案：${displayModel(item)} ${item.name}"><span class="mono">${i ? "下一档案 →" : "← 上一档案"}</span><strong>${displayModel(item)}</strong></a>`).join("")}</nav>
       </aside>
     </div></main>${ship.asset ? '<dialog class="lightbox" aria-label="高清舰船视图"><form method="dialog"><button class="close-lightbox" aria-label="关闭放大视图">关闭 ESC ×</button></form><div class="lightbox-image"></div><p class="mono lightbox-caption"></p><a class="text-link lightbox-original" target="_blank" rel="noreferrer">打开高清原图 ↗</a></dialog>' : ""}`;
-  if (ship.id === "hw-01") bindModelPreview();
+  if (models[ship.id]) bindModelPreview(ship);
   app.querySelector(".data-toggle").addEventListener("click", (event) => {
     const open = app
       .querySelector(".vessel-main")
@@ -184,7 +185,7 @@ function detail(ship) {
       true,
     );
     dialog.querySelector(".lightbox-caption").textContent =
-      `${ship.asset.model} / ${ship.asset.number} 历史模型 · ${viewLabels[current][0]} · 2560 × 1920`;
+      `${ship.asset.model} / ${ship.asset.number} ${ship.asset.model !== ship.model ? "历史模型" : "定稿模型"} · ${viewLabels[current][0]} · 2560 × 1920`;
     dialog.querySelector(".lightbox-original").href = offline
       ? base + source(ship.id, current).thumbnail.path
       : source(ship.id, current).url;
@@ -199,7 +200,9 @@ function detail(ship) {
     if (event.target === dialog) dialog.close();
   });
 }
-function bindModelPreview() {
+function bindModelPreview(ship) {
+  const config = models[ship.id];
+  const details = Object.entries(config.views).filter(([, view]) => view.target);
   const viewer = app.querySelector(".viewer");
   const imageControls = viewer.querySelector(".view-controls");
   viewer.querySelector(".viewer-top > span").outerHTML =
@@ -208,7 +211,7 @@ function bindModelPreview() {
     .querySelector(".viewer-stage")
     .insertAdjacentHTML(
       "beforeend",
-      `<div class="model-preview" hidden><canvas tabindex="0" role="img" aria-label="HW-01A 3D 模型，方向键旋转，Home 复位"></canvas><div class="model-caption"><span class="mono">HW-01A / 2227</span><strong>全舰 · 三分之四</strong></div><div class="model-status" role="status"><p>正在准备 3D 预览…</p><button type="button" hidden>重试 3D 载入 ↻</button></div><span class="model-hint">拖动旋转 · 滚轮 / 双指缩放</span><button type="button" class="model-reset" aria-label="复位 3D 视角">↺ <span>复位视角</span></button></div>`,
+      `<div class="model-preview" hidden><canvas tabindex="0" role="img" aria-label="${ship.model} 3D 模型，方向键旋转，Home 复位"></canvas><div class="model-caption"><span class="mono">${ship.model} / ${ship.number}</span><strong>全舰 · 三分之四</strong></div><div class="model-status" role="status"><p>正在准备 3D 预览…</p><button type="button" hidden>重试 3D 载入 ↻</button></div><span class="model-hint">拖动旋转 · 滚轮 / 双指缩放</span><button type="button" class="model-reset" aria-label="复位 3D 视角">↺ <span>复位视角</span></button></div>`,
     );
   imageControls.insertAdjacentHTML(
     "afterend",
@@ -219,18 +222,10 @@ function bindModelPreview() {
         ([key, label]) =>
           `<button type="button" data-model-view="${key}" data-lod="overview" aria-pressed="${key === "three-quarter"}">${label[0]}</button>`,
       )
-      .join("")}${Object.entries({
-      bow: "船首玻璃舱",
-      bridge: "指挥塔",
-      weapons: "甲板武器",
-      flank: "舷侧设备",
-      engine: "引擎机械舱",
-      stern: "舰尾玻璃舱",
-      ventral: "腹部推进器",
-    })
+      .join("")}${details
       .map(
-        ([key, label]) =>
-          `<button type="button" data-model-view="${key}" data-lod="detail" aria-pressed="false" hidden>${label}</button>`,
+        ([key, view]) =>
+          `<button type="button" data-model-view="${key}" data-lod="detail" aria-pressed="false" hidden>${view.label}</button>`,
       )
       .join("")}</div></div>`,
   );
@@ -238,7 +233,7 @@ function bindModelPreview() {
     .querySelector("#panel-record")
     .insertAdjacentHTML(
       "afterbegin",
-      '<p class="sidebar-note">3D 模型：HW-01A / 2227，来自新版 Blender 源文件。标准图片保留旧版 HW-01 / 227 记录。</p>',
+      `<p class="sidebar-note">3D 模型：${ship.model} / ${ship.number}，来自定稿 Blender 源文件。${ship.asset.model !== ship.model ? "标准图片保留旧版模型记录。" : "标准图片与 3D 均采用定稿模型。"}</p>`,
     );
   const host = viewer.querySelector(".model-preview");
   const controls = viewer.querySelector(".model-controls");
@@ -252,7 +247,7 @@ function bindModelPreview() {
       if (!pending)
         pending = import("./model-preview.js").then(
           ({ createModelPreview }) => {
-            if (!disposed) instance = createModelPreview(host);
+            if (!disposed) instance = createModelPreview(host, config);
             return instance;
           },
         );
@@ -283,8 +278,8 @@ function bindModelPreview() {
       ? "3D VIEW / 立体检视"
       : "STANDARD VIEW / 标准视图";
     viewer.querySelector(".viewer-foot").firstElementChild.textContent = three
-      ? "SOURCE MODEL / HW-01A · 2227"
-      : "SOURCE MODEL / HW-01 · 227";
+      ? `SOURCE MODEL / ${ship.model} · ${ship.number}`
+      : `SOURCE MODEL / ${ship.asset.model} · ${ship.asset.number}`;
     viewer.querySelector(".viewer-foot").lastElementChild.textContent = three
       ? "方向键旋转 · HOME 复位"
       : "可切换视角 · 点击放大";
@@ -304,6 +299,7 @@ function bindModelPreview() {
       button.addEventListener("click", () => showMode(button.dataset.preview)),
     );
   function select() {
+    controls.querySelector(".model-views").style.setProperty("--view-count", scope === "detail" ? details.length : 7);
     viewer.querySelectorAll("[data-model-view]").forEach((button) => {
       button.hidden = button.dataset.lod !== scope;
       button.setAttribute(

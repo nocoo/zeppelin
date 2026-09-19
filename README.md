@@ -2,24 +2,24 @@
 <h1 align="center">ZEPPELIN · 次世代舰队档案</h1>
 <p align="center"><a href="https://zeppelin.hexly.ai">Website</a> · <a href="https://hexly.ai/projects/zeppelin">Hexly archive</a> · <a href="https://status.hexly.ai">Service status</a></p>
 
-黑色工业科幻舰队展示站。按任务划分 17 个系列、15 个明确型号，另为尚未命名型号的 10 个系列保留独立入口，共 25 个档案。Vite + 原生 JavaScript/CSS，HW-01A 通过按需加载的 Three.js 提供 3D 检视；Cloudflare Worker 提供健康接口并托管静态站点。
+黑色工业科幻舰队展示站。按任务划分 17 个系列、15 个明确型号，另为尚未命名型号的 10 个系列保留独立入口，共 25 个档案。Vite + 原生 JavaScript/CSS，HW-01A、YS-01A、YS-02A 通过按需加载的 Three.js 提供 3D 检视；Cloudflare Worker 提供健康接口并托管静态站点。
 
 目录依据 Google Drive `zeppelin/太空时代/太空舰队-型号舷号与编成规范.md`，保留 [草案 A 原文快照](docs/fleet-spec.md)。快照仅清理行尾空格，`src/fleet.js` 分别记录原始来源与快照 SHA-256；测试对照文档中的系列和型号，防止遗漏或编造。新型号采用 A 代际，舷号按四位任务段；文档未指定的 YT 号段、BY-01A 体量与未建模尺寸均保持未知，不把示例舷号当作实际分配。
 
-| 目录型号            | 历史渲染标识                   | 视图状态                                     |
+| 目录型号            | 模型 / 舷号                    | 视图状态                                     |
 | ------------------- | ------------------------------ | -------------------------------------------- |
 | HW-01A              | HW-01 / 227（历史）；3D / 2227 | 7 个高清视图、7 个 3D 全览方向、7 个细节视角 |
-| YS-01A              | YS-01 / 5001                   | 7 个原型快照视图                             |
-| YS-02A              | YS-02 / 5002                   | 7 个原型快照视图                             |
+| YS-01A | 定稿 YS-01A / 5001 | 7 张定稿视图、7 个全览方向、6 个细节（含乘员舱剖视） |
+| YS-02A | 定稿 YS-02A / 5002 | 7 张定稿视图、7 个全览方向、7 个细节（含双层剖视及展开尾门） |
 | 其余规划型号 / 系列 | 未分配                         | 7 个明确占位视角，尺寸未知                   |
 
-HW-01A 默认进入 3D 预览，可切回历史标准图片。全览可旋转与缩放；细节保留 Blender 完整几何、涂装与法线贴图，固定距离，仅可旋转。模型在开发和构建前自动按哈希下载，二进制不进入 Git。
+三个已完成舰型默认进入 3D 预览，可切回标准图片。HW 保留历史图片，YS 图片已更新为定稿。全览可旋转与缩放；细节保留 Blender 完整几何、涂装与法线贴图，固定距离，仅可旋转。模型直接从 `https://h.no.mt` CDN 加载，二进制不进入 Git 或站点部署包；测试缓存仅保存在 `.local/models/`。
 
 详情页是固定视口的全屏工作台，无全站页头、页尾或页面滚动。桌面以大幅预览配合数据侧栏，参数、任务与档案分组切换；手机通过「舰型数据 / 返回预览」切换，保留当前视角。短屏仅数据区内部可滚动，返回、视角与相邻档案操作保持可达；回到首页恢复正常滚动。
 
 已有资产通过 `asset.model/number` 关联不可变发布记录，目录改名不会篡改历史 Manifest、URL 或图中标识。新资产发布必须显式关联并通过完整七视图校验；规划占位不会进入渲染 Manifest，也不会触发 CDN 请求或提供无效下载。
 
-YS 页面明确标注原型制作状态。已有尺寸来自历史模型；规划型号尺寸均未知。仅借鉴工业警示、重工业工程和科幻界面语言；无第三方角色、Logo 或画面复制。
+YS-01A、YS-02A 已设计定型，尺寸与载运参数来自定稿模型及验证报告；规划型号尺寸均未知。仅借鉴工业警示、重工业工程和科幻界面语言；无第三方角色、Logo 或画面复制。
 
 ## 开发与验证
 
@@ -52,7 +52,7 @@ macOS 浏览器测试使用已安装的 Google Chrome；Linux/CI 先运行 `npx 
 {
   "status": "ok",
   "name": "zeppelin",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "revision": "<完整 Git SHA>"
 }
 ```
@@ -76,9 +76,10 @@ npm run verify:production
 
 ## 舰船资产
 
+- [舰型上线与定稿更新 Skill](.agents/skills/zeppelin-vessel-release/SKILL.md)：数据核对、3D 导出、CDN 发布和简短上线验证；发现入口为 [CLAUDE.md](CLAUDE.md)。
 - [项目级标准视图 Skill](.agents/skills/zeppelin-standard-views/SKILL.md)：输入指定 `.blend`、型号、舷号，输出标准高清视图与渲染 Manifest。
 - [资产契约与 Hexly 集成](docs/assets.md)：可复现参数、版本命名、上传、验证与恢复。
-- [网站 Manifest](public/assets/manifest.json)：21 张 2560 × 1920 图、SHA-256、相机/渲染参数与来源 `.blend` 哈希。
+- [网站 Manifest](public/assets/manifest.json)：21 张 2560 × 1920 图（YS 已更新为定稿版本）、SHA-256、相机/渲染参数与来源 `.blend` 哈希。
 - `docs/assets/<model>/v<version>.json`：版本化发布记录。
 
 Google Drive 是建模源资产的归档位置。Git 不保存 `.blend`、GLB、烘焙贴图、PNG 母版、高清 WebP、字体二进制或渲染缓存。`.gitignore`、pre-commit、构建和 CI 均执行边界检查；门禁直接检查 Git index，强制添加或替换工作区文件不能绕过。唯一允许入库的图片是指定路径内 ≤640px、≤100 KB 的缩略图；任何单文件不得超过 500 KiB。

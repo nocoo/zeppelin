@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "blender": "5.2.2 LTS",
+  "scope": "geometry-and-renders",
+  "surface_standard": "Approved HW light grey / curved nacelles and shoulders / fitted service panels / light wear",
+  "engine_bridges": 2,
+  "render_validation": "PASS",
+  "model": {
+    "model": "YS-02A",
+    "pennant": "5002",
+    "objects": 1758,
+    "mesh_vertices": 111870,
+    "scenes": 4,
+    "dimensions_xyz_m": [
+      18.7,
+      26.65,
+      8.5
+    ],
+    "crew": 2,
+    "passengers": 12,
+    "cargo_modules": 4,
+    "weapons": 1,
+    "main_engines": 2,
+    "rcs_nozzles": 24,
+    "clearance_rays": 282,
+    "renders": 9,
+    "packed_fonts": true,
+    "external_libraries": 0,
+    "sha256": "436081d5b86acc7cf7850957a760631fc34548dbdacce73f8ed967ef3d3af908"
+  }
+}

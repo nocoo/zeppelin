@@ -1,4 +1,6 @@
 import { test, expect } from "@playwright/test";
+import { routeModels } from "./model-assets.mjs";
+test.beforeEach(async ({ page }) => routeModels(page));
 
 // Keep real-model smoke coverage affordable on CI's software WebGL renderer.
 test.use({

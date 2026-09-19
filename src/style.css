@@ -2166,7 +2166,7 @@ footer {
 }
 .model-views {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--view-count, 7), minmax(0, 1fr));
   border-top: 1px solid var(--line);
 }
 .model-views button {

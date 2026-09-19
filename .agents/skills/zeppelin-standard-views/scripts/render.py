@@ -25,9 +25,9 @@ parser.add_argument('--scene')
 parser.add_argument('--device', choices=['cpu', 'metal'], default='cpu')
 args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
 assert bpy.app.version == (5, 2, 2), f'Requires Blender 5.2.2; got {bpy.app.version_string}'
-assert re.fullmatch(r'(HW|YS)-\d{2}', args.model), 'Invalid model'
+assert re.fullmatch(r'[A-Z]{2}-\d{2}[A-Z]?', args.model), 'Invalid model'
 series = args.model.split('-')[0]
-assert re.fullmatch(r'2\d{2}' if series == 'HW' else r'5\d{3}', args.number), 'Invalid hull number'
+assert re.fullmatch(r'2\d{2,3}' if series == 'HW' else r'[1-9]\d{3}', args.number), 'Invalid hull number'
 source = args.blend.resolve(strict=True)
 assert source.suffix.lower() == '.blend', 'Expected .blend'
 repo = Path(__file__).resolve().parents[4]

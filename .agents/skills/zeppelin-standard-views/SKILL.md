@@ -1,13 +1,13 @@
 ---
 name: zeppelin-standard-views
-description: Render and publish reproducible Zeppelin spacecraft standard views from a Blender file, with geometry, camera, source hashes and verified Hexly CDN manifests. Use for HW/YS fleet assets and replacing their render sets.
+description: Render and publish reproducible Zeppelin spacecraft standard views from a Blender file, with geometry, camera, source hashes and verified Hexly CDN manifests. Use for fleet assets and replacing their render sets.
 ---
 
 # Zeppelin standard views
 
-Run from the Zeppelin repository. Read [the asset contract](../../../docs/assets.md) before publication. This skill renders an existing original model; it does not build or modify a spacecraft.
+Run from the Zeppelin repository. For a complete new-vessel or finalized-design release, start with [zeppelin-vessel-release](../zeppelin-vessel-release/SKILL.md). Read [the asset contract](../../../docs/assets.md) before publication. This skill renders an existing original model; it does not build or modify a spacecraft.
 
-1. Inspect the source and its authoring status. Require Blender **5.2.2**, a standalone `.blend`, metric units at scale 1, bow **−Y**, starboard **+X**, up **+Z**, and numbered vessel collections `01`–`79`. Rendering refuses missing external resources, invalid geometry or incompatible series/number. HW numbers match `2xx`; YS numbers match `5xxx`. Source coordinates are never silently rotated or rescaled.
+1. Inspect the source and its authoring status. Require Blender **5.2.2**, a standalone `.blend`, metric units at scale 1, bow **−Y**, starboard **+X**, up **+Z**, and numbered vessel collections `01`–`79`. Rendering refuses missing external resources, invalid geometry or incompatible series/number. Historical HW numbers may use `2xx`; current hull numbers are four digits, with HW in `2xxx` and YS in `5xxx`. Current models include the generation suffix (for example `YS-01A`). Source coordinates are never silently rotated or rescaled.
 2. Run the renderer with an **external**, empty output directory. Never copy the source into Git. Supply model and number, and optionally an exact scene when the saved active scene is an interior cutaway:
 
    ```sh

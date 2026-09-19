@@ -1,11 +1,11 @@
 {
   "name": "zeppelin",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/prepare-models.mjs && vite --host 127.0.0.1",
-    "build": "node scripts/prepare-models.mjs && node scripts/validate.mjs && vite build",
+    "dev": "vite --host 127.0.0.1",
+    "build": "node scripts/validate.mjs && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check": "node scripts/validate.mjs && node --test tests/*.test.mjs",
     "assets:verify": "node scripts/verify-cdn.mjs",
@@ -14,7 +14,8 @@
     "deploy:check": "wrangler deploy --dry-run --outdir .local/worker-bundle",
     "verify:production": "node scripts/verify-deployment.mjs",
     "dev:worker": "wrangler dev --local --inspector-port 0",
-    "models:prepare": "node scripts/prepare-models.mjs"
+    "models:prepare": "node scripts/prepare-models.mjs",
+    "pretest": "npm run models:prepare"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",

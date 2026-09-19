@@ -40,9 +40,9 @@ export function assertPublicationUnchanged(previous, candidate) {
 }
 export function validateVessel(vessel, published = true) {
   assert.equal(vessel.schemaVersion, 1);
-  assert.match(vessel.model, /^(HW|YS)-\d{2}$/);
+  assert.match(vessel.model, /^[A-Z]{2}-\d{2}[A-Z]?$/);
   assert.equal(vessel.series, vessel.model.split("-")[0]);
-  assert.match(vessel.number, vessel.series === "HW" ? /^2\d{2}$/ : /^5\d{3}$/);
+  assert.match(vessel.number, vessel.series === "HW" ? /^2\d{2,3}$/ : vessel.series === "YS" ? /^5\d{3}$/ : /^[1-9]\d{3}$/);
   assert.match(vessel.source.sha256, hashPattern);
   assert.match(vessel.rendererSha256, hashPattern);
   assert.equal(vessel.blender, "5.2.2 LTS");
@@ -114,7 +114,7 @@ export function validateVessel(vessel, published = true) {
       );
       assert.equal(
         view.thumbnail.path,
-        `assets/thumbnails/${vessel.model.toLowerCase()}-${name}.webp`,
+        `assets/thumbnails/${vessel.model.toLowerCase().replace(/[a-z]$/, "")}-${name}.webp`,
       );
       assert.ok(view.thumbnail.width <= 640 && view.thumbnail.height <= 640);
       assert.ok(view.thumbnail.bytes <= 100_000);
