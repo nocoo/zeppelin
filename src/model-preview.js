@@ -50,6 +50,35 @@ export function createModelPreview(host, config) {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
+  // Three perpendicular planes share the vessel's world coordinates, so the
+  // reference grid has real perspective and follows camera rotation.
+  const grid = new THREE.Group();
+  const gridSize = length * 2.8;
+  const gridCenter = xyz(center);
+  const floor = (config.model.bounds?.min?.[2] ?? center[2] - length * .16) - length * .12;
+  for (const plane of ["floor", "back", "side"]) {
+    for (const [divisions, opacity] of [[56, .15], [14, .34]]) {
+      const lines = new THREE.GridHelper(gridSize, divisions, 0xc5cc92, 0x899c86);
+      lines.position.copy(gridCenter);
+      if (plane === "floor") lines.position.y = floor;
+      if (plane === "back") {
+        lines.rotation.x = Math.PI / 2;
+        lines.position.z -= gridSize / 2;
+        lines.position.y = floor + gridSize / 2;
+      }
+      if (plane === "side") {
+        lines.rotation.z = Math.PI / 2;
+        lines.position.x -= gridSize / 2;
+        lines.position.y = floor + gridSize / 2;
+      }
+      lines.material.transparent = true;
+      lines.material.opacity = opacity;
+      lines.material.depthWrite = false;
+      lines.renderOrder = -1;
+      grid.add(lines);
+    }
+  }
+  scene.add(grid);
   const camera = new THREE.PerspectiveCamera(32, 1, 0.02, length * 12);
   const controls = new OrbitControls(camera, canvas);
   controls.enablePan = false;
@@ -108,6 +137,8 @@ export function createModelPreview(host, config) {
 
   function draw() {
     if (disposed || lost || !host.clientWidth || !host.clientHeight) return;
+    host.dataset.cameraDistance = camera.position.distanceTo(controls.target).toFixed(6);
+    host.dataset.cameraPosition = camera.position.toArray().map((value) => value.toFixed(6)).join(",");
     renderer.render(scene, camera);
   }
   function pose(preserveZoom = false) {
@@ -286,6 +317,10 @@ export function createModelPreview(host, config) {
   resize();
   return {
     select,
+    setBackground(name) {
+      grid.visible = name === "none";
+      draw();
+    },
     dispose() {
       disposed = true;
       abort.abort();
@@ -299,6 +334,7 @@ export function createModelPreview(host, config) {
         pending.then((root) => root && release(root)).catch(() => {});
       Promise.allSettled(cache.values()).then(() => draco.dispose());
       environment.dispose();
+      release(grid);
       scene.traverse((object) => object.shadow?.dispose());
       renderer.dispose();
       renderer.forceContextLoss();

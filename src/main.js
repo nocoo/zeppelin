@@ -3,8 +3,16 @@ import packageInfo from "../package.json";
 const { version } = packageInfo;
 import { fleet, series, viewLabels } from "./fleet.js";
 import { models } from "./models.js";
+import asteroidBelt from "../docs/assets/scenes/asteroid-belt-v1.0.0.json";
 let manifest;
 let disposePreview = () => {};
+const fleetFilter = { series: "all", resources: "available" };
+let background = "none";
+const hasResources = (ship) => Boolean(ship.asset || models[ship.id]);
+const filteredFleet = () => fleet.filter((ship) =>
+  (fleetFilter.series === "all" || ship.series === fleetFilter.series) &&
+  (fleetFilter.resources === "all" || hasResources(ship)),
+);
 
 const app = document.querySelector("#app");
 document.querySelector(".skip-link").addEventListener("click", (event) => {
@@ -45,11 +53,12 @@ function shipCard(ship, i) {
   const family = seriesOf(ship);
   return `<article class="ship-card"><div class="card-top"><span class="mono">${String(i + 1).padStart(2, "0")} / ${ship.series} DIVISION</span>${badge(ship)}</div><div class="card-image">${ship.asset ? `<span class="card-number" aria-hidden="true">${ship.asset.number}</span>` : ""}${picture(ship.id, "three-quarter")}<a class="card-image-link" href="#vessel/${ship.id}" aria-label="查看 ${displayModel(ship)} ${ship.name}"></a><span class="card-cross" aria-hidden="true">＋</span></div><div class="card-body"><div><span class="mono card-role">${ship.role}</span><h3><a href="#vessel/${ship.id}">${displayModel(ship)}</a></h3><p>${ship.name}</p></div><a class="square-link" href="#vessel/${ship.id}" aria-label="进入 ${displayModel(ship)} 档案">${arrow}</a></div><div class="card-bottom mono"><span>${ship.model ? `体量 / ${ship.sizeClass || "未知"}` : "型号待定"}</span><span>${ship.dimensions ? ship.dimensions[0][1] + " M" : "尺寸未知"} / ${family.numberRange || "号段待定"}</span></div></article>`;
 }
-function directory(filter = "all") {
+function directory(visible) {
+  if (!visible.length) return `<p class="fleet-empty" role="status">该系列暂无可预览资源。切换「全部档案」可查看规划舰型。</p>`;
   return series
-    .filter((item) => filter === "all" || item.code === filter)
+    .filter((item) => visible.some((ship) => ship.series === item.code))
     .map((family) => {
-      const ships = fleet.filter((ship) => ship.series === family.code);
+      const ships = visible.filter((ship) => ship.series === family.code);
       return `<section class="series-section" aria-labelledby="series-${family.code}"><div class="series-heading"><h3 id="series-${family.code}"><span>${family.code}</span>${family.name}</h3><span class="mono">${family.group} / ${family.numberRange || "号段待定"}</span><p>${family.mission}</p></div><div class="series-ships">${ships.map((ship) => shipCard(ship, fleet.indexOf(ship))).join("")}</div></section>`;
     })
     .join("");
@@ -64,7 +73,7 @@ function home() {
       <div class="hero-bottom"><span class="mono"><i class="live-dot"></i> FLEET SYSTEM / ONLINE</span><span class="mono">17 SERIES <span class="line-progress"></span> FLEET INDEX</span><button type="button" class="hero-motion">暂停动效</button><a href="#fleet" class="mono">SCROLL TO EXPLORE ↓</a></div>
     </section>
     ${stripe("立入禁止 / 深空作业区域")}
-    <section id="fleet" class="fleet-section section-pad" aria-labelledby="fleet-heading"><div class="section-heading"><div><p class="eyebrow">01 / FLEET DIRECTORY</p><h2 id="fleet-heading">舰队<span>档案</span><sup>[ ${series.length} 系列 ]</sup></h2></div><p class="section-intro">不同任务，同一片星海。<br>主战、区控与体系支援，按轨道任务编成。</p></div><div class="fleet-toolbar"><div class="filters" role="group" aria-label="按舰队系列筛选"><button type="button" data-filter="all" aria-pressed="true">全部系列 <span>${series.length}</span></button>${series.map((family) => `<button type="button" data-filter="${family.code}" aria-pressed="false">${family.code} / ${family.name} <span>${fleet.filter((item) => item.series === family.code).length}</span></button>`).join("")}</div><span class="mono fleet-count" aria-live="polite">${series.length} SERIES / ${fleet.filter((item) => item.model).length} MODELS</span></div><div class="fleet-grid">${directory()}</div><p class="fleet-note"><span class="note-square"></span>依据《太空舰队：型号 · 舷号 · 编成规范》草案 A。未命名的系列只预留目录；规划型号使用明确占位，尺寸未知。YS-01A 与 YS-02A 已设计定型；型号与舷号独立记录。</p></section>
+    <section id="fleet" class="fleet-section section-pad" aria-labelledby="fleet-heading"><div class="section-heading"><div><p class="eyebrow">01 / FLEET DIRECTORY</p><h2 id="fleet-heading">舰队<span>档案</span><sup>[ ${series.length} 系列 ]</sup></h2></div><p class="section-intro">不同任务，同一片星海。<br>主战、区控与体系支援，按轨道任务编成。</p></div><div class="fleet-toolbar"><div class="resource-filters" role="group" aria-label="按资源筛选"><button type="button" data-resources="available" aria-pressed="true">有资源 <span>${fleet.filter(hasResources).length}</span></button><button type="button" data-resources="all" aria-pressed="false">全部档案 <span>${fleet.length}</span></button></div><div class="filters" role="group" aria-label="按舰队系列筛选"><button type="button" data-filter="all" aria-pressed="true">全部系列 <span>${series.length}</span></button>${series.map((family) => `<button type="button" data-filter="${family.code}" aria-pressed="false">${family.code} / ${family.name} <span>${fleet.filter((item) => item.series === family.code).length}</span></button>`).join("")}</div><span class="mono fleet-count" aria-live="polite">${series.length} SERIES / ${fleet.filter((item) => item.model).length} MODELS</span></div><div class="fleet-grid">${directory(filteredFleet())}</div><p class="fleet-note"><span class="note-square"></span>依据《太空舰队：型号 · 舷号 · 编成规范》草案 A。未命名的系列只预留目录；规划型号使用明确占位，尺寸未知。YS-01A 与 YS-02A 已设计定型；型号与舷号独立记录。</p></section>
     <section id="doctrine" class="doctrine section-pad" aria-labelledby="doctrine-heading"><div class="doctrine-title"><p class="eyebrow">02 / DESIGN DOCTRINE</p><h2 id="doctrine-heading">太空很远。<br>工程<span>很近。</span></h2><span class="mono">FORM FOLLOWS MISSION.</span></div><div class="doctrine-body"><p class="large-copy">每一道装甲缝，<br>都有它存在的理由。</p><p>我们相信，可信的未来来自可读的结构。压力舱、承力骨架、推进阵列与检修通道，让想象落在真实的机械逻辑之上。</p><div class="principles"><div><span class="mono">01 — STRUCTURE</span><h3>结构先行</h3><p>轮廓由任务与承力关系塑造。</p></div><div><span class="mono">02 — IDENTITY</span><h3>家族秩序</h3><p>用系列、型号与舷号建立识别。</p></div><div><span class="mono">03 — SCALE</span><h3>人的尺度</h3><p>从一席驾驶舱，到一段深空航程。</p></div></div></div></section>
     <section id="archive" class="archive section-pad" aria-labelledby="archive-heading"><div><p class="eyebrow">03 / ENGINEERING RECORD</p><h2 id="archive-heading">看得见的结构。<br><span>经得起检视的细节。</span></h2><p>已渲染型号提供七个统一标准视角。<br>前后、左右、顶底与三分之四透视，完整阅读一艘舰。</p><a class="text-link" href="#vessel/hw-01">打开标准视图 ${arrow}</a></div><div class="archive-preview">${picture("hw-01", "top")}<span class="mono archive-label">HW-01 / DORSAL PROJECTION</span><span class="archive-dimension mono">61.1 M</span><span class="cross top-left" aria-hidden="true">＋</span><span class="cross bottom-right" aria-hidden="true">＋</span></div></section>
     <div class="closing-band"><span class="mono">THE NEXT FRONTIER IS UNDER CONSTRUCTION.</span><span>下一段航程，正在建造。</span><span aria-hidden="true">↗</span></div>
@@ -73,26 +82,31 @@ function home() {
     const paused = app.querySelector(".hero").classList.toggle("motion-paused");
     event.currentTarget.textContent = paused ? "继续动效" : "暂停动效";
   });
-  app.querySelectorAll("[data-filter]").forEach((button) =>
+  function refreshDirectory() {
+    const visible = filteredFleet();
+    const eligible = fleet.filter((ship) => fleetFilter.resources === "all" || hasResources(ship));
+    app.querySelectorAll("[data-filter]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.filter === fleetFilter.series));
+      button.querySelector("span").textContent = button.dataset.filter === "all"
+        ? new Set(eligible.map((ship) => ship.series)).size
+        : eligible.filter((ship) => ship.series === button.dataset.filter).length;
+    });
+    app.querySelectorAll("[data-resources]").forEach((button) =>
+      button.setAttribute("aria-pressed", String(button.dataset.resources === fleetFilter.resources)),
+    );
+    app.querySelector(".fleet-grid").innerHTML = directory(visible);
+    app.querySelector(".fleet-count").textContent =
+      `${new Set(visible.map((item) => item.series)).size} SERIES / ${visible.filter((item) => item.model).length} MODELS`;
+    bindImages();
+  }
+  app.querySelectorAll("[data-filter], [data-resources]").forEach((button) =>
     button.addEventListener("click", () => {
-      const filtered = fleet.filter(
-        (item) =>
-          button.dataset.filter === "all" ||
-          item.series === button.dataset.filter,
-      );
-      app
-        .querySelectorAll("[data-filter]")
-        .forEach((item) =>
-          item.setAttribute("aria-pressed", String(item === button)),
-        );
-      app.querySelector(".fleet-grid").innerHTML = directory(
-        button.dataset.filter,
-      );
-      app.querySelector(".fleet-count").textContent =
-        `${new Set(filtered.map((item) => item.series)).size} SERIES / ${filtered.filter((item) => item.model).length} MODELS`;
-      bindImages();
+      if (button.dataset.filter) fleetFilter.series = button.dataset.filter;
+      else fleetFilter.resources = button.dataset.resources;
+      refreshDirectory();
     }),
   );
+  refreshDirectory();
 }
 function detail(ship) {
   const family = seriesOf(ship);
@@ -138,7 +152,7 @@ function detail(ship) {
       <nav class="vessel-next" aria-label="相邻档案">${neighbors.map((item, i) => `<a href="#vessel/${item.id}" aria-label="${i ? "下一" : "上一"}档案：${displayModel(item)} ${item.name}"><span class="mono">${i ? "下一档案 →" : "← 上一档案"}</span><strong>${displayModel(item)}</strong></a>`).join("")}</nav>
       </aside>
     </div></main>${ship.asset ? '<dialog class="lightbox" aria-label="高清舰船视图"><form method="dialog"><button class="close-lightbox" aria-label="关闭放大视图">关闭 ESC ×</button></form><div class="lightbox-image"></div><p class="mono lightbox-caption"></p><a class="text-link lightbox-original" target="_blank" rel="noreferrer">打开高清原图 ↗</a></dialog>' : ""}`;
-  if (models[ship.id]) bindModelPreview(ship);
+  if (models[ship.id]) bindBackground(bindModelPreview(ship));
   app.querySelector(".data-toggle").addEventListener("click", (event) => {
     const open = app
       .querySelector(".vessel-main")
@@ -247,7 +261,10 @@ function bindModelPreview(ship) {
       if (!pending)
         pending = import("./model-preview.js").then(
           ({ createModelPreview }) => {
-            if (!disposed) instance = createModelPreview(host, config);
+            if (!disposed) {
+              instance = createModelPreview(host, config);
+              instance.setBackground(background);
+            }
             return instance;
           },
         );
@@ -341,6 +358,42 @@ function bindModelPreview(ship) {
     instance?.dispose();
   };
   showMode("3d");
+  return (name) => instance?.setBackground(name);
+}
+function bindBackground(setModelBackground) {
+  const viewer = app.querySelector(".viewer");
+  const stage = viewer.querySelector(".viewer-stage");
+  viewer.querySelector(".viewer-top").insertAdjacentHTML("beforeend",
+    `<label class="scene-picker">场景<select aria-label="背景场景"><option value="none">无</option><option value="asteroid-belt">小行星带</option></select></label>`,
+  );
+  stage.insertAdjacentHTML("afterbegin", `<img class="scene-background" alt="" hidden><span class="scene-status" role="status" hidden></span>`);
+  const select = viewer.querySelector(".scene-picker select");
+  const image = stage.querySelector(".scene-background");
+  const status = stage.querySelector(".scene-status");
+  function apply() {
+    const enabled = background !== "none";
+    select.value = background;
+    stage.dataset.background = background;
+    image.hidden = !enabled;
+    status.hidden = true;
+    if (enabled && (!image.complete || !image.naturalWidth)) {
+      status.textContent = "正在载入场景…";
+      status.hidden = false;
+      image.src = asteroidBelt.image.url;
+    }
+    setModelBackground(background);
+  }
+  image.addEventListener("load", () => { status.hidden = true; });
+  image.addEventListener("error", () => {
+    if (background === "none") return;
+    status.textContent = "场景载入失败，请切换后重试";
+    status.hidden = false;
+  });
+  select.addEventListener("change", () => {
+    background = select.value;
+    apply();
+  });
+  apply();
 }
 function bindImages() {
   app.querySelectorAll(".asset:not([data-bound])").forEach((container) => {

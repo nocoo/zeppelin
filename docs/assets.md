@@ -74,3 +74,19 @@ The owner requested no Logo in Zeppelin site chrome. README retains the adopted 
 通用 `scripts/export-model.py` 支持型号、舷号、外观场景及附加剖视场景。共享几何求值一次，烘焙 4096 色彩 / 2048 法线图集；仅按源场景可见性拆分 GLB 节点，通过 `sourceScenes` 保留驾驶舱、客舱、下层货舱和展开尾门的真实状态。全览只保留外观场景并简化几何，细节按相机切换原生场景。`src/models.js` 是舰型 3D 发布记录及相机的唯一登记入口，渲染器不含舰型专用分支。
 
 七视图图片仍使用版本化内容地址；定稿型号带 A 后缀，路由、缩略图文件和记录目录保留稳定 ID（如 `ys-01`）。新款操作入口：[舰型上线 Skill](../.agents/skills/zeppelin-vessel-release/SKILL.md)，根目录 `CLAUDE.md` 提供发现索引。Actions 保持轻量，不添加逐视角和多分辨率长遍历。
+
+
+## 3D 场景背景（v1.2.0）
+
+小行星带来自 Google Drive `zeppelin/太空时代/场景/小行星带/小行星带.blend`。`scripts/render-background.py` 只读打开并关闭舰船集合 01–16，保留源岩体、星云、星点与光照，使用「02 碎石带穿行」相机输出 2800 × 1750 母版，不修改源文件。场景为 3D 预览背后的静态背景图，舰船独立旋转；标准图片保持原有背景，不叠加场景。
+
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --disable-autoexec \
+  --python-exit-code 1 --python scripts/render-background.py -- \
+  --blend '/absolute/小行星带.blend' --output '/external/asteroid-belt/v1.0.0'
+node scripts/publish-background.mjs --input '/external/asteroid-belt/v1.0.0' \
+  --hexly '/absolute/hexly.ai' --version 1.0.0
+# 审阅外部 plan.json 后，同一命令追加 --publish。
+```
+
+发布器复用 Hexly CDN，完整 GET/hash 验证后保存 `docs/assets/scenes/asteroid-belt-v1.0.0.json`。图片母版与 WebP 留在仓库外；网站仅按需请求 CDN。场景选择在当前页面会话中保留；进入标准图时隐藏场景与选择器，返回 3D 后恢复；选择「无」时 3D 展示世界坐标中的多级三维网格。细节仍锁定距离，仅可旋转。

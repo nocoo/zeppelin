@@ -510,25 +510,29 @@ button[hidden],
   border-top: 1px solid var(--line);
   margin-bottom: 40px;
 }
-.filters {
+.filters,
+.resource-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   padding: 18px 0;
 }
-.filters button {
+.filters button,
+.resource-filters button {
   padding: 11px 13px;
   background: transparent;
   border: 1px solid var(--line);
   font-size: 11px;
   color: #b8bab0;
 }
-.filters button span {
+.filters button span,
+.resource-filters button span {
   font: 9px var(--mono);
   margin-left: 8px;
   color: var(--muted);
 }
-.filters button[aria-pressed="true"] {
+.filters button[aria-pressed="true"],
+.resource-filters button[aria-pressed="true"] {
   color: var(--yellow);
   border-color: var(--yellow);
   background: #232619;
@@ -536,6 +540,19 @@ button[hidden],
 .fleet-count {
   font-size: 10px;
   color: var(--muted);
+}
+.resource-filters {
+  padding-bottom: 0;
+}
+.resource-filters button {
+  font-size: 12px;
+}
+.fleet-empty {
+  padding: 40px 20px;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 .fleet-grid {
   display: grid;
@@ -1109,6 +1126,56 @@ footer {
 .viewer-stage .asset img {
   mix-blend-mode: lighten;
 }
+.viewer:not(.is-3d) .scene-picker,
+.viewer:not(.is-3d) .scene-background,
+.viewer:not(.is-3d) .scene-status {
+  display: none;
+}
+.viewer.is-3d .viewer-stage {
+  background: radial-gradient(ellipse at 50% 38%, #20271f, #101410 80%);
+}
+.is-3d .viewer-stage[data-background="asteroid-belt"] {
+  background: #090f14;
+}
+.scene-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.scene-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.scene-picker select {
+  min-height: 34px;
+  padding: 5px 24px 5px 9px;
+  border: 1px solid #555e48;
+  border-radius: 0;
+  background: #171c16;
+  color: #e6e9da;
+  font: inherit;
+  cursor: pointer;
+}
+.scene-status {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  right: 16px;
+  padding: 8px;
+  background: #101410de;
+  color: #e6e9da;
+  font-size: 10px;
+}
+.is-3d .viewer-stage[data-background="asteroid-belt"] .model-caption,
+.is-3d .viewer-stage[data-background="asteroid-belt"] .model-hint {
+  text-shadow: 0 1px 4px #000, 0 0 12px #000;
+}
 .viewer-caption {
   position: absolute;
   left: 20px;
@@ -1551,6 +1618,20 @@ footer {
   }
 }
 @media (max-width: 760px) {
+  .viewer-top {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .viewer.is-3d .viewer-top:has(.scene-picker) h2 {
+    display: none;
+  }
+  .scene-picker {
+    gap: 5px;
+    font-size: 10px;
+  }
+  .scene-picker select {
+    padding-right: 4px;
+  }
   .section-pad {
     padding: 60px 6%;
   }

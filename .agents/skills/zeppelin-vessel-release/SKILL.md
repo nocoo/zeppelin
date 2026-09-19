@@ -39,6 +39,7 @@ node scripts/publish-models.mjs --input '/external/ys-01a-3d/v1.0.0' \
 
 - 在 `src/models.js` 登记发布记录、全览比例和细节相机。坐标使用 Blender 米制，前端统一转为 glTF；优先采用源相机、包围盒和功能区位置。
 - 每个细节指定 `target / direction / span`，剖视另指定精确 `scene` 名。全览允许旋转与缩放；细节固定距离，禁用缩放、平移和双指变焦。不要在渲染器或页面中追加型号专属分支。
+- 有图片或 3D 发布记录的舰型自动进入首页默认「有资源」筛选；规划档案仍可通过「全部档案」访问。标准图片保持原背景；场景选择仅作用于 3D 预览。
 - 定稿外观有变化时按 [标准视图 Skill](../zeppelin-standard-views/SKILL.md) 重做七视图，用新的图片版本发布。`public/assets/manifest.json` 和 `docs/assets/<id>/v<version>.json` 必须一致；缩略图仍使用稳定路由 ID。
 - 更新页面状态、规格、功能描述和 README，移除过时的原型提示；旧发布记录保留。
 

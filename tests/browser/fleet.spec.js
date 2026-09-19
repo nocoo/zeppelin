@@ -42,10 +42,10 @@ test("directory filters, ship identity, direct routes and back navigation", asyn
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
-  await expect(page.locator(".ship-card")).toHaveCount(fleet.length);
-  await page.getByRole("button", { name: /YS \/ 运输舰/ }).click();
   await expect(page.locator(".ship-card")).toHaveCount(3);
-  await expect(page.locator(".fleet-count")).toHaveText("1 SERIES / 3 MODELS");
+  await page.getByRole("button", { name: /YS \/ 运输舰/ }).click();
+  await expect(page.locator(".ship-card")).toHaveCount(2);
+  await expect(page.locator(".fleet-count")).toHaveText("1 SERIES / 2 MODELS");
   await page.getByRole("link", { name: "进入 YS-01A 档案" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("YS-01");
   await expect(page.locator(".vessel-sidebar")).toContainText("5001");
@@ -53,10 +53,19 @@ test("directory filters, ship identity, direct routes and back navigation", asyn
     await page.getByRole("button", { name: "舰型数据 ＋" }).click();
   await expect(page.locator(".prototype-notice")).toHaveCount(0);
   await expect(page.locator(".vessel-sidebar")).toContainText("设计定型");
+  await page.getByRole("link", { name: "← 舰队档案" }).click();
+  await expect(page.locator(".ship-card")).toHaveCount(2);
+  await page.locator('[data-filter="HT"]').click();
+  await expect(page.locator(".fleet-empty")).toBeVisible();
+  await page.getByRole("button", { name: /^全部档案/ }).click();
+  await expect(page.locator(".ship-card")).toHaveCount(fleet.filter(s => s.series === "HT").length);
+  await page.locator('[data-filter="all"]').click();
+  await expect(page.locator(".ship-card")).toHaveCount(fleet.length);
+  await page.goto("/#vessel/ys-01");
   await page.reload();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("YS-01");
   await page.getByRole("link", { name: "← 舰队档案" }).click();
-  await expect(page.locator(".ship-card")).toHaveCount(fleet.length);
+  await expect(page.locator(".ship-card")).toHaveCount(3);
   await expect(page.locator("#fleet")).toBeInViewport();
   expect(errors).toEqual([]);
 });
@@ -166,6 +175,7 @@ test("all series filter into their own directory without invented types", async 
   page,
 }) => {
   await page.goto("/#fleet");
+  await page.getByRole("button", { name: /^全部档案/ }).click();
   for (const family of series) {
     await page.locator(`[data-filter="${family.code}"]`).click();
     await expect(page.locator(".series-section")).toHaveCount(1);

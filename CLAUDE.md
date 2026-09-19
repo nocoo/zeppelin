@@ -11,6 +11,7 @@ Vite + 原生 JavaScript/CSS + Three.js 舰队档案站，Cloudflare Worker 托�
 | 从 Blender 生成和发布七个标准高清视角 | [zeppelin-standard-views](.agents/skills/zeppelin-standard-views/SKILL.md) |
 
 先读对应 Skill。新舰型工作以 `zeppelin-vessel-release` 为入口；其中引用标准视图流程。
+3D 场景背景的导出、CDN 发布方法见 [资产契约](docs/assets.md)。
 
 ## 常用命令与边界
 

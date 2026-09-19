@@ -1,6 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { routeModels } from "./model-assets.mjs";
-test.beforeEach(async ({ page }) => routeModels(page));
+import asteroidBelt from "../../docs/assets/scenes/asteroid-belt-v1.0.0.json" with { type: "json" };
+test.beforeEach(async ({ page }) => {
+  await routeModels(page);
+  await page.route(asteroidBelt.image.url, (route) => route.fulfill({
+    path: "public/assets/thumbnails/hw-01-three-quarter.webp", contentType: "image/webp",
+  }));
+});
 
 // Keep real-model smoke coverage affordable on CI's software WebGL renderer.
 test.use({
@@ -25,6 +31,15 @@ test("overview and detail load, with detail zoom locked and rotation available",
   await page.goto("/#vessel/hw-01");
   await ready(page);
   expect(models).toHaveLength(1);
+  await page.getByLabel("背景场景").selectOption("asteroid-belt");
+  await expect(page.locator(".scene-background")).toBeVisible();
+  await page.getByRole("button", { name: "标准视图", exact: true }).click();
+  await expect(page.getByLabel("背景场景")).toBeHidden();
+  await expect(page.locator(".scene-background")).toBeHidden();
+  await page.getByRole("button", { name: "3D 预览", exact: true }).click();
+  await expect(page.getByLabel("背景场景")).toHaveValue("asteroid-belt");
+  await page.getByLabel("背景场景").selectOption("none");
+  await expect(page.locator(".scene-background")).toBeHidden();
 
   await page.getByRole("button", { name: "细节", exact: true }).click();
   await ready(page);
@@ -32,13 +47,19 @@ test("overview and detail load, with detail zoom locked and rotation available",
   expect(models).toHaveLength(2);
   const canvas = page.locator(".model-preview canvas");
   await canvas.hover();
-  const before = await canvas.screenshot();
+  const host = page.locator(".model-preview");
+  // Check camera motion directly instead of comparing rendered pixels.
+  const distance = await host.getAttribute("data-camera-distance");
+  const position = await host.getAttribute("data-camera-position");
+  expect(Number(distance)).toBeGreaterThan(0);
   await page.mouse.wheel(0, -900);
   await page.waitForTimeout(100);
-  expect((await canvas.screenshot()).equals(before)).toBe(true);
+  await expect(host).toHaveAttribute("data-camera-distance", distance);
+  await expect(host).toHaveAttribute("data-camera-position", position);
   await canvas.focus();
   await page.keyboard.press("ArrowRight");
-  expect((await canvas.screenshot()).equals(before)).toBe(false);
+  await expect(host).not.toHaveAttribute("data-camera-position", position);
+  await expect(host).toHaveAttribute("data-camera-distance", distance);
   expect(errors).toEqual([]);
 });
 

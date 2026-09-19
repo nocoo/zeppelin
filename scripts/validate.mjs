@@ -5,6 +5,7 @@ import sharp from "sharp";
 import { fleet } from "../src/fleet.js";
 import { validateVessel } from "./asset-contract.mjs";
 import { guard } from "./guard-files.mjs";
+import asteroidBelt from "../docs/assets/scenes/asteroid-belt-v1.0.0.json" with { type: "json" };
 
 const manifest = JSON.parse(
   await readFile("public/assets/manifest.json", "utf8"),
@@ -50,6 +51,13 @@ assert.deepEqual(
   [...thumbs].sort(),
 );
 await guard();
+assert.match(asteroidBelt.source.sha256, /^[a-f0-9]{64}$/);
+assert.equal(asteroidBelt.excludedCollections.length, 16);
+assert.equal(asteroidBelt.image.url,
+  `https://h.no.mt/projects/hexly-ai/textures/zeppelin-asteroid-belt/v${asteroidBelt.version}/asteroid-belt-${asteroidBelt.image.sha256.slice(0, 12)}.webp`);
+assert.equal(asteroidBelt.image.contentType, "image/webp");
+assert.equal(asteroidBelt.image.width, 2800);
+assert.equal(asteroidBelt.image.height, 1750);
 console.info(
   `Validated ${fleet.length} catalogue entries, ${Object.keys(manifest.vessels).length} render sets, ${thumbs.size} standard views, immutable URLs and thumbnail hashes`,
 );

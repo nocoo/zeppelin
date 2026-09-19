@@ -1,0 +1,84 @@
+{
+  "name": "小行星带",
+  "id": "asteroid-belt",
+  "source": {
+    "filename": "小行星带.blend",
+    "sha256": "f335a5d5c48df3ead364c40dd45b8fef3839c928dad5a661ba10009fe7f7fdbe",
+    "scene": "小行星带 · 2227号航行"
+  },
+  "rendererSha256": "5088f9353768756a066f4d51f5c35015d618be1a5078f7763e26f7319290b738",
+  "blender": "5.2.2 LTS",
+  "excludedCollections": [
+    "01 · 船体骨架与龙骨",
+    "02 · 分块装甲与旧漆",
+    "03 · 框架驾驶舱与船首",
+    "04 · 侧面设备槽与管线",
+    "05 · 双侧矢量引擎",
+    "06 · 背部舰桥与机械甲板",
+    "07 · 舰尾与船名标识",
+    "08 · 装甲附层与检修细节",
+    "09 · 甲板舱室与密集设备群",
+    "10 · 炮塔与近防武器",
+    "11 · 舷侧建筑与武器",
+    "12 · 引擎外侧机械舱",
+    "13 · 首尾玻璃舱内控制机构",
+    "14 · 延伸肩舱与横向散热翼",
+    "15 · 腹部双副引擎",
+    "16 · 六向姿态推进器"
+  ],
+  "render": {
+    "engine": "CYCLES",
+    "samples": 96,
+    "seed": 227,
+    "device": "metal",
+    "width": 2800,
+    "height": 1750,
+    "camera": "Camera · 02 碎石带穿行",
+    "matrixWorld": [
+      [
+        0.8215880990028381,
+        -0.23989936709403992,
+        0.5171473026275635,
+        102
+      ],
+      [
+        0.5700815916061401,
+        0.3457372784614563,
+        -0.7453004121780396,
+        -146
+      ],
+      [
+        4.558270205734516e-9,
+        0.9071460962295532,
+        0.4208158552646637,
+        83
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ]
+  },
+  "image": {
+    "project": "hexly-ai",
+    "kind": "textures",
+    "asset": "zeppelin-asteroid-belt",
+    "version": "1.0.0",
+    "bucket": "hexlyai",
+    "key": "projects/hexly-ai/textures/zeppelin-asteroid-belt/v1.0.0/asteroid-belt-cfe4d463df1d.webp",
+    "url": "https://h.no.mt/projects/hexly-ai/textures/zeppelin-asteroid-belt/v1.0.0/asteroid-belt-cfe4d463df1d.webp",
+    "filename": "asteroid-belt.webp",
+    "bytes": 199014,
+    "sha256": "cfe4d463df1d644049632413a3b5fdd7e5625d30d34a60cb83f7a41019874989",
+    "contentType": "image/webp",
+    "cacheControl": "public, max-age=31536000, immutable",
+    "action": "uploaded",
+    "width": 2800,
+    "height": 1750,
+    "pngSha256": "6a6f63cfaa309ae65f0e4e952c2f292dd556cf8931270d944ee57690304fa79f",
+    "verifiedAt": "2026-09-19T08:28:10.633Z"
+  },
+  "version": "1.0.0"
+}
