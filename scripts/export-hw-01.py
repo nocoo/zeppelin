@@ -7,7 +7,6 @@ import sys
 from pathlib import Path
 
 import bpy
-from mathutils import Vector
 
 
 def sha(path):
