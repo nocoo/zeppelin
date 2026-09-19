@@ -51,3 +51,24 @@ Hexly 先探测地址，只在不存在时上传，完整 GET 验证 MIME、字�
 ### Website mark exception (2026-09-19)
 
 The owner requested no Logo in Zeppelin site chrome. README retains the adopted rounded spacecraft presentation; the homepage uses its text wordmark and the vessel workspace/sidebar has no brand image. Transparent browser/favicon and social metadata assets retain their established roles. `public/brand.json` remains the immutable source receipt; its header derivative is available but not rendered.
+
+## HW-01A 交互模型
+
+`docs/assets/hw-01/3d-v1.0.0.json` 独立记录新版 `HW-01A.blend` / **2227**，不改写七视图的历史 `HW-01` / 227 记录。`scripts/export-hw-01.py` 使用 Blender 5.2.2，只读打开源文件，核对前后 SHA-256；保留 01–79 集合的 3,965 个可渲染部件，排除布景。所有倒角、实体化和加权法线经求值导出，文字转为实际几何。glTF 坐标为 `(x,z,-y)`，米制比例不变。
+
+细节版保留约 138 万三角面，按材质无损合并绘制批次；从源材质节点烘焙 4096px Base Color 与 2048px 切线法线，保留程序化涂装和微表面凹凸。全览再将几何减至约 44 万三角面，贴图降至 1024px。两档均使用 Draco 压缩，玻璃、金属度、粗糙度和自发光采用源 PBR 参数；实时玻璃粗糙度作透射适配，尾焰使用半透明发光近似。有限分辨率贴图与实时反射不等同于 Cycles 光线追踪。
+
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup \
+  --disable-autoexec --python-exit-code 1 --python scripts/export-hw-01.py -- \
+  --blend '/external/HW-01A.blend' --output '/external/empty-export-directory'
+node scripts/publish-models.mjs --input /external/empty-export-directory \
+  --hexly /path/to/hexly.ai
+# 审阅 publication-plan.json 后，在资产发布授权范围内加 --publish。
+```
+
+发布复用 Hexly `planMedia` / `publishMedia`，仅在调用进程中登记 `model/gltf-binary` MIME，不修改 Hexly 源码、存储配置或 CORS。GLB 使用独立版本和内容哈希地址，上传后完整 GET/hash 验证，完成两档后才安装发布记录。源 `.blend`、烘焙贴图和 GLB 母版均留在外部目录。
+
+`npm run models:prepare` 从发布记录下载并验证 GLB 的长度、头部和 SHA-256，写入忽略的 `public/assets/models/`；dev/build 自动执行并复用已验证缓存。构建将模型作为**同源**静态资源交付，避免依赖共享 CDN 的跨域白名单。单个 GLB 小于 Workers Static Assets 的 25 MiB 限制。Git 仅保存代码与记录，资产门禁同时阻止 GLB 扩展名和伪装的 GLB 头部。
+
+网页仅在 HW-01A 详情加载 Three.js，全览先加载，进入细节后才请求完整模型；不自动降级成低精度细节。七个全览方向可旋转与缩放；七个局部视角锁定距离，关闭平移与双指手势，单指/鼠标拖动和方向键旋转，Home 或复位按钮恢复预设方向。视口尺寸变化只调整构图适配。切换范围复用已解码模型，离开舰型释放 WebGL、贴图、几何和解码线程；加载错误可重试，WebGL 不可用仍可进入标准图片视图。

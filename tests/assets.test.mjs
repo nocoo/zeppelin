@@ -162,6 +162,6 @@ test("catalogue covers the normative series and model list without fabricated sp
   }
   assert.equal(series.find((s) => s.code === "YT").numberRange, null);
   assert.equal(fleet.find((s) => s.id === "by-01").sizeClass, null);
-  assert.equal(fleet.find((s) => s.id === "hw-01").number, null);
+  assert.equal(fleet.find((s) => s.id === "hw-01").number, "2227");
   assert.equal(fleet.find((s) => s.id === "hw-01").asset.number, "227");
 });

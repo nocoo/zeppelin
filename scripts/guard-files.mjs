@@ -8,7 +8,7 @@ import sharp from "sharp";
 export async function checkEntry(path, bytes) {
   assert.ok(bytes.length <= 512_000, `File exceeds 500 KiB: ${path}`);
   assert.ok(
-    !/\.(blend\d*|fbx|obj|exr|psd|tiff?|mp4|mov|zip|woff2?|ttf|otf)$/i.test(
+    !/\.(blend\d*|glb|gltf|fbx|obj|exr|psd|tiff?|mp4|mov|zip|woff2?|ttf|otf)$/i.test(
       path,
     ),
     `Source/large asset forbidden: ${path}`,
@@ -22,6 +22,10 @@ export async function checkEntry(path, bytes) {
   assert.ok(
     !bytes.subarray(0, 7).equals(Buffer.from("BLENDER")),
     `Blender file disguised as ${path}`,
+  );
+  assert.ok(
+    !bytes.subarray(0, 4).equals(Buffer.from("glTF")),
+    `GLB file disguised as ${path}`,
   );
   let meta;
   try {

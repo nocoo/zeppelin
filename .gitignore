@@ -31,3 +31,7 @@ playwright-report/
 *.log
 *.tmp
 __pycache__/
+
+*.glb
+*.gltf
+public/assets/models/

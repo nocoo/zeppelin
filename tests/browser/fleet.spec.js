@@ -63,6 +63,8 @@ for (const id of ["hw-01", "ys-01", "ys-02"]) {
     page,
   }) => {
     await page.goto(`/#vessel/${id}`);
+    if (id === "hw-01")
+      await page.getByRole("button", { name: "标准视图", exact: true }).click();
     for (const view of Object.keys(manifest.vessels[id].views)) {
       const button = page.locator(`[data-view="${view}"]`);
       await button.click();
@@ -125,6 +127,7 @@ test("production CDN failure is explicit, retryable, and never silently uses a t
         }),
   );
   await page.goto("/?assets=offline#vessel/hw-01");
+  await page.getByRole("button", { name: "标准视图", exact: true }).click();
   await expect(page.locator(".offline-banner")).toHaveCount(0);
   await expect(page.locator("#active-view .asset-error")).toBeVisible();
   await expect(page.locator("#active-view img")).toHaveAttribute(
@@ -213,6 +216,7 @@ test("detail fills the viewport, keeps data accessible and restores home scrolli
   await page.keyboard.press("Enter");
   await expect(page.locator("#main")).toBeFocused();
   await expect(page).toHaveURL(/#vessel\/hw-01$/);
+  await page.getByRole("button", { name: "标准视图", exact: true }).click();
   for (const size of [
     page.viewportSize(),
     { width: 820, height: 1180 },
@@ -283,6 +287,8 @@ test("detail fills the viewport, keeps data accessible and restores home scrolli
   await expect(page.locator("html")).not.toHaveClass(/detail-mode/);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
   expect(
-    await page.evaluate(() => document.documentElement.scrollHeight > innerHeight),
+    await page.evaluate(
+      () => document.documentElement.scrollHeight > innerHeight,
+    ),
   ).toBe(true);
 });

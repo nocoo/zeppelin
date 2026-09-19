@@ -3,6 +3,7 @@ import packageInfo from "../package.json";
 const { version } = packageInfo;
 import { fleet, series, viewLabels } from "./fleet.js";
 let manifest;
+let disposePreview = () => {};
 
 const app = document.querySelector("#app");
 document.querySelector(".skip-link").addEventListener("click", (event) => {
@@ -132,12 +133,15 @@ function detail(ship) {
       <div class="data-controls" role="group" aria-label="舰型数据分组"><button type="button" id="data-identification" data-panel="identification" aria-controls="panel-identification" aria-pressed="true">01 参数</button><button type="button" id="data-mission" data-panel="mission" aria-controls="panel-mission" aria-pressed="false">02 任务</button><button type="button" id="data-record" data-panel="record" aria-controls="panel-record" aria-pressed="false">03 档案</button></div>
       <section id="panel-identification" class="data-panel" aria-labelledby="data-identification" tabindex="0">${ship.state === "development" ? '<p class="prototype-notice">原型制作中 · 当前视图为在制模型快照，细节可能随设计迭代。</p>' : ""}<dl class="compact-specs">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>${ship.series === "QS" ? '<p class="sidebar-note">¹ 轻型 QS 可依编制归入 2xxx；具体百位划分待舰籍细则确定。</p>' : ""}</section>
       <section id="panel-mission" class="data-panel" aria-labelledby="data-mission" tabindex="0" hidden><h2 class="sidebar-title mono">MISSION / 任务与编成</h2><p class="mission-copy">${ship.description}</p><dl class="compact-specs mission-specs"><div><dt>编队位置</dt><dd>${family.formation}</dd></div><div><dt>任务分组</dt><dd>${family.group}${family.optional ? " · 可选线" : ""}</dd></div></dl>${ship.features.length ? `<div class="design-details"><h2 class="sidebar-title mono">STRUCTURE / 模型设计细节</h2><ol>${ship.features.map(([, title, description]) => `<li><h3>${title}</h3><p>${description}</p></li>`).join("")}</ol></div>` : ""}</section>
-      <section id="panel-record" class="data-panel" aria-labelledby="data-record" tabindex="0" hidden><h2 class="sidebar-title mono">RECORD / 档案状态</h2>${ship.asset ? `<p class="sidebar-note">历史渲染标识：${ship.asset.model} / ${ship.asset.number}。目录采用草案 A 型号，图中标识保留原始状态${ship.series === "HW" ? "；原三位舷号 227 尚未重编为四位" : ""}。尺寸为旧模型记录。</p>` : `<p class="sidebar-note">${ship.model ? "规划型号，尚无模型或渲染。" : "规范只定义了该系列，型号尚未分配。"}标准视图为显式占位，尺寸与工程参数未知。</p>`}<p class="sidebar-note">来源：型号 · 舷号 · 编成规范<br>草案 A / 2026.09.19</p></section>
+      <section id="panel-record" class="data-panel" aria-labelledby="data-record" tabindex="0" hidden><h2 class="sidebar-title mono">RECORD / 档案状态</h2>${ship.asset ? `<p class="sidebar-note">历史渲染标识：${ship.asset.model} / ${ship.asset.number}。目录采用草案 A 型号，图中标识保留原始状态${ship.series === "HW" ? "；新版 3D 模型已采用四位舷号 2227" : ""}。尺寸为旧模型记录。</p>` : `<p class="sidebar-note">${ship.model ? "规划型号，尚无模型或渲染。" : "规范只定义了该系列，型号尚未分配。"}标准视图为显式占位，尺寸与工程参数未知。</p>`}<p class="sidebar-note">来源：型号 · 舷号 · 编成规范<br>草案 A / 2026.09.19</p></section>
       <nav class="vessel-next" aria-label="相邻档案">${neighbors.map((item, i) => `<a href="#vessel/${item.id}" aria-label="${i ? "下一" : "上一"}档案：${displayModel(item)} ${item.name}"><span class="mono">${i ? "下一档案 →" : "← 上一档案"}</span><strong>${displayModel(item)}</strong></a>`).join("")}</nav>
       </aside>
     </div></main>${ship.asset ? '<dialog class="lightbox" aria-label="高清舰船视图"><form method="dialog"><button class="close-lightbox" aria-label="关闭放大视图">关闭 ESC ×</button></form><div class="lightbox-image"></div><p class="mono lightbox-caption"></p><a class="text-link lightbox-original" target="_blank" rel="noreferrer">打开高清原图 ↗</a></dialog>' : ""}`;
+  if (ship.id === "hw-01") bindModelPreview();
   app.querySelector(".data-toggle").addEventListener("click", (event) => {
-    const open = app.querySelector(".vessel-main").classList.toggle("data-open");
+    const open = app
+      .querySelector(".vessel-main")
+      .classList.toggle("data-open");
     event.currentTarget.setAttribute("aria-expanded", String(open));
     event.currentTarget.textContent = open ? "返回预览 ×" : "舰型数据 ＋";
   });
@@ -195,6 +199,153 @@ function detail(ship) {
     if (event.target === dialog) dialog.close();
   });
 }
+function bindModelPreview() {
+  const viewer = app.querySelector(".viewer");
+  const imageControls = viewer.querySelector(".view-controls");
+  viewer.querySelector(".viewer-top > span").outerHTML =
+    `<div class="preview-modes" role="group" aria-label="预览模式"><button type="button" data-preview="image" aria-pressed="false">标准视图</button><button type="button" data-preview="3d" aria-pressed="true">3D 预览</button></div>`;
+  viewer
+    .querySelector(".viewer-stage")
+    .insertAdjacentHTML(
+      "beforeend",
+      `<div class="model-preview" hidden><canvas tabindex="0" role="img" aria-label="HW-01A 3D 模型，方向键旋转，Home 复位"></canvas><div class="model-caption"><span class="mono">HW-01A / 2227</span><strong>全舰 · 三分之四</strong></div><div class="model-status" role="status"><p>正在准备 3D 预览…</p><button type="button" hidden>重试 3D 载入 ↻</button></div><span class="model-hint">拖动旋转 · 滚轮 / 双指缩放</span><button type="button" class="model-reset" aria-label="复位 3D 视角">↺ <span>复位视角</span></button></div>`,
+    );
+  imageControls.insertAdjacentHTML(
+    "afterend",
+    `<div class="model-controls" hidden><div class="model-scope" role="group" aria-label="3D 检视范围"><button type="button" data-scope="overview" aria-pressed="true">全览</button><button type="button" data-scope="detail" aria-pressed="false">细节</button><span>全舰结构 / 可旋转与缩放</span></div><div class="model-views" role="group" aria-label="3D 全览视角">${Object.entries(
+      viewLabels,
+    )
+      .map(
+        ([key, label]) =>
+          `<button type="button" data-model-view="${key}" data-lod="overview" aria-pressed="${key === "three-quarter"}">${label[0]}</button>`,
+      )
+      .join("")}${Object.entries({
+      bow: "船首玻璃舱",
+      bridge: "指挥塔",
+      weapons: "甲板武器",
+      flank: "舷侧设备",
+      engine: "引擎机械舱",
+      stern: "舰尾玻璃舱",
+      ventral: "腹部推进器",
+    })
+      .map(
+        ([key, label]) =>
+          `<button type="button" data-model-view="${key}" data-lod="detail" aria-pressed="false" hidden>${label}</button>`,
+      )
+      .join("")}</div></div>`,
+  );
+  app
+    .querySelector("#panel-record")
+    .insertAdjacentHTML(
+      "afterbegin",
+      '<p class="sidebar-note">3D 模型：HW-01A / 2227，来自新版 Blender 源文件。标准图片保留旧版 HW-01 / 227 记录。</p>',
+    );
+  const host = viewer.querySelector(".model-preview");
+  const controls = viewer.querySelector(".model-controls");
+  let instance,
+    pending,
+    disposed = false,
+    scope = "overview";
+  const selected = { overview: "three-quarter", detail: "bow" };
+  async function load() {
+    try {
+      if (!pending)
+        pending = import("./model-preview.js").then(
+          ({ createModelPreview }) => {
+            if (!disposed) instance = createModelPreview(host);
+            return instance;
+          },
+        );
+      const preview = await pending;
+      if (!disposed) preview?.select(selected[scope]);
+    } catch (error) {
+      if (disposed) return;
+      pending = null;
+      host.dataset.state = "error";
+      host.querySelector(".model-status").hidden = false;
+      host.querySelector(".model-status p").textContent =
+        "3D 预览暂不可用，请重试或切换标准视图。";
+      host.querySelector(".model-status button").hidden = false;
+      console.error("3D initialization failed", error);
+    }
+  }
+  host.querySelector(".model-status button").addEventListener("click", () => {
+    if (!instance) load();
+  });
+  function showMode(mode) {
+    const three = mode === "3d";
+    viewer.classList.toggle("is-3d", three);
+    host.hidden = !three;
+    controls.hidden = !three;
+    imageControls.hidden = three;
+    viewer.querySelector("#active-view").hidden = three;
+    viewer.querySelector("#viewer-heading").textContent = three
+      ? "3D VIEW / 立体检视"
+      : "STANDARD VIEW / 标准视图";
+    viewer.querySelector(".viewer-foot").firstElementChild.textContent = three
+      ? "SOURCE MODEL / HW-01A · 2227"
+      : "SOURCE MODEL / HW-01 · 227";
+    viewer.querySelector(".viewer-foot").lastElementChild.textContent = three
+      ? "方向键旋转 · HOME 复位"
+      : "可切换视角 · 点击放大";
+    viewer
+      .querySelectorAll("[data-preview]")
+      .forEach((button) =>
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.preview === mode),
+        ),
+      );
+    if (three && !instance) load();
+  }
+  viewer
+    .querySelectorAll("[data-preview]")
+    .forEach((button) =>
+      button.addEventListener("click", () => showMode(button.dataset.preview)),
+    );
+  function select() {
+    viewer.querySelectorAll("[data-model-view]").forEach((button) => {
+      button.hidden = button.dataset.lod !== scope;
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.modelView === selected[scope]),
+      );
+    });
+    if (instance) instance.select(selected[scope]);
+  }
+  controls.querySelectorAll("[data-scope]").forEach((button) =>
+    button.addEventListener("click", () => {
+      scope = button.dataset.scope;
+      controls
+        .querySelectorAll("[data-scope]")
+        .forEach((item) =>
+          item.setAttribute("aria-pressed", String(item === button)),
+        );
+      controls.querySelector(".model-scope > span").textContent =
+        scope === "detail"
+          ? "完整细节 / 仅旋转 · 距离锁定"
+          : "全舰结构 / 可旋转与缩放";
+      controls
+        .querySelector(".model-views")
+        .setAttribute(
+          "aria-label",
+          scope === "detail" ? "3D 细节视角" : "3D 全览视角",
+        );
+      select();
+    }),
+  );
+  controls.querySelectorAll("[data-model-view]").forEach((button) =>
+    button.addEventListener("click", () => {
+      selected[scope] = button.dataset.modelView;
+      select();
+    }),
+  );
+  disposePreview = () => {
+    disposed = true;
+    instance?.dispose();
+  };
+  showMode("3d");
+}
 function bindImages() {
   app.querySelectorAll(".asset:not([data-bound])").forEach((container) => {
     container.dataset.bound = "true";
@@ -227,6 +378,8 @@ function render() {
   const ship = match && fleet.find((item) => item.id === match[1]);
   const next = ship ? ship.id : "home";
   if (route !== next) {
+    disposePreview();
+    disposePreview = () => {};
     document.body.classList.remove("modal-open");
     document.documentElement.classList.toggle("detail-mode", Boolean(ship));
     ship ? detail(ship) : home();

@@ -335,7 +335,7 @@ export const fleet = [
     sizeClass: "小",
     status: "设计定型",
     state: "ready",
-    number: null,
+    number: "2227",
     description: "港站、近地勤务轨道与运输队末段近防。",
     dimensions: [
       ["舰长", "61.1", "M"],

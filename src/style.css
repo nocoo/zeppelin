@@ -1549,7 +1549,6 @@ footer {
   .series-ships {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
 }
 @media (max-width: 760px) {
   .section-pad {
@@ -2053,4 +2052,191 @@ footer {
   .site-header nav a:last-child { display: flex; }
   .brand { gap: 8px; }
   .brand-version { font-size: 8px; }
+}
+
+/* HW-01 interactive inspection shares the fixed-height image workbench. */
+.preview-modes,
+.model-scope {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.preview-modes button,
+.model-scope button {
+  border: 1px solid var(--line);
+  background: transparent;
+  padding: 8px 12px;
+  min-height: 34px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.preview-modes button[aria-pressed="true"],
+.model-scope button[aria-pressed="true"] {
+  background: #292c1d;
+  border-color: #76794d;
+  color: var(--yellow);
+}
+.is-3d .viewer-axis,
+.is-3d .viewer-caption,
+.is-3d .expand-view {
+  display: none;
+}
+.model-preview {
+  position: absolute;
+  inset: 0;
+}
+.model-preview canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+.model-preview canvas:active {
+  cursor: grabbing;
+}
+.model-preview canvas:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: -3px;
+}
+.model-caption {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: grid;
+  gap: 8px;
+  pointer-events: none;
+}
+.model-caption .mono {
+  font-size: 8px;
+  color: var(--yellow);
+}
+.model-caption strong {
+  font-size: 12px;
+  font-weight: 400;
+}
+.model-hint {
+  position: absolute;
+  bottom: 22px;
+  left: 20px;
+  color: #c2c6b7;
+  font-size: 10px;
+  pointer-events: none;
+}
+.model-reset {
+  position: absolute;
+  right: 20px;
+  bottom: 14px;
+  min-height: 40px;
+  border: 1px solid #62664f;
+  background: #101110;
+  color: var(--yellow);
+  padding: 8px 12px;
+}
+.model-reset span {
+  font-size: 10px;
+}
+.model-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #121410eb;
+  padding: 24px;
+  text-align: center;
+  font-size: 12px;
+}
+.model-status button {
+  background: var(--yellow);
+  color: #101110;
+  border: 0;
+  padding: 12px 16px;
+}
+.model-scope {
+  padding: 8px 14px;
+  border-top: 1px solid var(--line);
+}
+.model-scope > span {
+  margin-left: auto;
+  font-size: 9px;
+  color: var(--muted);
+}
+.model-views {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+.model-views button {
+  min-height: 48px;
+  padding: 8px 4px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 3px solid transparent;
+  font-size: 10px;
+}
+.model-views button[aria-pressed="true"] {
+  background: #22251a;
+  border-bottom-color: var(--yellow);
+  color: var(--yellow);
+}
+.model-views button:hover {
+  background: #25281d;
+}
+@media (max-width: 760px) {
+  .preview-modes button {
+    padding: 6px 9px;
+    min-height: 36px;
+  }
+  .model-scope {
+    padding: 6px 10px;
+  }
+  .model-scope > span {
+    font-size: 8px;
+  }
+  .model-views button {
+    font-size: 9px;
+    padding: 8px 5px;
+    line-height: 1.6;
+  }
+  .model-caption {
+    top: 14px;
+    left: 14px;
+  }
+  .model-hint {
+    left: 14px;
+    bottom: 18px;
+    font-size: 9px;
+  }
+  .model-reset {
+    right: 12px;
+    bottom: 10px;
+  }
+}
+@media (max-height: 500px) {
+  .model-scope {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  .model-scope button {
+    min-height: 30px;
+    padding: 4px 10px;
+  }
+  .model-caption {
+    top: 10px;
+    gap: 4px;
+  }
+  .model-caption .mono {
+    display: none;
+  }
+  .model-hint {
+    bottom: 12px;
+  }
+  .model-reset {
+    bottom: 6px;
+    min-height: 32px;
+  }
 }

@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/validate.mjs && vite build",
+    "dev": "node scripts/prepare-models.mjs && vite --host 127.0.0.1",
+    "build": "node scripts/prepare-models.mjs && node scripts/validate.mjs && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check": "node scripts/validate.mjs && node --test tests/*.test.mjs",
     "assets:verify": "node scripts/verify-cdn.mjs",
@@ -13,7 +13,8 @@
     "hooks:install": "git config core.hooksPath .githooks",
     "deploy:check": "wrangler deploy --dry-run --outdir .local/worker-bundle",
     "verify:production": "node scripts/verify-deployment.mjs",
-    "dev:worker": "wrangler dev --local --inspector-port 0"
+    "dev:worker": "wrangler dev --local --inspector-port 0",
+    "models:prepare": "node scripts/prepare-models.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
@@ -22,5 +23,8 @@
     "vite": "^7.1.5",
     "wrangler": "4.135.0"
   },
-  "packageManager": "npm@11.19.0"
+  "packageManager": "npm@11.19.0",
+  "dependencies": {
+    "three": "^0.186.0"
+  }
 }

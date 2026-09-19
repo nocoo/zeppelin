@@ -1,7 +1,10 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: default-src 'self'; img-src 'self' https://h.no.mt; font-src https://cdn.jsdelivr.net; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; img-src 'self' blob: https://h.no.mt; font-src https://cdn.jsdelivr.net; style-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
 
 /api/live.json
   Cache-Control: no-store
+
+/assets/models/*
+  Cache-Control: public, max-age=31536000, immutable
