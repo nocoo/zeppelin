@@ -73,7 +73,7 @@ The owner requested no Logo in Zeppelin site chrome. README retains the adopted 
 
 通用 `scripts/export-model.py` 支持型号、舷号、外观场景及附加剖视场景。共享几何求值一次，烘焙 4096 色彩 / 2048 法线图集；仅按源场景可见性拆分 GLB 节点，通过 `sourceScenes` 保留驾驶舱、客舱、下层货舱和展开尾门的真实状态。全览只保留外观场景并简化几何，细节按相机切换原生场景。`src/models.js` 是舰型 3D 发布记录及相机的唯一登记入口，渲染器不含舰型专用分支。
 
-七视图图片仍使用版本化内容地址；定稿型号带 A 后缀，路由、缩略图文件和记录目录保留稳定 ID（如 `ys-01`）。新款操作入口：[舰型上线 Skill](../.agents/skills/zeppelin-vessel-release/SKILL.md)，根目录 `CLAUDE.md` 提供发现索引。Actions 保持轻量，不添加逐视角和多分辨率长遍历。
+七视图图片仍使用版本化内容地址；定稿型号带 A 后缀，路由、缩略图文件和记录目录保留稳定 ID（如 `ys-01`）。新款操作入口：[舰型上线 Skill](../.agents/skills/zeppelin-vessel-release/SKILL.md)，根目录 `AGENTS.md` 提供发现索引。Actions 保持轻量，不添加逐视角和多分辨率长遍历。
 
 
 ## 3D 场景背景（v1.2.0）
