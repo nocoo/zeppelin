@@ -12,7 +12,6 @@ export const series = [
   {
     code: "HT",
     name: "远征母舰",
-    role: "EXPEDITIONARY CARRIER",
     group: "主战与区控",
     numberRange: "1xxx",
     mission: "可机动的轨道前进基地：机群、C2、推进剂与弹药中转。",
@@ -22,7 +21,6 @@ export const series = [
   {
     code: "ZJ",
     name: "破轨主力舰",
-    role: "ORBITAL BREACH CAPITAL SHIP",
     group: "主战与区控",
     numberRange: "4xxx",
     mission: "在交会窗口内打击加固目标、要塞与大型空间站。",
@@ -32,7 +30,6 @@ export const series = [
   {
     code: "XJ",
     name: "区控巡洋舰",
-    role: "AREA CONTROL CRUISER",
     group: "主战与区控",
     numberRange: "3xxx",
     mission: "远程传感、多层拦截与支队指挥。",
@@ -42,7 +39,6 @@ export const series = [
   {
     code: "QS",
     name: "多用途驱逐舰",
-    role: "MULTIROLE DESTROYER",
     group: "主战与区控",
     numberRange: "3xxx / 2xxx¹",
     mission: "护航、驱离轻型威胁、局部制轨与编队补位。",
@@ -52,7 +48,6 @@ export const series = [
   {
     code: "HW",
     name: "护卫舰",
-    role: "ESCORT FRIGATE",
     group: "主战与区控",
     numberRange: "2xxx",
     mission: "内圈末段拦截、港站与勤务轨道安全、低烈度巡逻。",
@@ -62,7 +57,6 @@ export const series = [
   {
     code: "QX",
     name: "隐身潜航舰",
-    role: "LOW OBSERVABLE INFILTRATOR",
     group: "主战与区控",
     numberRange: "4xxx",
     mission: "低可探测渗透、伏击与破交。",
@@ -72,7 +66,6 @@ export const series = [
   {
     code: "YT",
     name: "攻舰快艇级",
-    role: "FAST ATTACK CRAFT",
     group: "主战与区控",
     numberRange: null,
     mission: "高机动、短窗口突击。",
@@ -82,7 +75,6 @@ export const series = [
   {
     code: "YJ",
     name: "预警指挥舰",
-    role: "EARLY WARNING & COMMAND",
     group: "体系与支援",
     numberRange: "8xxx",
     mission: "战略级传感与航迹融合。",
@@ -92,7 +84,6 @@ export const series = [
   {
     code: "DZ",
     name: "电子战舰",
-    role: "ELECTRONIC WARFARE",
     group: "体系与支援",
     numberRange: "8xxx",
     mission: "电磁与频谱对抗、致盲与诱骗。",
@@ -102,7 +93,6 @@ export const series = [
   {
     code: "ZX",
     name: "侦察监视舰",
-    role: "RECONNAISSANCE & SURVEILLANCE",
     group: "体系与支援",
     numberRange: "8xxx",
     mission: "长期值守与战略侦察。",
@@ -112,7 +102,6 @@ export const series = [
   {
     code: "YS",
     name: "运输舰",
-    role: "ORBITAL TRANSPORT",
     group: "体系与支援",
     numberRange: "5xxx",
     mission: "人员与物资轨道投送，包含短程穿梭与舰站接驳。",
@@ -122,7 +111,6 @@ export const series = [
   {
     code: "BY",
     name: "补给舰",
-    role: "FLEET REPLENISHMENT",
     group: "体系与支援",
     numberRange: "6xxx",
     mission: "推进剂、弹药与耗材在轨补给。",
@@ -132,7 +120,6 @@ export const series = [
   {
     code: "WX",
     name: "维修工程舰",
-    role: "REPAIR & ENGINEERING",
     group: "体系与支援",
     numberRange: "6xxx",
     mission: "抢修、拖带与结构作业。",
@@ -142,7 +129,6 @@ export const series = [
   {
     code: "LZ",
     name: "两栖投送舰",
-    role: "SURFACE & FACILITY INSERTION",
     group: "体系与支援",
     numberRange: "7xxx",
     mission: "面向表面或设施的投送与回收。",
@@ -152,7 +138,6 @@ export const series = [
   {
     code: "JY",
     name: "救援舰",
-    role: "SEARCH & RESCUE",
     group: "体系与支援",
     numberRange: "7xxx",
     mission: "搜救与乘员回收。",
@@ -162,7 +147,6 @@ export const series = [
   {
     code: "JL",
     name: "教练舰",
-    role: "TRAINING & QUALIFICATION",
     group: "体系与支援",
     numberRange: "9xxx",
     mission: "训练与科目鉴定。",
@@ -172,7 +156,6 @@ export const series = [
   {
     code: "KY",
     name: "科研试验舰",
-    role: "RESEARCH & EXPERIMENTAL",
     group: "体系与支援",
     numberRange: "9xxx",
     mission: "勘探、试验与验证。",
