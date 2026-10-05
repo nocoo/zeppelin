@@ -22,7 +22,7 @@
     "@playwright/test": "^1.55.0",
     "sharp": "0.35.5",
     "vite": "^7.1.5",
-    "wrangler": "4.135.0"
+    "wrangler": "4.142.0"
   },
   "packageManager": "npm@11.19.0",
   "dependencies": {
