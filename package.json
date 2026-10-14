@@ -1,6 +1,6 @@
 {
   "name": "zeppelin",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -22,7 +22,7 @@
     "@playwright/test": "^1.64.0",
     "sharp": "0.35.5",
     "vite": "^7.1.5",
-    "wrangler": "4.149.0"
+    "wrangler": "4.150.0"
   },
   "packageManager": "npm@11.19.0",
   "dependencies": {
