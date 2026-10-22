@@ -15,7 +15,7 @@
 
 构建从**实际检出的提交**生成 `dist/api/live.json`；不读取 Release 事件的 `GITHUB_SHA`，避免版本错报。Worker 显式处理健康路由，其他方法返回 405；元数据缺失返回 503。未知 API、缺失静态资源返回 404，不能被首页回退掩盖。Vite 开发域名同样支持 `/api/live`。
 
-- **CI**：main push、PR、手动执行；复用 `nocoo/base-ci` 的 `quality.yml`、`test-job.yml` 和 `workflow-lint.yml`，全部固定至其他项目同用的完整 SHA `ad43150de3a2be2fa464b5cd2f921dc4fa9f8f0f`。执行资产门禁、单元测试、安全扫描、构建、Worker 打包检查和桌面/手机浏览器测试。原生 JS 项目没有独立 TypeScript 或 lint 配置，按 base-ci 契约明确说明，不使用空命令充当检查。
+- **CI**：main push、PR、手动执行；复用 `nocoo/base-ci` 的 `quality.yml`、`test-job.yml` 和 `workflow-lint.yml`，全部固定至其他项目同用的完整 SHA `ac635753a869cb85fad1f52aae4ccbd6119f3cae`。执行资产门禁、单元测试、安全扫描、构建、Worker 打包检查和桌面/手机浏览器测试。原生 JS 项目没有独立 TypeScript 或 lint 配置，按 base-ci 契约明确说明，不使用空命令充当检查。
 - **Release**：main 的 CI 成功后自动触发；复用 `deploy-worker.yml`。共享工作流验证 CI 来源、成功状态和当前 main 提交，重新检出已验证 SHA 后构建部署。并发锁 `zeppelin-production` 串行发布，失败或过期 CI 不部署。
 - **生产验证**：发布后核对 `/api/live` 的项目名、版本、完整 revision 与 `no-store`，并验证首页、JS/CSS、舰队 Manifest；最多重试 12 次。
 

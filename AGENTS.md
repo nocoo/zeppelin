@@ -35,7 +35,7 @@ workflow. Scene-background export/CDN publication follows the asset contract.
 
 ## Setup and commands
 
-Run from the repository root. The manifest pins npm 11.19.0; CI uses Node 26.8.1.
+Run from the repository root. The manifest pins npm 11.19.0; CI uses Node 26.12.1.
 Use the machine-approved npm registry. The existing hook installer selects
 `.githooks`; retain normal hooks when preparing a checkout.
 
