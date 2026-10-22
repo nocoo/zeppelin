@@ -33,7 +33,7 @@ jobs:
       allowed-source-events: push,workflow_dispatch
       package-manager: npm
       runtime-version: "11.19.0"
-      node-version: "26.8.1"
+      node-version: "26.12.1"
       install-policy: project
       build-command: |
         npm run build

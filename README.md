@@ -38,7 +38,7 @@ YS-01A、YS-02A 已设计定型，尺寸与载运参数来自定稿模型及验�
 
 ## 开发
 
-使用 `.node-version` 指定的 Node.js 26.8.1 与 npm 11.19.0。
+使用 `.node-version` 指定的 Node.js 26.12.1 与 npm 11.19.0。
 
 ```sh
 npm ci

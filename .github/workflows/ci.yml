@@ -20,7 +20,7 @@ jobs:
     with:
       package-manager: npm
       runtime-version: "11.19.0"
-      node-version: "26.8.1"
+      node-version: "26.12.1"
       install-policy: project
       test-command: npm run check
       typecheck: false
@@ -44,7 +44,7 @@ jobs:
     with:
       runtime: npm
       runtime-version: "11.19.0"
-      node-version: "26.8.1"
+      node-version: "26.12.1"
       install-policy: project
       browser: chromium
       pre-command: npm run build

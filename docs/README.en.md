@@ -38,7 +38,7 @@ Switch between standard images, 3D overviews and detail views. Drag to rotate; o
 
 ## Development
 
-Use Node.js 26.8.1 from `.node-version` and npm 11.19.0.
+Use Node.js 26.12.1 from `.node-version` and npm 11.19.0.
 
 ```sh
 npm ci
