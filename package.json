@@ -1,6 +1,6 @@
 {
   "name": "zeppelin",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
-    "@playwright/test": "^1.64.1",
+    "@playwright/test": "^1.65.0",
     "sharp": "0.35.5",
     "vite": "^7.3.7",
     "wrangler": "^4.156.0"
