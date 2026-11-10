@@ -1,3 +1,5 @@
+# CI slot standard v1 (nocoo/base-ci docs/slots.md): impl S3, G1, G2, B1, L1, L3, Z1 via quality.yml;
+# na S1, S2, L1.5, L2, P1 in slot-status. nocoo/base-ci v2026.12: top-level slot jobs, L3 browsers/artifacts.
 name: CI
 
 on:
@@ -10,19 +12,13 @@ permissions:
   contents: read
 
 jobs:
-  workflows:
-    uses: nocoo/base-ci/.github/workflows/workflow-lint.yml@633a5545fcfec91b688840650d4edf3e9cc1abbd # v2026.10
-    with:
-      required-reusable-workflow: nocoo/base-ci/.github/workflows/deploy-worker.yml
-
   quality:
-    uses: nocoo/base-ci/.github/workflows/quality.yml@633a5545fcfec91b688840650d4edf3e9cc1abbd # v2026.10
+    uses: nocoo/base-ci/.github/workflows/quality.yml@1ea10ecab22b72512399485391603fe03a161016 # v2026.12
     with:
       package-manager: npm
       runtime-version: "11.19.0"
       node-version: "26.12.1"
       install-policy: project
-      test-command: npm run check
       typecheck: false
       lint: false
       disabled-check-reasons: |-
@@ -30,26 +26,36 @@ jobs:
           "typecheck": "Plain JavaScript project without TypeScript; Vite and Wrangler validate both bundles.",
           "lint": "No lint configuration; existing asset, source and browser checks remain required."
         }
+      unit: true
+      test-command: npm run check
+      security: true
+      lockfiles: package-lock.json
       build: true
       build-command: |
         npm run build
         npm run deploy:check
       artifact-name: zeppelin-static-site
       artifact-paths: dist
-      lockfiles: package-lock.json
-
-  browser:
-    name: Worker HTTP and browser tests
-    uses: nocoo/base-ci/.github/workflows/test-job.yml@633a5545fcfec91b688840650d4edf3e9cc1abbd # v2026.10
-    with:
-      runtime: npm
-      runtime-version: "11.19.0"
-      node-version: "26.12.1"
-      install-policy: project
-      browser: chromium
-      pre-command: npm run build
-      command: npm test
-      env-json: '{"CI":"true", "WRANGLER_SEND_METRICS":"false"}'
-      artifact-name: zeppelin-browser-evidence
-      artifact-path: test-results
-      timeout-minutes: 15
+      workflow-lint: true
+      workflow-lint-required-workflow: nocoo/base-ci/.github/workflows/deploy-worker.yml
+      workflow-lint-yamllint: true
+      l3: true
+      l3-browsers: chromium
+      l3-prepare-command: npm run build
+      l3-command: npm test
+      l3-artifact-name: zeppelin-browser-evidence
+      l3-artifact-path: test-results
+      env-json: '{"CI":"true", "WRANGLER_SEND_METRICS": "false"}'
+      slot-status: >-
+        {"S1": {"status": "na", "reason": "纯 JavaScript，无 TypeScript 类型来源；Vite/Wrangler 构建承担类型相关校验"},
+        "S2": {"status": "na", "reason": "无 ESLint/Biome 等 lint 配置；validate、资产门禁与 npm run check 承担静态校验"},
+        "S3": {"status": "impl"},
+        "G1": {"status": "impl"},
+        "G2": {"status": "impl"},
+        "B1": {"status": "impl"},
+        "L1": {"status": "impl"},
+        "L1.5": {"status": "na", "reason": "无 @cloudflare/vitest-pool-workers / miniflare Worker 运行时测试套件；浏览器场景归 L3"},
+        "L2": {"status": "na", "reason": "无独立 HTTP API E2E；Worker 与路由由 L3 Playwright（wrangler dev）覆盖"},
+        "L3": {"status": "impl"},
+        "P1": {"status": "na", "reason": "package.json 为 private，不发布 npm 包"},
+        "Z1": {"status": "impl"}}
