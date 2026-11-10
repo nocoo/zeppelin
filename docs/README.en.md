@@ -22,7 +22,7 @@ The catalogue follows the fleet naming and organization document in Google Drive
 | YS-02A | Final YS-02A / 5002 | 7 final images, 7 overview directions, 7 details including a two-deck cutaway and open tailgate |
 | Other planned models / series | Unassigned | 7 explicit placeholder views; dimensions unknown |
 
-The three completed models open in 3D, with standard images available as an alternative. HW retains its historical images; YS images reflect the finalized designs. The catalogue initially shows models with assets, with series filters and an option to show all records. In 3D, choose no scene or an asteroid belt. Without a scene, a three-dimensional grid rotates with the camera; standard images retain their original backgrounds. Overview views support rotation and zoom. Detail views preserve Blender geometry, paint and normal maps, with rotation at a fixed distance. Models load directly from `https://h.no.mt`; binaries are excluded from Git and the site deployment, and test caches stay in `.local/models/`.
+The three completed models open in 3D, with standard images available as an alternative. HW retains its historical images; YS images reflect the finalized designs. The catalogue initially shows models with assets, with series filters and an option to show all records. In 3D, choose no scene or an asteroid belt. Without a scene, a three-dimensional grid rotates with the camera; standard images retain their original backgrounds. Overview views support rotation and zoom. Detail views preserve Blender geometry, paint and normal maps, with rotation at a fixed distance. Models load directly from `https://h.no.mt`; binaries are excluded from Git and the site deployment.
 
 Each detail page is a full-screen workspace without the global header, footer or page scrolling. Desktop layouts pair a large preview with a data sidebar for specifications, missions and archive details. Mobile layouts switch between vessel data and preview while preserving the selected view. Only the data area scrolls on short screens, keeping navigation and view controls accessible. Returning to the catalogue restores normal scrolling.
 
@@ -61,13 +61,10 @@ A Cloudflare Worker hosts the static site and serves `/api/live`. See the [deplo
 ```sh
 npm run check
 npm run build
-npm test
 npm run assets:verify
 ```
 
-`check` validates catalogue data, assets and unit behavior. `npm test` first prepares a hash-verified cache of real models, then runs Playwright against the local Worker, covering HTTP endpoints, desktop/mobile interaction, views, filtering, unknown specifications, keyboard access, accessibility and asset failure/retry behavior. `assets:verify` separately checks remote CDN assets and requires network access.
-
-On macOS, tests use the installed Google Chrome. On Linux/CI, first run `npx playwright install --with-deps chromium`. Browser tests exclusively use port `27052` and do not reuse the development server. Model caches stay in `.local/models/`.
+`check` validates catalogue data, assets and Node unit tests. `assets:verify` separately checks remote CDN assets and requires network access.
 
 ## Stack
 
@@ -77,7 +74,7 @@ On macOS, tests use the installed Google Chrome. On Linux/CI, first run `npx pla
 | Three.js | On-demand vessel and scene previews |
 | Cloudflare Workers / Static Assets | Site hosting and health endpoint |
 | R2 / CDN | Immutable models, high-resolution images and brand assets |
-| Node.js, Playwright, axe-core | Data validation, unit, HTTP, browser and accessibility checks |
+| Node.js | Data validation and unit tests |
 | Blender | Upstream vessel modeling and standard-view production |
 
 ## Documentation

@@ -33,7 +33,7 @@ node scripts/publish-models.mjs --input '/external/ys-01a-3d/v1.0.0' \
 
 检查外部 `publication-plan.json` 的型号、源 SHA、文件体积、CDN 地址和版本，再在本次用户授权范围内加 `--publish`。复用 Hexly 的 `planMedia/publishMedia`，完成 GET、长度、MIME、SHA 校验后才安装 `docs/assets/<id>/3d-v<version>.json`。已发布版本不能改写；改变字节即使用新版本，旧 URL 保留。
 
-网页模型必须直接读取发布记录里的 `https://h.no.mt` URL。验证生产域名和开发域名的 CORS；CSP 的 `connect-src` 需允许该域名。不要把 GLB 放回 `public/`、打进 `dist/` 或提交 Git。`npm run models:prepare` 仅为测试下载 `.local/models/` 缓存。
+网页模型必须直接读取发布记录里的 `https://h.no.mt` URL。验证生产域名和开发域名的 CORS；CSP 的 `connect-src` 需允许该域名。不要把 GLB 放回 `public/`、打进 `dist/` 或提交 Git。
 
 ## 接入与图片
 

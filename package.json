@@ -9,17 +9,12 @@
     "preview": "vite preview --host 127.0.0.1",
     "check": "node scripts/validate.mjs && node --test tests/*.test.mjs",
     "assets:verify": "node scripts/verify-cdn.mjs",
-    "test": "playwright test",
     "hooks:install": "git config core.hooksPath .githooks",
     "deploy:check": "wrangler deploy --dry-run --outdir .local/worker-bundle",
     "verify:production": "node scripts/verify-deployment.mjs",
-    "dev:worker": "wrangler dev --local --inspector-port 0",
-    "models:prepare": "node scripts/prepare-models.mjs",
-    "pretest": "npm run models:prepare"
+    "dev:worker": "wrangler dev --local --inspector-port 0"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.14.0",
-    "@playwright/test": "^1.65.0",
     "sharp": "0.35.5",
     "vite": "^7.3.7",
     "wrangler": "^4.156.0"

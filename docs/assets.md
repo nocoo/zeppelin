@@ -62,7 +62,7 @@ The owner requested no Logo in Zeppelin site chrome. README retains the adopted 
 
 发布复用 Hexly `planMedia` / `publishMedia`，仅在调用进程中登记 `model/gltf-binary` MIME，不修改 Hexly 源码、存储配置或 CORS。GLB 使用独立版本和内容哈希地址，上传后完整 GET/hash 验证，完成两档后才安装发布记录。源 `.blend`、烘焙贴图和 GLB 母版均留在外部目录。
 
-网页直接读取发布记录中的 CDN URL，按需下载全览或细节 GLB；生产与开发域名的跨域许可已通过实际响应核对。CSP `connect-src` 明确允许 `https://h.no.mt`。GLB 不进入 `public/`、Vite `dist/` 或 Git。`npm run models:prepare` 只下载到 `.local/models/` 并核对长度、GLB 头和 SHA-256，供浏览器测试拦截相同 CDN URL，避免 CI 依赖在线波动。
+网页直接读取发布记录中的 CDN URL，按需下载全览或细节 GLB；生产与开发域名的跨域许可已通过实际响应核对。CSP `connect-src` 明确允许 `https://h.no.mt`。GLB 不进入 `public/`、Vite `dist/` 或 Git。
 
 网页仅在具备 3D 发布记录的舰型详情加载 Three.js，全览先加载，进入细节后才请求完整模型；不自动降级成低精度细节。七个全览方向可旋转与缩放；七个局部视角锁定距离，关闭平移与双指手势，单指/鼠标拖动和方向键旋转，Home 或复位按钮恢复预设方向。视口尺寸变化只调整构图适配。切换范围复用已解码模型，离开舰型释放 WebGL、贴图、几何和解码线程；加载错误可重试，WebGL 不可用仍可进入标准图片视图。
 
