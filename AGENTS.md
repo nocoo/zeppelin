@@ -45,15 +45,11 @@ npm run hooks:install
 npm run dev
 npm run check
 npm run build
-npm test
 npm run deploy:check
 ```
 
 `check` validates catalogue/assets and runs Node tests. `build` validates then
-builds Vite output. `npm test` first prepares checksummed real model caches and
-runs desktop/mobile Playwright against a local Worker on port 27052; it requires
-Chrome on macOS or Playwright Chromium in CI. Model preparation can download CDN
-assets; it is not a production write. `deploy:check` is a packaging dry run.
+builds Vite output. `deploy:check` is a packaging dry run.
 No standalone TypeScript or lint command exists; do not substitute invented ones.
 
 ## Quality contract and evidence
@@ -65,15 +61,15 @@ not proof of a successful current run.
 | Dimension | Required contract and current state |
 | --- | --- |
 | L1 | Planned: UT and four coverage metrics each >=95%, strict check-only static analysis with zero errors/warnings, no skipped/focused tests, index-snapshot pre-commit and rejection. CI runs `npm run check`; no coverage floor or complete strict JS static gate exists. TypeScript-specific checks are N/A for plain JS. |
-| L2 | Planned: real local HTTP over every owned endpoint/method and applicable asset contracts. Browser CI runs a local Worker, but complete method/assertion coverage is not established. No application database exists. |
-| L3 | Enforced in configured CI: critical desktop/mobile Playwright journeys against built assets and a local Worker. Preserve the deliberately bounded smoke scope; live CDN/production acceptance needs separate evidence. |
+| L2 | Planned: real local HTTP over every owned endpoint/method and applicable asset contracts. No application database exists. |
+| L3 | N/A: repository no longer actively maintained; browser E2E removed. |
 | G2 | Enforced in configured shared CI: dependency/secret scans from pinned `base-ci/quality.yml` with `package-lock.json`. Local pre-push security/ref enforcement is planned; required scanners must fail when missing. |
-| D1 | Planned: separate local processes/browser contexts and guarded per-run outputs, never daily-dev/production fixtures. Playwright uses port 27052 and refuses server reuse; complete cache/output/fixture isolation is unverified. SQLite markers are N/A because this application has no database. |
+| D1 | N/A: no browser test processes. SQLite markers are N/A because this application has no database. |
 | Media | Enforced by the tracked pre-commit asset guard and CI validation: inspect staged object modes, sizes, types, approved thumbnails and hashes. This narrow guard is not complete L1. |
 
 Current pre-commit invokes `node scripts/guard-files.mjs --staged`; no tracked
 pre-push hook exists. CI explicitly disables separate typecheck/lint steps and
-runs check, build/dry-run, security and browser lanes. Preserve the full immutable
+runs check, build/dry-run and security lanes. Preserve the full immutable
 shared-workflow pins. Target: unified L1 on the index snapshot under 30 seconds;
 applicable L2/G2 on stdin push refs under three minutes. These broader local gates
 remain planned. Never bypass hooks, hide scanner failures or use autofix gates.
