@@ -1,87 +1,50 @@
 # Zeppelin
 
-Fleet archive using Vite, plain JavaScript/CSS and Three.js, hosted by a
-Cloudflare Worker. [README.md](README.md) is the human overview.
-Local preview: `https://zeppelin.dev.hexly.ai`; production: `https://zeppelin.hexly.ai`.
+Fleet archive built with Vite, plain JavaScript/CSS, and Three.js, hosted by a Cloudflare Worker (`worker.js` + `wrangler.jsonc`).
+Docs: [README.md](README.md) · [Asset Contract](docs/assets.md) · [Deployment](docs/deployment.md) · [Fleet Spec](docs/fleet-spec.md) · [Retrospective](Retrospective.md)
 
-## Scope and sources
+## Commands
 
-Maintain this root AGENTS.md as the only project handbook; do not create a
-CLAUDE.md alias, import, copy or symlink. Root `package.json` and lockfile own
-version/dependencies. `src/fleet.js`, the asset manifest and immutable receipts
-own catalogue facts; [the asset contract](docs/assets.md) owns media policy.
-
-Read the corresponding maintained skill before these operations:
-
-| Operation | Skill |
-| --- | --- |
-| Add/finalize a vessel, update specifications/3D models, publish CDN assets | [zeppelin-vessel-release](.agents/skills/zeppelin-vessel-release/SKILL.md) |
-| Generate and publish seven standard high-resolution Blender views | [zeppelin-standard-views](.agents/skills/zeppelin-standard-views/SKILL.md) |
-
-New vessel work starts with the release skill, which references the standard-view
-workflow. Scene-background export/CDN publication follows the asset contract.
-
-## Project boundaries
-
-- Blender sources live in Google Drive; export masters stay outside the checkout.
-  Models and high-resolution images are published to `https://h.no.mt`.
-- The website reads CDN models directly. Git contains only source, configuration,
-  publication receipts and approved small thumbnails. GLB files belong in neither
-  Git nor the site deployment bundle. Preserve immutable asset URLs and hashes.
-- Keep Actions focused on critical smoke checks. Do not add a full interaction
-  matrix for every vessel, view and resolution merely to normalize documentation.
-- Preserve known/unknown catalogue facts; a planned vessel is not a completed
-  model. Follow the release skill before changing stable identifiers or records.
-
-## Setup and commands
-
-Run from the repository root. The manifest pins npm 11.19.0; CI uses Node 26.12.1.
-Use the machine-approved npm registry. The existing hook installer selects
-`.githooks`; retain normal hooks when preparing a checkout.
+Run from repository root. Manifest pins `npm@11.19.0`; `.node-version` and CI use Node `26.12.1`.
 
 ```sh
 npm ci
-npm run hooks:install
-npm run dev
-npm run check
-npm run build
-npm run deploy:check
+npm run hooks:install       # set git core.hooksPath to .githooks
+npm run dev                 # https://zeppelin.dev.hexly.ai -> 127.0.0.1:7052
+npm run check               # L1: validate catalogue/assets + Node tests
+npm run build               # B1: validate + Vite build to dist/
+npm run deploy:check        # B1: Wrangler packaging dry run (.local/worker-bundle)
+npm run dev:worker          # local Worker at 127.0.0.1:17052 (after build)
+npm run verify:production   # post-deploy live probe only (not routine doc validation)
 ```
 
-`check` validates catalogue/assets and runs Node tests. `build` validates then
-builds Vite output. `deploy:check` is a packaging dry run.
-No standalone TypeScript or lint command exists; do not substitute invented ones.
+## Invariants
 
-## Quality contract and evidence
+- **Sources of truth**: `package.json`/`package-lock.json` own versions/deps; `src/fleet.js`, `public/assets/manifest.json`, and `docs/assets/**` own catalogue facts; [docs/assets.md](docs/assets.md) owns media policy.
+- **Vessel release**: start new/updated vessel work with [zeppelin-vessel-release](.agents/skills/zeppelin-vessel-release/SKILL.md) before changing specs, 3D models, stable IDs, or CDN assets.
+- **Views & scenes**: use [zeppelin-standard-views](.agents/skills/zeppelin-standard-views/SKILL.md) for the seven HD Blender views; scene-background export/CDN follows [docs/assets.md](docs/assets.md).
+- **External masters**: Blender sources stay in Google Drive and export masters outside the checkout; models and HD renders publish to `https://h.no.mt`, and the site reads CDN models directly.
+- **Git & bundle limits**: commit only source, config, receipts, and approved `<= 640x640` (`<= 100 KB`) WebP thumbnails; never commit GLB/Blender/HD files or bundle GLB into the Worker.
+- **Immutable records**: preserve published asset URLs, hashes, receipts, and historical changelog entries; keep known/unknown facts distinct (a planned vessel is not a completed model).
+- **Lean CI & scripts**: keep Actions focused on critical smoke checks (no full vessel/view/resolution matrix); no TypeScript or lint script exists here—do not invent dummy ones.
+- **Gates & releases**: preserve full 40-char SHA workflow pins; never bypass hooks, hide scanner failures, or use autofix gates. Main CI auto-deploys; releases and CDN/prod actions need authorization.
 
-Quality follows System1 v1.3.0 Native Mode (`nocoo/base-ci v2026.15`) in `.github/workflows/quality-slots.yml` and `.github/workflows/ci.yml`. Statuses are `enforced`, `planned`, `manual`, or justified `N/A`.
+## Quality & Local Gates
 
-| Slot | Status | Evidence |
+Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (called by [.github/workflows/ci.yml](.github/workflows/ci.yml); `quality / Z1: Gate` required on `main`). Enforced CI slots: `S3`, `G1`, `G2`, `B1`, `L1` (no coverage floor), `Z1`. Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
+
+- **N/A slots (static/tooling)**: `S1` (plain JS, no TypeScript), `S2` (no standalone lint script), `P1` (Cloudflare Worker, not an npm package).
+- **N/A slots (runtime/E2E)**: `L2`/`L3` (static site without server runtime or app API), `L4` (repository no longer actively maintained; browser E2E removed).
+- **Local hooks**: install via `npm run hooks:install` (`.githooks/`); `pre-commit` runs `node scripts/guard-files.mjs --staged` on the staged index. No tracked `pre-push` hook exists.
+
+## Resources & Isolation
+
+| Lane | Endpoint / State | Boundary |
 | --- | --- | --- |
-| `S1` Types | N/A | Plain JS project without TypeScript |
-| `S2` Lint | N/A | No separate lint script configured |
-| `S3` Workflow | enforced | SHA-pinned workflow action check in CI |
-| `G1` Secrets | enforced | `gitleaks` scan in CI |
-| `G2` Dependencies | enforced | `osv-scanner` scan (`package-lock.json`) in CI |
-| `B1` Build | enforced | `npm run build && npm run deploy:check` in CI |
-| `L1` Unit | enforced | `npm run check` in CI (no coverage floor configured) |
-| `L2` Runtime | N/A | Static site without server runtime |
-| `L3` Integration | N/A | Static site without application API |
-| `L4` E2E | N/A | Repository no longer actively maintained; browser E2E removed |
-| `P1` Package | N/A | Deployed as Cloudflare Worker, not an npm package |
-| `Z1` Gate | enforced | `quality / Z1: Gate` required status check on `main` |
+| Dev | `https://zeppelin.dev.hexly.ai` -> `127.0.0.1:7052` | Vite `dev` / `preview` (`strictPort: true`, cannot run concurrently) |
+| Local Worker | `127.0.0.1:17052`, `.local/worker-bundle` | `npm run build && npm run dev:worker`; serves `dist/` + `/api/live` |
+| Prod & CDN | `https://zeppelin.hexly.ai`, `https://h.no.mt` | Read-only checks unless release or asset publication is authorized |
 
-Current pre-commit invokes `node scripts/guard-files.mjs --staged`; no tracked pre-push hook exists. Preserve the full immutable shared-workflow pins. Never bypass hooks, hide scanner failures or use autofix gates.
+## Retrospective
 
-## Operations and completion
-
-Successful main CI triggers automatic deployment. Asset publication, production
-operations and releases require authorization for those operations. After an
-authorized deployment, `npm run verify:production` checks the deployed revision;
-this live probe is not routine documentation validation.
-
-Check the full diff and actual link targets, stage explicit paths and make an
-atomic commit. Report actual checks and unresolved gaps. Record incident
-narratives in [Retrospective.md](Retrospective.md); keep recurring project rules
-brief here and deterministic safeguards in tests/hooks. Preserve historical
-changelog entries and immutable publication records.
+Record incident narratives in [Retrospective.md](Retrospective.md); promote recurring project constraints to `Invariants` above and deterministic safeguards to tests/hooks.
