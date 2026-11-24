@@ -15,19 +15,17 @@ function release(root) {
     textures = new Set();
   root.traverse((object) => {
     if (object.geometry) geometries.add(object.geometry);
-    for (const material of [].concat(object.material || []))
-      materials.add(material);
+    for (const material of [].concat(object.material || [])) materials.add(material);
   });
-  geometries.forEach((geometry) => geometry.dispose());
+  for (const geometry of geometries) geometry.dispose();
   materials.forEach((material) => {
-    for (const value of Object.values(material))
-      if (value?.isTexture) textures.add(value);
+    for (const value of Object.values(material)) if (value?.isTexture) textures.add(value);
     material.dispose();
   });
-  textures.forEach((texture) => {
+  for (const texture of textures) {
     texture.source.data?.close?.();
     texture.dispose();
-  });
+  }
 }
 
 export function createModelPreview(host, config) {
@@ -55,9 +53,12 @@ export function createModelPreview(host, config) {
   const grid = new THREE.Group();
   const gridSize = length * 2.8;
   const gridCenter = xyz(center);
-  const floor = (config.model.bounds?.min?.[2] ?? center[2] - length * .16) - length * .12;
+  const floor = (config.model.bounds?.min?.[2] ?? center[2] - length * 0.16) - length * 0.12;
   for (const plane of ["floor", "back", "side"]) {
-    for (const [divisions, opacity] of [[56, .15], [14, .34]]) {
+    for (const [divisions, opacity] of [
+      [56, 0.15],
+      [14, 0.34],
+    ]) {
       const lines = new THREE.GridHelper(gridSize, divisions, 0xc5cc92, 0x899c86);
       lines.position.copy(gridCenter);
       if (plane === "floor") lines.position.y = floor;
@@ -110,10 +111,10 @@ export function createModelPreview(host, config) {
       light.castShadow = true;
       light.shadow.mapSize.set(2048, 2048);
       Object.assign(light.shadow.camera, {
-        left: -length * .7,
-        right: length * .7,
-        top: length * .7,
-        bottom: -length * .7,
+        left: -length * 0.7,
+        right: length * 0.7,
+        top: length * 0.7,
+        bottom: -length * 0.7,
         near: 1,
         far: length * 4,
       });
@@ -138,7 +139,10 @@ export function createModelPreview(host, config) {
   function draw() {
     if (disposed || lost || !host.clientWidth || !host.clientHeight) return;
     host.dataset.cameraDistance = camera.position.distanceTo(controls.target).toFixed(6);
-    host.dataset.cameraPosition = camera.position.toArray().map((value) => value.toFixed(6)).join(",");
+    host.dataset.cameraPosition = camera.position
+      .toArray()
+      .map((value) => value.toFixed(6))
+      .join(",");
     renderer.render(scene, camera);
   }
   function pose(preserveZoom = false) {
@@ -147,21 +151,14 @@ export function createModelPreview(host, config) {
     const span = view.span || config.span;
     // Fit the narrower viewport dimension. This is framing on resize, never user zoom in details.
     const distance =
-      span /
-      (2 *
-        Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) *
-        Math.min(camera.aspect, 1));
+      span / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * Math.min(camera.aspect, 1));
     const ratio =
-      preserveZoom && !detail
-        ? camera.position.distanceTo(controls.target) / baseDistance
-        : 1;
+      preserveZoom && !detail ? camera.position.distanceTo(controls.target) / baseDistance : 1;
     const direction = preserveZoom
       ? camera.position.clone().sub(controls.target).normalize()
       : xyz(view.direction).normalize();
     controls.target.copy(xyz(view.target || center));
-    camera.position
-      .copy(controls.target)
-      .addScaledVector(direction, distance * ratio);
+    camera.position.copy(controls.target).addScaledVector(direction, distance * ratio);
     baseDistance = distance;
     controls.enableZoom = !detail;
     controls.minDistance = detail ? distance : distance * 0.65;
@@ -188,12 +185,7 @@ export function createModelPreview(host, config) {
   observer.observe(host);
   controls.addEventListener("change", draw);
   function keydown(event) {
-    if (
-      !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home"].includes(
-        event.key,
-      )
-    )
-      return;
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home"].includes(event.key)) return;
     event.preventDefault();
     if (event.key === "Home") return pose();
     const spherical = new THREE.Spherical().setFromVector3(
@@ -205,9 +197,7 @@ export function createModelPreview(host, config) {
     if (event.key === "ArrowUp") spherical.phi -= step;
     if (event.key === "ArrowDown") spherical.phi += step;
     spherical.makeSafe();
-    camera.position
-      .copy(controls.target)
-      .add(new THREE.Vector3().setFromSpherical(spherical));
+    camera.position.copy(controls.target).add(new THREE.Vector3().setFromSpherical(spherical));
     controls.update();
     draw();
   }
@@ -228,14 +218,10 @@ export function createModelPreview(host, config) {
   async function getModel(lod) {
     if (cache.has(lod)) return cache.get(lod);
     const pending = (async () => {
-      const response = await fetch(
-        model.assets[lod].url,
-        { signal: abort.signal },
-      );
+      const response = await fetch(model.assets[lod].url, { signal: abort.signal });
       if (!response.ok) throw new Error(`Model HTTP ${response.status}`);
       const buffer = await response.arrayBuffer();
-      if (buffer.byteLength !== model.assets[lod].bytes)
-        throw new Error("Incomplete model");
+      if (buffer.byteLength !== model.assets[lod].bytes) throw new Error("Incomplete model");
       if (disposed) return null;
       const gltf = await loader.parseAsync(buffer, "");
       if (disposed) {
@@ -247,15 +233,13 @@ export function createModelPreview(host, config) {
         object.castShadow = true;
         object.receiveShadow = true;
         const material = object.material;
-        if (material.transparent || material.transmission > 0)
-          object.castShadow = false;
+        if (material.transparent || material.transmission > 0) object.castShadow = false;
         // Screen-space transmission blurs more than Cycles at the same roughness.
         if (material.transmission > 0.9) {
           material.roughness = 0.025;
           material.envMapIntensity = 0.25;
         }
-        if (material.name.includes("soft blue exhaust"))
-          material.depthWrite = false;
+        if (material.name.includes("soft blue exhaust")) material.depthWrite = false;
       });
       return gltf.scene;
     })();
@@ -274,9 +258,7 @@ export function createModelPreview(host, config) {
       detail = Boolean(views[name].target);
     const lod = detail ? "detail" : "overview";
     caption.textContent = views[name].label;
-    hint.textContent = detail
-      ? "拖动旋转 · 距离锁定"
-      : "拖动旋转 · 滚轮 / 双指缩放";
+    hint.textContent = detail ? "拖动旋转 · 距离锁定" : "拖动旋转 · 滚轮 / 双指缩放";
     canvas.setAttribute(
       "aria-label",
       `${views[name].label}，${detail ? "仅可旋转" : "可旋转与缩放"}。方向键旋转，Home 复位。`,
@@ -298,7 +280,9 @@ export function createModelPreview(host, config) {
       scene.add(object);
       object.traverse((part) => {
         if (part.userData.sourceScenes)
-          part.visible = part.userData.sourceScenes.includes(views[name].scene || model.source.scene);
+          part.visible = part.userData.sourceScenes.includes(
+            views[name].scene || model.source.scene,
+          );
       });
       object.visible = true;
       status.hidden = true;

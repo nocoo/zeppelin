@@ -10,9 +10,9 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "none",
-    "run_worker_first": ["/api/live"],
+    "run_worker_first": ["/api/live"]
   },
   "routes": [{ "pattern": "zeppelin.hexly.ai", "custom_domain": true }],
   "observability": { "enabled": true, "head_sampling_rate": 1 },
-  "dev": { "ip": "127.0.0.1", "port": 17052 },
+  "dev": { "ip": "127.0.0.1", "port": 17052 }
 }

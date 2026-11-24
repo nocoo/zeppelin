@@ -14,11 +14,7 @@ import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { execFileSync } from "node:child_process";
 import sharp from "sharp";
-import {
-  assertPublicationUnchanged,
-  validateVessel,
-  views,
-} from "./asset-contract.mjs";
+import { assertPublicationUnchanged, validateVessel, views } from "./asset-contract.mjs";
 
 const { values } = parseArgs({
   options: {
@@ -39,21 +35,15 @@ if (
 }
 const root = resolve(import.meta.dirname, "..");
 const input = await realpath(values.input);
-if (input === root || input.startsWith(root + "/"))
+if (input === root || input.startsWith(`${root}/`))
   throw new Error("HD assets must remain outside repository");
 const hexly = resolve(values.hexly);
 const hash = (buffer) => createHash("sha256").update(buffer).digest("hex");
-const source = JSON.parse(
-  await readFile(join(input, "render-manifest.json"), "utf8"),
-);
+const source = JSON.parse(await readFile(join(input, "render-manifest.json"), "utf8"));
 validateVessel(source, false);
 const id = source.model.toLowerCase().replace(/[a-z]$/, "");
-const { planMedia, publishMedia } = await import(
-  pathToFileURL(join(hexly, "scripts/media-r2.ts"))
-);
-const storage = JSON.parse(
-  await readFile(join(hexly, "src/data/media-storage.json"), "utf8"),
-);
+const { planMedia, publishMedia } = await import(pathToFileURL(join(hexly, "scripts/media-r2.ts")));
+const storage = JSON.parse(await readFile(join(hexly, "src/data/media-storage.json"), "utf8"));
 if (storage.origin !== "https://h.no.mt" || storage.bucket !== "hexlyai")
   throw new Error("Hexly storage contract changed; review before proceeding");
 const provenance = {
@@ -117,11 +107,7 @@ for (const name of views) {
 }
 await writeFile(
   join(input, "plan.json"),
-  JSON.stringify(
-    { publisher: provenance, assets: plans.map((p) => p.plan) },
-    null,
-    2,
-  ) + "\n",
+  `${JSON.stringify({ publisher: provenance, assets: plans.map((p) => p.plan) }, null, 2)}\n`,
 );
 if (!values.publish) {
   console.info(
@@ -137,19 +123,12 @@ try {
   await lock.writeFile(String(process.pid));
   let manifest;
   try {
-    manifest = JSON.parse(
-      await readFile(join(root, "public/assets/manifest.json"), "utf8"),
-    );
+    manifest = JSON.parse(await readFile(join(root, "public/assets/manifest.json"), "utf8"));
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
     manifest = { schemaVersion: 1, vessels: {} };
   }
-  const historyPath = join(
-    root,
-    "docs/assets",
-    id,
-    `v${values.version}.json`,
-  );
+  const historyPath = join(root, "docs/assets", id, `v${values.version}.json`);
   let previous;
   try {
     previous = JSON.parse(await readFile(historyPath, "utf8"));
@@ -159,8 +138,7 @@ try {
   if (previous) assertPublicationUnchanged(previous, exported);
   for (const { name, file, plan } of plans) {
     const bytes = await readFile(file);
-    if (hash(bytes) !== plan.sha256)
-      throw new Error("Prepared bytes changed before publication");
+    if (hash(bytes) !== plan.sha256) throw new Error("Prepared bytes changed before publication");
     const receipt = await publishMedia(plan, file);
     exported.views[name] = {
       ...exported.views[name],
@@ -177,7 +155,7 @@ try {
     recursive: true,
   });
   if (!previous)
-    await writeFile(historyPath, JSON.stringify(exported, null, 2) + "\n", {
+    await writeFile(historyPath, `${JSON.stringify(exported, null, 2)}\n`, {
       flag: "wx",
     });
   for (const name of views)
@@ -187,15 +165,13 @@ try {
     );
   await writeFile(
     join(root, "public/assets/manifest.json.tmp"),
-    JSON.stringify(manifest, null, 2) + "\n",
+    `${JSON.stringify(manifest, null, 2)}\n`,
   );
   await rename(
     join(root, "public/assets/manifest.json.tmp"),
     join(root, "public/assets/manifest.json"),
   );
-  console.info(
-    `Installed complete verified ${source.model} manifest and thumbnails`,
-  );
+  console.info(`Installed complete verified ${source.model} manifest and thumbnails`);
 } finally {
   await lock.close();
   await unlink(lockPath);

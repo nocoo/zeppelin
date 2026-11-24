@@ -14,13 +14,8 @@ export default {
         { status: 405, headers: { ...headers, Allow: "GET, HEAD" } },
       );
     }
-    const asset = await env.ASSETS.fetch(
-      new URL("/api/live.json", request.url),
-    );
-    if (
-      !asset.ok ||
-      !asset.headers.get("Content-Type")?.includes("application/json")
-    ) {
+    const asset = await env.ASSETS.fetch(new URL("/api/live.json", request.url));
+    if (!asset.ok || !asset.headers.get("Content-Type")?.includes("application/json")) {
       return new Response(
         request.method === "HEAD"
           ? null

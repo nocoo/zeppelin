@@ -65,7 +65,7 @@ p {
 }
 button[hidden],
 [hidden] {
-  display: none !important;
+  display: none;
 }
 .mono,
 .eyebrow {
@@ -182,9 +182,8 @@ button[hidden],
   overflow: hidden;
   padding: 0 5%;
   background:
-    linear-gradient(90deg, transparent calc(100% - 1px), #ffffff04 1px) 0 0/80px
-      80px,
-    linear-gradient(transparent calc(100% - 1px), #ffffff04 1px) 0 0/80px 80px;
+    linear-gradient(90deg, transparent calc(100% - 1px), #ffffff04 1px) 0 0 / 80px 80px,
+    linear-gradient(transparent calc(100% - 1px), #ffffff04 1px) 0 0 / 80px 80px;
 }
 .hero-rail {
   position: absolute;
@@ -293,12 +292,7 @@ button[hidden],
   aspect-ratio: 1;
   border: 1px solid #62664b36;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    transparent 49%,
-    #62664b24 49.2%,
-    transparent 49.5%
-  );
+  background: radial-gradient(circle, transparent 49%, #62664b24 49.2%, transparent 49.5%);
 }
 .target-ring:before,
 .target-ring:after {
@@ -684,7 +678,7 @@ button[hidden],
   letter-spacing: 1px;
 }
 .card-body h3 {
-  font: 800 49px/0.98 var(--display);
+  font: 800 49px / 0.98 var(--display);
   letter-spacing: 0.5px;
   margin: 7px 0;
 }
@@ -735,8 +729,7 @@ button[hidden],
   gap: 10%;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(90deg, #ffffff02 1px, transparent 1px) 0 0/100px
-    100px;
+  background: linear-gradient(90deg, #ffffff02 1px, transparent 1px) 0 0 / 100px 100px;
 }
 .doctrine-title h2 {
   font-size: 52px;
@@ -822,8 +815,8 @@ button[hidden],
   height: 370px;
   border: 1px solid var(--line);
   background:
-    linear-gradient(#ffffff07 1px, transparent 1px) 0 0/32px 32px,
-    linear-gradient(90deg, #ffffff07 1px, transparent 1px) 0 0/32px 32px;
+    linear-gradient(#ffffff07 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, #ffffff07 1px, transparent 1px) 0 0 / 32px 32px;
 }
 .archive-preview .asset {
   height: 100%;
@@ -930,13 +923,13 @@ footer {
   display: grid;
   place-items: center;
   background:
-    linear-gradient(#b9c58906 1px, transparent 1px) 0 0/32px 32px,
-    linear-gradient(90deg, #b9c58906 1px, transparent 1px) 0 0/32px 32px,
+    linear-gradient(#b9c58906 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, #b9c58906 1px, transparent 1px) 0 0 / 32px 32px,
     #131510;
 }
 .placeholder-code {
   position: absolute;
-  font: 800 clamp(140px, 21vw, 320px)/1 var(--display);
+  font: 800 clamp(140px, 21vw, 320px) / 1 var(--display);
   color: #24281e;
   letter-spacing: 8px;
   top: 50%;
@@ -1033,8 +1026,8 @@ footer {
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 .vessel-main :focus-visible {
   outline: 2px solid var(--yellow);
@@ -1066,7 +1059,7 @@ footer {
   gap: 16px;
 }
 .vessel-heading h1 {
-  font: 800 32px/1 var(--display);
+  font: 800 32px / 1 var(--display);
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
@@ -1114,8 +1107,8 @@ footer {
   overflow: hidden;
   position: relative;
   background:
-    linear-gradient(#ffffff05 1px, transparent 1px) 0 0/50px 50px,
-    linear-gradient(90deg, #ffffff05 1px, transparent 1px) 0 0/50px 50px,
+    linear-gradient(#ffffff05 1px, transparent 1px) 0 0 / 50px 50px,
+    linear-gradient(90deg, #ffffff05 1px, transparent 1px) 0 0 / 50px 50px,
     #121410;
 }
 .viewer-stage #active-view,
@@ -1174,7 +1167,9 @@ footer {
 }
 .is-3d .viewer-stage[data-background="asteroid-belt"] .model-caption,
 .is-3d .viewer-stage[data-background="asteroid-belt"] .model-hint {
-  text-shadow: 0 1px 4px #000, 0 0 12px #000;
+  text-shadow:
+    0 1px 4px #000,
+    0 0 12px #000;
 }
 .viewer-caption {
   position: absolute;
@@ -2097,8 +2092,8 @@ footer {
   *,
   *:before,
   *:after {
-    animation: none !important;
-    transition: none !important;
+    animation: none;
+    transition: none;
   }
 }
 .card-image-link {
@@ -2119,20 +2114,84 @@ footer {
 }
 
 /* Homepage identity and family links. */
-.brand-version { color: var(--muted); white-space: nowrap; }
-.header-actions { display: flex; gap: 4px; flex: none; }
-.header-action { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; }
-.header-action:hover, .header-action:focus-visible { color: var(--yellow); background: var(--panel); }
-.header-action svg { width: 18px; height: 18px; pointer-events: none; }
-.header-tooltip { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; padding: 7px 10px; border: 1px solid var(--line); background: var(--panel); color: #edeee8; font-size: 12px; white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .12s .12s; }
-.header-action:hover .header-tooltip, .header-action:focus-visible .header-tooltip { opacity: 1; visibility: visible; }
-@media (max-width: 1050px) { .header-code { display: none; } }
+.brand-version {
+  color: var(--muted);
+  white-space: nowrap;
+}
+.header-actions {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+.header-action {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.header-action:hover,
+.header-action:focus-visible {
+  color: var(--yellow);
+  background: var(--panel);
+}
+.header-action svg {
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+.header-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: #edeee8;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s 0.12s;
+}
+.header-action:hover .header-tooltip,
+.header-action:focus-visible .header-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+@media (max-width: 1050px) {
+  .header-code {
+    display: none;
+  }
+}
 @media (max-width: 760px) {
-  .site-header { height: auto; min-height: 96px; flex-wrap: wrap; gap: 12px; padding-top: 14px; padding-bottom: 10px; }
-  .site-header nav { order: 3; width: 100%; justify-content: space-between; height: 26px; }
-  .site-header nav a:last-child { display: flex; }
-  .brand { gap: 8px; }
-  .brand-version { font-size: 8px; }
+  .site-header {
+    height: auto;
+    min-height: 96px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 14px;
+    padding-bottom: 10px;
+  }
+  .site-header nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    height: 26px;
+  }
+  .site-header nav a:last-child {
+    display: flex;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .brand-version {
+    font-size: 8px;
+  }
 }
 
 /* HW-01 interactive inspection shares the fixed-height image workbench. */

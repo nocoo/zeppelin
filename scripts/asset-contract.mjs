@@ -1,14 +1,6 @@
 import assert from "node:assert/strict";
 
-export const views = [
-  "front",
-  "rear",
-  "port",
-  "starboard",
-  "top",
-  "bottom",
-  "three-quarter",
-];
+export const views = ["front", "rear", "port", "starboard", "top", "bottom", "three-quarter"];
 export const hashPattern = /^[a-f0-9]{64}$/;
 export function assertPublicationUnchanged(previous, candidate) {
   for (const field of [
@@ -42,7 +34,10 @@ export function validateVessel(vessel, published = true) {
   assert.equal(vessel.schemaVersion, 1);
   assert.match(vessel.model, /^[A-Z]{2}-\d{2}[A-Z]?$/);
   assert.equal(vessel.series, vessel.model.split("-")[0]);
-  assert.match(vessel.number, vessel.series === "HW" ? /^2\d{2,3}$/ : vessel.series === "YS" ? /^5\d{3}$/ : /^[1-9]\d{3}$/);
+  assert.match(
+    vessel.number,
+    vessel.series === "HW" ? /^2\d{2,3}$/ : vessel.series === "YS" ? /^5\d{3}$/ : /^[1-9]\d{3}$/,
+  );
   assert.match(vessel.source.sha256, hashPattern);
   assert.match(vessel.rendererSha256, hashPattern);
   assert.equal(vessel.blender, "5.2.2 LTS");
@@ -84,34 +79,21 @@ export function validateVessel(vessel, published = true) {
     assert.equal(view.height, 1920);
     assert.match(view.sha256, hashPattern);
     assert.ok(Number.isInteger(view.bytes) && view.bytes > 0);
-    assert.equal(
-      view.camera.type,
-      name === "three-quarter" ? "PERSP" : "ORTHO",
-    );
+    assert.equal(view.camera.type, name === "three-quarter" ? "PERSP" : "ORTHO");
     assert.equal(view.camera.lensMm, 70);
     assert.equal(view.camera.matrixWorld.length, 4);
     assert.ok(
-      view.camera.matrixWorld.every(
-        (row) => row.length === 4 && row.every(Number.isFinite),
-      ),
+      view.camera.matrixWorld.every((row) => row.length === 4 && row.every(Number.isFinite)),
     );
-    assert.ok(
-      Number.isFinite(view.camera.orthoScale) && view.camera.orthoScale > 0,
-    );
+    assert.ok(Number.isFinite(view.camera.orthoScale) && view.camera.orthoScale > 0);
     if (name !== "three-quarter") orthoScales.add(view.camera.orthoScale);
     if (published) {
       assert.equal(view.contentType, "image/webp");
       const expected = `https://h.no.mt/projects/hexly-ai/screenshots/zep-${vessel.model.toLowerCase()}/v${vessel.version}/${name}-${view.sha256.slice(0, 12)}.webp`;
-      assert.equal(
-        view.url,
-        expected,
-        "URL must be the verified Hexly immutable key",
-      );
+      assert.equal(view.url, expected, "URL must be the verified Hexly immutable key");
       assert.equal(view.key, new URL(expected).pathname.slice(1));
       assert.match(view.pngSha256, hashPattern);
-      assert.ok(
-        view.verifiedAt && Number.isFinite(Date.parse(view.verifiedAt)),
-      );
+      assert.ok(view.verifiedAt && Number.isFinite(Date.parse(view.verifiedAt)));
       assert.equal(
         view.thumbnail.path,
         `assets/thumbnails/${vessel.model.toLowerCase().replace(/[a-z]$/, "")}-${name}.webp`,

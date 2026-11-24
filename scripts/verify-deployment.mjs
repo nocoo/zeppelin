@@ -26,12 +26,9 @@ assert.deepEqual(await live.json(), {
 });
 const html = await (await get("/")).text();
 assert.ok(html.includes('id="app"'), "Homepage is missing");
-const assets = [...html.matchAll(/(?:src|href)="([^"<>]+\.(?:js|css))"/g)].map(
-  (match) => match[1],
-);
+const assets = [...html.matchAll(/(?:src|href)="([^"<>]+\.(?:js|css))"/g)].map((match) => match[1]);
 assert.ok(
-  assets.some((path) => path.endsWith(".js")) &&
-    assets.some((path) => path.endsWith(".css")),
+  assets.some((path) => path.endsWith(".js")) && assets.some((path) => path.endsWith(".css")),
   "Compiled assets are missing",
 );
 for (const path of assets) {
@@ -45,9 +42,7 @@ for (const path of assets) {
 }
 assert.deepEqual(
   await (await get("/assets/manifest.json")).json(),
-  JSON.parse(
-    await readFile(new URL("../public/assets/manifest.json", import.meta.url)),
-  ),
+  JSON.parse(await readFile(new URL("../public/assets/manifest.json", import.meta.url))),
   "Published fleet manifest differs from this release",
 );
 console.info(

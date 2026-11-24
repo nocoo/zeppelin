@@ -9,7 +9,7 @@ import { fleet } from "../src/fleet.js";
 
 test("model provenance, LODs, CDN paths and binary boundary", async () => {
   for (const [id, { model, views }] of Object.entries(models)) {
-    const ship = fleet.find(ship => ship.id === id);
+    const ship = fleet.find((ship) => ship.id === id);
     assert.equal(model.model, ship.model);
     assert.equal(model.number, ship.number);
     assert.ok(model.sourceObjects > 0);
@@ -23,9 +23,7 @@ test("model provenance, LODs, CDN paths and binary boundary", async () => {
     }
     assert.match(model.source.sha256, /^[a-f0-9]{64}$/);
     assert.match(model.exporterSha256, /^[a-f0-9]{64}$/);
-    assert.ok(
-      model.assets.detail.triangles > model.assets.overview.triangles * 2,
-    );
+    assert.ok(model.assets.detail.triangles > model.assets.overview.triangles * 2);
     for (const [lod, asset] of Object.entries(model.assets)) {
       assert.equal(
         asset.path,
@@ -35,16 +33,10 @@ test("model provenance, LODs, CDN paths and binary boundary", async () => {
       assert.ok(asset.bytes > 0);
       assert.equal(asset.contentType, "model/gltf-binary");
       assert.ok(Number.isFinite(Date.parse(asset.verifiedAt)));
-      await assert.rejects(
-        checkEntry(`public/${asset.path}`, Buffer.from("glTF")),
-        /forbidden/,
-      );
+      await assert.rejects(checkEntry(`public/${asset.path}`, Buffer.from("glTF")), /forbidden/);
     }
   }
-  await assert.rejects(
-    checkEntry("docs/model.dat", Buffer.from("glTF")),
-    /disguised/,
-  );
+  await assert.rejects(checkEntry("docs/model.dat", Buffer.from("glTF")), /disguised/);
   // Tiny valid container verifies integrity logic without committing binary fixtures.
   const bytes = Buffer.alloc(20);
   bytes.write("glTF");

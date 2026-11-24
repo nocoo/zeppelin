@@ -7,31 +7,20 @@ import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import sharp from "sharp";
-import {
-  assertPublicationUnchanged,
-  validateVessel,
-} from "../scripts/asset-contract.mjs";
+import { assertPublicationUnchanged, validateVessel } from "../scripts/asset-contract.mjs";
 import { checkEntry, guard } from "../scripts/guard-files.mjs";
 
-const manifest = JSON.parse(
-  await readFile("public/assets/manifest.json", "utf8"),
-);
+const manifest = JSON.parse(await readFile("public/assets/manifest.json", "utf8"));
 const original = manifest.vessels["hw-01"];
 test("published versions reject source or camera changes even with identical image bytes", () => {
   const candidate = structuredClone(original);
   candidate.views.front.verifiedAt = new Date().toISOString();
   assertPublicationUnchanged(original, candidate);
   candidate.source.sha256 = "a".repeat(64);
-  assert.throws(
-    () => assertPublicationUnchanged(original, candidate),
-    /new version/,
-  );
+  assert.throws(() => assertPublicationUnchanged(original, candidate), /new version/);
   candidate.source = original.source;
   candidate.views.front.camera.lensMm = 50;
-  assert.throws(
-    () => assertPublicationUnchanged(original, candidate),
-    /new version/,
-  );
+  assert.throws(() => assertPublicationUnchanged(original, candidate), /new version/);
 });
 test("manifest rejects incomplete views, wrong identities and tampered delivery metadata", () => {
   for (const change of [
@@ -66,13 +55,11 @@ test("camera axes and perspective matrices describe seven distinct complete view
     for (const [name, view] of Object.entries(vessel.views)) {
       positions.add(view.camera.location.join(","));
       if (directions[name]) {
-        const delta = view.camera.location.map(
-          (n, i) => n - view.camera.target[i],
-        );
+        const delta = view.camera.location.map((n, i) => n - view.camera.target[i]);
         const length = Math.hypot(...delta);
-        delta.forEach((n, i) =>
-          assert.ok(Math.abs(n / length - directions[name][i]) < 1e-5),
-        );
+        for (const [i, n] of delta.entries()) {
+          assert.ok(Math.abs(n / length - directions[name][i]) < 1e-5);
+        }
       }
     }
     assert.equal(positions.size, 7);
@@ -85,22 +72,13 @@ test("file gate rejects HD even below size limit and disguised binary sources", 
     .webp()
     .toBuffer();
   assert.ok(hd.length < 100_000);
-  await assert.rejects(
-    checkEntry("public/assets/thumbnails/hw-01-front.webp", hd),
-    /HD image/,
-  );
+  await assert.rejects(checkEntry("public/assets/thumbnails/hw-01-front.webp", hd), /HD image/);
   await assert.rejects(
     checkEntry("docs/instructions.txt", Buffer.from("BLENDER-v302")),
     /disguised/,
   );
-  await assert.rejects(
-    checkEntry("docs/large.txt", Buffer.alloc(512_001)),
-    /exceeds/,
-  );
-  await assert.rejects(
-    checkEntry(".env.production", Buffer.from("TOKEN=redacted")),
-    /Credential/,
-  );
+  await assert.rejects(checkEntry("docs/large.txt", Buffer.alloc(512_001)), /exceeds/);
+  await assert.rejects(checkEntry(".env.production", Buffer.from("TOKEN=redacted")), /Credential/);
 });
 test("force-added index cannot hide a large file by replacing its working copy", async () => {
   const dir = await mkdtemp(join(tmpdir(), "zep-guard-test-"));
@@ -117,19 +95,12 @@ test("force-added index cannot hide a large file by replacing its working copy",
 
 test("catalogue covers the normative series and model list without fabricated specifications", async () => {
   const bytes = await readFile("docs/fleet-spec.md");
-  assert.equal(
-    createHash("sha256").update(bytes).digest("hex"),
-    catalogSource.sha256,
-  );
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), catalogSource.sha256);
   const text = bytes.toString();
   const seriesSection = text.match(/^## 2\.[\s\S]*?(?=^## 3\.)/m)[0];
-  const sourceSeries = [...seriesSection.matchAll(/\| `([A-Z]{2})` \|/g)].map(
-    (match) => match[1],
-  );
+  const sourceSeries = [...seriesSection.matchAll(/\| `([A-Z]{2})` \|/g)].map((match) => match[1]);
   const sourceModels = [
-    ...new Set(
-      [...text.matchAll(/`([A-Z]{2}-\d{2}A)`/g)].map((match) => match[1]),
-    ),
+    ...new Set([...text.matchAll(/`([A-Z]{2}-\d{2}A)`/g)].map((match) => match[1])),
   ].sort();
   assert.equal(sourceSeries.length, 17);
   assert.deepEqual(
@@ -146,11 +117,9 @@ test("catalogue covers the normative series and model list without fabricated sp
   assert.equal(new Set(fleet.map((s) => s.id)).size, fleet.length);
   const numbers = fleet.map((s) => s.number).filter(Boolean);
   assert.equal(new Set(numbers).size, numbers.length);
-  for (const family of series)
-    assert.ok(fleet.some((s) => s.series === family.code));
+  for (const family of series) assert.ok(fleet.some((s) => s.series === family.code));
   for (const ship of fleet) {
-    if (ship.model)
-      assert.match(ship.model, new RegExp(`^${ship.series}-[0-9]{2}A$`));
+    if (ship.model) assert.match(ship.model, new RegExp(`^${ship.series}-[0-9]{2}A$`));
     if (ship.number) assert.match(ship.number, /^[1-9][0-9]{3}$/);
     if (!ship.asset) {
       assert.equal(ship.state, "planned");

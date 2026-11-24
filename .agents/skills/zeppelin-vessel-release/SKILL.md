@@ -1,7 +1,8 @@
 ---
+
 name: zeppelin-vessel-release
 description: >
-  Publish a new Zeppelin vessel or update a finalized design: reconcile its Blender source and specifications, export 3D views, publish immutable CDN assets, update the catalogue, and follow the site's release pipeline. Use for 新舰型上线、舰型定稿、模型更新; not for authoring the spacecraft itself.
+Publish a new Zeppelin vessel or update a finalized design: reconcile its Blender source and specifications, export 3D views, publish immutable CDN assets, update the catalogue, and follow the site's release pipeline. Use for 新舰型上线、舰型定稿、模型更新; not for authoring the spacecraft itself.
 ---
 
 # 舰型上线与定稿更新

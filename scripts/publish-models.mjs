@@ -20,23 +20,16 @@ assert.ok(
 );
 const input = await realpath(values.input);
 const root = resolve(import.meta.dirname, "..");
-assert.ok(!input.startsWith(root + "/"), "Keep model masters outside Git");
+assert.ok(!input.startsWith(`${root}/`), "Keep model masters outside Git");
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
-const exported = JSON.parse(
-  await readFile(join(input, "model-manifest.json"), "utf8"),
-);
+const exported = JSON.parse(await readFile(join(input, "model-manifest.json"), "utf8"));
 assert.match(exported.model, /^[A-Z]{2}-\d{2}[A-Z]$/);
 assert.match(values.version, /^\d+\.\d+\.\d+$/);
 const slug = exported.model.toLowerCase();
 const id = slug.replace(/[a-z]$/, "");
-assert.equal(
-  exported.exporterSha256,
-  hash(await readFile(join(root, "scripts/export-model.py"))),
-);
+assert.equal(exported.exporterSha256, hash(await readFile(join(root, "scripts/export-model.py"))));
 const helper = resolve(values.hexly, "scripts/media-r2.ts");
-const { planMedia, publishMedia, mediaTypes } = await import(
-  pathToFileURL(helper)
-);
+const { planMedia, publishMedia, mediaTypes } = await import(pathToFileURL(helper));
 // Extend this process's format registry; reuse Hexly's transport without modifying its checkout.
 mediaTypes[".glb"] = "model/gltf-binary";
 const manifest = {
@@ -44,11 +37,9 @@ const manifest = {
   version: values.version,
   publisher: {
     repository: "https://github.com/nocoo/hexly.ai",
-    commit: execFileSync(
-      "git",
-      ["-C", resolve(values.hexly), "rev-parse", "HEAD"],
-      { encoding: "utf8" },
-    ).trim(),
+    commit: execFileSync("git", ["-C", resolve(values.hexly), "rev-parse", "HEAD"], {
+      encoding: "utf8",
+    }).trim(),
     helper: "scripts/media-r2.ts",
     helperSha256: hash(await readFile(helper)),
   },
@@ -73,10 +64,7 @@ for (const [lod, asset] of Object.entries(exported.assets)) {
     path: `assets/models/${slug}-${lod}-${asset.sha256.slice(0, 12)}.glb`,
   };
 }
-await writeFile(
-  join(input, "publication-plan.json"),
-  JSON.stringify(manifest, null, 2) + "\n",
-);
+await writeFile(join(input, "publication-plan.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 if (!values.publish) {
   console.info(`Plan ready: ${join(input, "publication-plan.json")}`);
 } else {
@@ -89,11 +77,7 @@ if (!values.publish) {
     if (error.code !== "ENOENT") throw error;
   }
   if (previous) {
-    assert.equal(
-      previous.source.sha256,
-      manifest.source.sha256,
-      "Published source is immutable",
-    );
+    assert.equal(previous.source.sha256, manifest.source.sha256, "Published source is immutable");
     for (const lod of Object.keys(manifest.assets))
       assert.equal(
         previous.assets[lod].sha256,
@@ -103,26 +87,17 @@ if (!values.publish) {
   }
   for (const [lod, asset] of Object.entries(manifest.assets)) {
     const file = join(input, exported.assets[lod].file);
-    assert.equal(
-      hash(await readFile(file)),
-      asset.sha256,
-      "Model changed before publication",
-    );
+    assert.equal(hash(await readFile(file)), asset.sha256, "Model changed before publication");
     const receipt = await publishMedia(asset, file);
     manifest.assets[lod] = {
       ...asset,
       ...receipt,
       verifiedAt: new Date().toISOString(),
     };
-    console.info(
-      `${lod}: ${receipt.action}, ${asset.bytes} bytes, GET/hash verified`,
-    );
+    console.info(`${lod}: ${receipt.action}, ${asset.bytes} bytes, GET/hash verified`);
   }
-  if (
-    !previous ||
-    Object.values(previous.assets).some((asset) => !asset.verifiedAt)
-  ) {
-    await writeFile(`${record}.tmp`, JSON.stringify(manifest, null, 2) + "\n");
+  if (!previous || Object.values(previous.assets).some((asset) => !asset.verifiedAt)) {
+    await writeFile(`${record}.tmp`, `${JSON.stringify(manifest, null, 2)}\n`);
     await rename(`${record}.tmp`, record);
   }
 }

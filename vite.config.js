@@ -17,16 +17,13 @@ function releaseMetadata() {
     name: "release-metadata",
     configureServer(server) {
       server.middlewares.use((request, response, next) => {
-        if (new URL(request.url, "http://localhost").pathname !== "/api/live")
-          return next();
+        if (new URL(request.url, "http://localhost").pathname !== "/api/live") return next();
         response.setHeader("Content-Type", "application/json; charset=utf-8");
         response.setHeader("Cache-Control", "no-store");
         if (!["GET", "HEAD"].includes(request.method)) {
           response.statusCode = 405;
           response.setHeader("Allow", "GET, HEAD");
-          return response.end(
-            JSON.stringify({ status: "error", error: "Method not allowed" }),
-          );
+          return response.end(JSON.stringify({ status: "error", error: "Method not allowed" }));
         }
         response.end(request.method === "HEAD" ? undefined : metadata());
       });
