@@ -1,4 +1,12 @@
+/**
+ * @typedef {{ ASSETS: { fetch: (input: RequestInfo | URL) => Promise<Response> } }} WorkerEnv
+ */
+
 export default {
+  /**
+   * @param {Request} request
+   * @param {WorkerEnv} env
+   */
   async fetch(request, env) {
     if (new URL(request.url).pathname !== "/api/live") {
       return env.ASSETS.fetch(request);

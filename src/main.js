@@ -1,13 +1,23 @@
+/// <reference types="vite/client" />
 import "./style.css";
 import packageInfo from "../package.json";
 const { version } = packageInfo;
 import { fleet, series, viewLabels } from "./fleet.js";
 import { models } from "./models.js";
 import asteroidBelt from "../docs/assets/scenes/asteroid-belt-v1.0.0.json";
+
+/**
+ * @typedef {typeof fleet[number]} Ship
+ * @typedef {{ url: string; width: number; height: number; thumbnail: { path: string } }} ManifestView
+ * @typedef {{ vessels: Record<string, { views: Record<string, ManifestView> }> }} FleetManifest
+ */
+
+/** @type {FleetManifest} */
 let manifest;
 let disposePreview = () => {};
 const fleetFilter = { series: "all", resources: "available" };
 let background = "none";
+/** @param {Ship} ship */
 const hasResources = (ship) => Boolean(ship.asset || models[ship.id]);
 const filteredFleet = () =>
   fleet.filter(
@@ -16,9 +26,9 @@ const filteredFleet = () =>
       (fleetFilter.resources === "all" || hasResources(ship)),
   );
 
-const app = document.querySelector("#app");
-document.querySelector(".skip-link").addEventListener("click", (event) => {
-  const main = app.querySelector("#main");
+const app = /** @type {HTMLElement} */ (document.querySelector("#app"));
+document.querySelector(".skip-link")?.addEventListener("click", (event) => {
+  const main = /** @type {HTMLElement | null} */ (app.querySelector("#main"));
   if (!main) return;
   event.preventDefault();
   main.focus({ preventScroll: true });
@@ -32,13 +42,27 @@ const githubIcon =
   '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.87c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.93.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>';
 const hexlyIcon =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 8.66 5v10L12 22l-8.66-5V7Z"/><path d="M12 2v20M3.34 7l17.32 10m0-10L3.34 17"/></svg>';
+/** @param {Ship} ship */
 const badge = (ship) =>
   `<span class="status ${ship.state}"><span aria-hidden="true"></span>${ship.status}</span>`;
+/**
+ * @param {string} id
+ * @param {string} view
+ */
 const source = (id, view) => manifest.vessels[id].views[view];
+/** @param {Ship} ship */
 const displayModel = (ship) => ship.model || `${ship.series} / —`;
+/** @param {Ship} ship */
 const seriesOf = (ship) => series.find((item) => item.code === ship.series);
+/**
+ * @param {string} id
+ * @param {string} view
+ * @param {string} [className]
+ * @param {boolean} [eager]
+ */
 function picture(id, view, className = "", eager = false) {
   const ship = fleet.find((item) => item.id === id);
+  if (!ship) return "";
   if (!ship.asset)
     return `<div class="view-placeholder ${className}" data-placeholder="${id}/${view}" role="img" aria-label="${displayModel(ship)} ${viewLabels[view][0]}占位，设计视图待制作，尺寸未知"><span class="placeholder-code" aria-hidden="true">${ship.series}</span><div class="placeholder-reticle" aria-hidden="true"></div><div class="placeholder-message"><span class="mono">AWAITING DESIGN / ${viewLabels[view][1]}</span><strong>设计视图待制作</strong><span>${ship.model || "型号待定"} · 尺寸未知</span></div><span class="placeholder-foot mono">PLACEHOLDER / NO GEOMETRY DATA</span></div>`;
   const asset = source(id, view);
@@ -49,12 +73,19 @@ function header() {
 }
 const footer = () =>
   `<footer><a class="footer-wordmark" href="#">ZEPPELIN<span>＋</span></a><div><span class="mono">BUILT FOR THE DISTANCE.</span><p>把想象，铸造成抵达的力量。</p></div><div class="footer-meta mono"><span>原创科幻舰船 · 视觉设计档案</span><span>© ${new Date().getFullYear()} ZEPPELIN FLEET PROGRAM</span><a href="https://github.com/nocoo/zeppelin" target="_blank" rel="noreferrer">项目源代码 ${arrow}</a></div></footer>`;
+/** @param {string} text */
 const stripe = (text) =>
   `<div class="warning-band"><span aria-hidden="true">＋ ＋ ＋</span><span>${text}</span><span class="mono">AUTHORIZED PERSONNEL ONLY</span><span aria-hidden="true">＋ ＋ ＋</span></div>`;
+/**
+ * @param {Ship} ship
+ * @param {number} i
+ */
 function shipCard(ship, i) {
   const family = seriesOf(ship);
+  if (!family) return "";
   return `<article class="ship-card"><div class="card-top"><span class="mono">${String(i + 1).padStart(2, "0")} / ${ship.series} DIVISION</span>${badge(ship)}</div><div class="card-image">${ship.asset ? `<span class="card-number" aria-hidden="true">${ship.asset.number}</span>` : ""}${picture(ship.id, "three-quarter")}<a class="card-image-link" href="#vessel/${ship.id}" aria-label="查看 ${displayModel(ship)} ${ship.name}"></a><span class="card-cross" aria-hidden="true">＋</span></div><div class="card-body"><div><span class="mono card-role">${ship.role}</span><h3><a href="#vessel/${ship.id}">${displayModel(ship)}</a></h3><p>${ship.name}</p></div><a class="square-link" href="#vessel/${ship.id}" aria-label="进入 ${displayModel(ship)} 档案">${arrow}</a></div><div class="card-bottom mono"><span>${ship.model ? `体量 / ${ship.sizeClass || "未知"}` : "型号待定"}</span><span>${ship.dimensions ? `${ship.dimensions[0][1]} M` : "尺寸未知"} / ${family.numberRange || "号段待定"}</span></div></article>`;
 }
+/** @param {Ship[]} visible */
 function directory(visible) {
   if (!visible.length)
     return `<p class="fleet-empty" role="status">该系列暂无可预览资源。切换「全部档案」可查看规划舰型。</p>`;
@@ -81,42 +112,54 @@ function home() {
     <section id="archive" class="archive section-pad" aria-labelledby="archive-heading"><div><p class="eyebrow">03 / ENGINEERING RECORD</p><h2 id="archive-heading">看得见的结构。<br><span>经得起检视的细节。</span></h2><p>已渲染型号提供七个统一标准视角。<br>前后、左右、顶底与三分之四透视，完整阅读一艘舰。</p><a class="text-link" href="#vessel/hw-01">打开标准视图 ${arrow}</a></div><div class="archive-preview">${picture("hw-01", "top")}<span class="mono archive-label">HW-01 / DORSAL PROJECTION</span><span class="archive-dimension mono">61.1 M</span><span class="cross top-left" aria-hidden="true">＋</span><span class="cross bottom-right" aria-hidden="true">＋</span></div></section>
     <div class="closing-band"><span class="mono">THE NEXT FRONTIER IS UNDER CONSTRUCTION.</span><span>下一段航程，正在建造。</span><span aria-hidden="true">↗</span></div>
   </main>${footer()}`;
-  app.querySelector(".hero-motion").addEventListener("click", (event) => {
-    const paused = app.querySelector(".hero").classList.toggle("motion-paused");
-    event.currentTarget.textContent = paused ? "继续动效" : "暂停动效";
+  app.querySelector(".hero-motion")?.addEventListener("click", (event) => {
+    const paused = app.querySelector(".hero")?.classList.toggle("motion-paused") ?? false;
+    /** @type {HTMLElement} */ (event.currentTarget).textContent = paused ? "继续动效" : "暂停动效";
   });
   function refreshDirectory() {
     const visible = filteredFleet();
     const eligible = fleet.filter((ship) => fleetFilter.resources === "all" || hasResources(ship));
-    app.querySelectorAll("[data-filter]").forEach((button) => {
-      button.setAttribute("aria-pressed", String(button.dataset.filter === fleetFilter.series));
-      button.querySelector("span").textContent =
-        button.dataset.filter === "all"
-          ? new Set(eligible.map((ship) => ship.series)).size
-          : eligible.filter((ship) => ship.series === button.dataset.filter).length;
-    });
-    for (const button of app.querySelectorAll("[data-resources]")) {
+    /** @type {NodeListOf<HTMLElement>} */ (app.querySelectorAll("[data-filter]")).forEach(
+      (button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.filter === fleetFilter.series));
+        const count = button.querySelector("span");
+        if (count) {
+          count.textContent = String(
+            button.dataset.filter === "all"
+              ? new Set(eligible.map((ship) => ship.series)).size
+              : eligible.filter((ship) => ship.series === button.dataset.filter).length,
+          );
+        }
+      },
+    );
+    for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+      app.querySelectorAll("[data-resources]")
+    )) {
       button.setAttribute(
         "aria-pressed",
         String(button.dataset.resources === fleetFilter.resources),
       );
     }
-    app.querySelector(".fleet-grid").innerHTML = directory(visible);
-    app.querySelector(".fleet-count").textContent =
+    /** @type {HTMLElement} */ (app.querySelector(".fleet-grid")).innerHTML = directory(visible);
+    /** @type {HTMLElement} */ (app.querySelector(".fleet-count")).textContent =
       `${new Set(visible.map((item) => item.series)).size} SERIES / ${visible.filter((item) => item.model).length} MODELS`;
     bindImages();
   }
-  for (const button of app.querySelectorAll("[data-filter], [data-resources]")) {
+  for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+    app.querySelectorAll("[data-filter], [data-resources]")
+  )) {
     button.addEventListener("click", () => {
       if (button.dataset.filter) fleetFilter.series = button.dataset.filter;
-      else fleetFilter.resources = button.dataset.resources;
+      else if (button.dataset.resources) fleetFilter.resources = button.dataset.resources;
       refreshDirectory();
     });
   }
   refreshDirectory();
 }
+/** @param {Ship} ship */
 function detail(ship) {
   const family = seriesOf(ship);
+  if (!family) return;
   const index = fleet.indexOf(ship);
   const neighbors = [
     fleet[(index + fleet.length - 1) % fleet.length],
@@ -157,40 +200,58 @@ function detail(ship) {
       </aside>
     </div></main>${ship.asset ? '<dialog class="lightbox" aria-label="高清舰船视图"><form method="dialog"><button class="close-lightbox" aria-label="关闭放大视图">关闭 ESC ×</button></form><div class="lightbox-image"></div><p class="mono lightbox-caption"></p><a class="text-link lightbox-original" target="_blank" rel="noreferrer">打开高清原图 ↗</a></dialog>' : ""}`;
   if (models[ship.id]) bindBackground(bindModelPreview(ship));
-  app.querySelector(".data-toggle").addEventListener("click", (event) => {
-    const open = app.querySelector(".vessel-main").classList.toggle("data-open");
-    event.currentTarget.setAttribute("aria-expanded", String(open));
-    event.currentTarget.textContent = open ? "返回预览 ×" : "舰型数据 ＋";
+  app.querySelector(".data-toggle")?.addEventListener("click", (event) => {
+    const open = app.querySelector(".vessel-main")?.classList.toggle("data-open") ?? false;
+    const target = /** @type {HTMLElement} */ (event.currentTarget);
+    target.setAttribute("aria-expanded", String(open));
+    target.textContent = open ? "返回预览 ×" : "舰型数据 ＋";
   });
-  for (const button of app.querySelectorAll("[data-panel]")) {
+  for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+    app.querySelectorAll("[data-panel]")
+  )) {
     button.addEventListener("click", () => {
-      for (const item of app.querySelectorAll("[data-panel]")) {
+      for (const item of /** @type {NodeListOf<HTMLElement>} */ (
+        app.querySelectorAll("[data-panel]")
+      )) {
         const active = item === button;
         item.setAttribute("aria-pressed", String(active));
-        app.querySelector(`#panel-${item.dataset.panel}`).hidden = !active;
+        /** @type {HTMLElement} */ (app.querySelector(`#panel-${item.dataset.panel}`)).hidden =
+          !active;
       }
     });
   }
   let current = "three-quarter";
-  for (const button of app.querySelectorAll("[data-view]")) {
+  for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+    app.querySelectorAll("[data-view]")
+  )) {
     button.addEventListener("click", () => {
-      current = button.dataset.view;
+      current = button.dataset.view ?? "three-quarter";
       for (const item of app.querySelectorAll("[data-view]")) {
         item.setAttribute("aria-pressed", String(item === button));
       }
-      app.querySelector("#active-view").innerHTML = picture(ship.id, current, "", true);
-      app.querySelector(".viewer-caption").innerHTML =
+      /** @type {HTMLElement} */ (app.querySelector("#active-view")).innerHTML = picture(
+        ship.id,
+        current,
+        "",
+        true,
+      );
+      /** @type {HTMLElement} */ (app.querySelector(".viewer-caption")).innerHTML =
         `<span class="mono">${viewLabels[current][1]} / ${ship.asset ? (current === "three-quarter" ? "70 MM" : "ORTHOGRAPHIC") : "PENDING"}</span><strong>${viewLabels[current][0]}</strong>`;
       bindImages();
     });
   }
   if (!ship.asset) return;
-  const dialog = app.querySelector("dialog");
-  app.querySelector(".expand-view").addEventListener("click", () => {
-    dialog.querySelector(".lightbox-image").innerHTML = picture(ship.id, current, "", true);
-    dialog.querySelector(".lightbox-caption").textContent =
-      `${ship.asset.model} / ${ship.asset.number} ${ship.asset.model !== ship.model ? "历史模型" : "定稿模型"} · ${viewLabels[current][0]} · 2560 × 1920`;
-    dialog.querySelector(".lightbox-original").href = offline
+  const dialog = /** @type {HTMLDialogElement} */ (app.querySelector("dialog"));
+  app.querySelector(".expand-view")?.addEventListener("click", () => {
+    /** @type {HTMLElement} */ (dialog.querySelector(".lightbox-image")).innerHTML = picture(
+      ship.id,
+      current,
+      "",
+      true,
+    );
+    /** @type {HTMLElement} */ (dialog.querySelector(".lightbox-caption")).textContent =
+      `${ship.asset?.model} / ${ship.asset?.number} ${ship.asset?.model !== ship.model ? "历史模型" : "定稿模型"} · ${viewLabels[current][0]} · 2560 × 1920`;
+    /** @type {HTMLAnchorElement} */ (dialog.querySelector(".lightbox-original")).href = offline
       ? base + source(ship.id, current).thumbnail.path
       : source(ship.id, current).url;
     dialog.showModal();
@@ -202,19 +263,18 @@ function detail(ship) {
     if (event.target === dialog) dialog.close();
   });
 }
+/** @param {Ship} ship */
 function bindModelPreview(ship) {
   const config = models[ship.id];
   const details = Object.entries(config.views).filter(([, view]) => view.target);
-  const viewer = app.querySelector(".viewer");
-  const imageControls = viewer.querySelector(".view-controls");
-  viewer.querySelector(".viewer-top > span").outerHTML =
+  const viewer = /** @type {HTMLElement} */ (app.querySelector(".viewer"));
+  const imageControls = /** @type {HTMLElement} */ (viewer.querySelector(".view-controls"));
+  /** @type {HTMLElement} */ (viewer.querySelector(".viewer-top > span")).outerHTML =
     `<div class="preview-modes" role="group" aria-label="预览模式"><button type="button" data-preview="image" aria-pressed="false">标准视图</button><button type="button" data-preview="3d" aria-pressed="true">3D 预览</button></div>`;
-  viewer
-    .querySelector(".viewer-stage")
-    .insertAdjacentHTML(
-      "beforeend",
-      `<div class="model-preview" hidden><canvas tabindex="0" role="img" aria-label="${ship.model} 3D 模型，方向键旋转，Home 复位"></canvas><div class="model-caption"><span class="mono">${ship.model} / ${ship.number}</span><strong>全舰 · 三分之四</strong></div><div class="model-status" role="status"><p>正在准备 3D 预览…</p><button type="button" hidden>重试 3D 载入 ↻</button></div><span class="model-hint">拖动旋转 · 滚轮 / 双指缩放</span><button type="button" class="model-reset" aria-label="复位 3D 视角">↺ <span>复位视角</span></button></div>`,
-    );
+  /** @type {HTMLElement} */ (viewer.querySelector(".viewer-stage")).insertAdjacentHTML(
+    "beforeend",
+    `<div class="model-preview" hidden><canvas tabindex="0" role="img" aria-label="${ship.model} 3D 模型，方向键旋转，Home 复位"></canvas><div class="model-caption"><span class="mono">${ship.model} / ${ship.number}</span><strong>全舰 · 三分之四</strong></div><div class="model-status" role="status"><p>正在准备 3D 预览…</p><button type="button" hidden>重试 3D 载入 ↻</button></div><span class="model-hint">拖动旋转 · 滚轮 / 双指缩放</span><button type="button" class="model-reset" aria-label="复位 3D 视角">↺ <span>复位视角</span></button></div>`,
+  );
   imageControls.insertAdjacentHTML(
     "afterend",
     `<div class="model-controls" hidden><div class="model-scope" role="group" aria-label="3D 检视范围"><button type="button" data-scope="overview" aria-pressed="true">全览</button><button type="button" data-scope="detail" aria-pressed="false">细节</button><span>全舰结构 / 可旋转与缩放</span></div><div class="model-views" role="group" aria-label="3D 全览视角">${Object.entries(
@@ -231,18 +291,20 @@ function bindModelPreview(ship) {
       )
       .join("")}</div></div>`,
   );
-  app
-    .querySelector("#panel-record")
-    .insertAdjacentHTML(
-      "afterbegin",
-      `<p class="sidebar-note">3D 模型：${ship.model} / ${ship.number}，来自定稿 Blender 源文件。${ship.asset.model !== ship.model ? "标准图片保留旧版模型记录。" : "标准图片与 3D 均采用定稿模型。"}</p>`,
-    );
-  const host = viewer.querySelector(".model-preview");
-  const controls = viewer.querySelector(".model-controls");
-  let instance,
-    pending,
-    disposed = false,
-    scope = "overview";
+  /** @type {HTMLElement} */ (app.querySelector("#panel-record")).insertAdjacentHTML(
+    "afterbegin",
+    `<p class="sidebar-note">3D 模型：${ship.model} / ${ship.number}，来自定稿 Blender 源文件。${ship.asset?.model !== ship.model ? "标准图片保留旧版模型记录。" : "标准图片与 3D 均采用定稿模型。"}</p>`,
+  );
+  const host = /** @type {HTMLElement} */ (viewer.querySelector(".model-preview"));
+  const controls = /** @type {HTMLElement} */ (viewer.querySelector(".model-controls"));
+  /** @type {ReturnType<typeof import("./model-preview.js").createModelPreview> | undefined} */
+  let instance;
+  /** @type {Promise<ReturnType<typeof import("./model-preview.js").createModelPreview> | undefined> | null} */
+  let pending = null;
+  let disposed = false;
+  /** @type {"overview" | "detail"} */
+  let scope = "overview";
+  /** @type {Record<"overview" | "detail", string>} */
   const selected = { overview: "three-quarter", detail: "bow" };
   async function load() {
     try {
@@ -260,66 +322,84 @@ function bindModelPreview(ship) {
       if (disposed) return;
       pending = null;
       host.dataset.state = "error";
-      host.querySelector(".model-status").hidden = false;
-      host.querySelector(".model-status p").textContent = "3D 预览暂不可用，请重试或切换标准视图。";
-      host.querySelector(".model-status button").hidden = false;
+      /** @type {HTMLElement} */ (host.querySelector(".model-status")).hidden = false;
+      /** @type {HTMLElement} */ (host.querySelector(".model-status p")).textContent =
+        "3D 预览暂不可用，请重试或切换标准视图。";
+      /** @type {HTMLElement} */ (host.querySelector(".model-status button")).hidden = false;
       console.error("3D initialization failed", error);
     }
   }
-  host.querySelector(".model-status button").addEventListener("click", () => {
+  host.querySelector(".model-status button")?.addEventListener("click", () => {
     if (!instance) load();
   });
+  /** @param {string} mode */
   function showMode(mode) {
     const three = mode === "3d";
     viewer.classList.toggle("is-3d", three);
     host.hidden = !three;
     controls.hidden = !three;
     imageControls.hidden = three;
-    viewer.querySelector("#active-view").hidden = three;
-    viewer.querySelector("#viewer-heading").textContent = three
+    /** @type {HTMLElement} */ (viewer.querySelector("#active-view")).hidden = three;
+    /** @type {HTMLElement} */ (viewer.querySelector("#viewer-heading")).textContent = three
       ? "3D VIEW / 立体检视"
       : "STANDARD VIEW / 标准视图";
-    viewer.querySelector(".viewer-foot").firstElementChild.textContent = three
-      ? `SOURCE MODEL / ${ship.model} · ${ship.number}`
-      : `SOURCE MODEL / ${ship.asset.model} · ${ship.asset.number}`;
-    viewer.querySelector(".viewer-foot").lastElementChild.textContent = three
-      ? "方向键旋转 · HOME 复位"
-      : "可切换视角 · 点击放大";
-    for (const button of viewer.querySelectorAll("[data-preview]")) {
+    const foot = /** @type {HTMLElement} */ (viewer.querySelector(".viewer-foot"));
+    if (foot.firstElementChild) {
+      foot.firstElementChild.textContent = three
+        ? `SOURCE MODEL / ${ship.model} · ${ship.number}`
+        : `SOURCE MODEL / ${ship.asset?.model} · ${ship.asset?.number}`;
+    }
+    if (foot.lastElementChild) {
+      foot.lastElementChild.textContent = three
+        ? "方向键旋转 · HOME 复位"
+        : "可切换视角 · 点击放大";
+    }
+    for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+      viewer.querySelectorAll("[data-preview]")
+    )) {
       button.setAttribute("aria-pressed", String(button.dataset.preview === mode));
     }
     if (three && !instance) load();
   }
-  for (const button of viewer.querySelectorAll("[data-preview]")) {
-    button.addEventListener("click", () => showMode(button.dataset.preview));
+  for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+    viewer.querySelectorAll("[data-preview]")
+  )) {
+    button.addEventListener("click", () => showMode(button.dataset.preview ?? "3d"));
   }
   function select() {
-    controls
-      .querySelector(".model-views")
-      .style.setProperty("--view-count", scope === "detail" ? details.length : 7);
-    for (const button of viewer.querySelectorAll("[data-model-view]")) {
+    /** @type {HTMLElement} */ (controls.querySelector(".model-views")).style.setProperty(
+      "--view-count",
+      String(scope === "detail" ? details.length : 7),
+    );
+    for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+      viewer.querySelectorAll("[data-model-view]")
+    )) {
       button.hidden = button.dataset.lod !== scope;
       button.setAttribute("aria-pressed", String(button.dataset.modelView === selected[scope]));
     }
     if (instance) instance.select(selected[scope]);
   }
-  for (const button of controls.querySelectorAll("[data-scope]")) {
+  for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+    controls.querySelectorAll("[data-scope]")
+  )) {
     button.addEventListener("click", () => {
-      scope = button.dataset.scope;
+      scope = button.dataset.scope === "detail" ? "detail" : "overview";
       for (const item of controls.querySelectorAll("[data-scope]")) {
         item.setAttribute("aria-pressed", String(item === button));
       }
-      controls.querySelector(".model-scope > span").textContent =
+      /** @type {HTMLElement} */ (controls.querySelector(".model-scope > span")).textContent =
         scope === "detail" ? "完整细节 / 仅旋转 · 距离锁定" : "全舰结构 / 可旋转与缩放";
       controls
         .querySelector(".model-views")
-        .setAttribute("aria-label", scope === "detail" ? "3D 细节视角" : "3D 全览视角");
+        ?.setAttribute("aria-label", scope === "detail" ? "3D 细节视角" : "3D 全览视角");
       select();
     });
   }
-  for (const button of controls.querySelectorAll("[data-model-view]")) {
+  for (const button of /** @type {NodeListOf<HTMLElement>} */ (
+    controls.querySelectorAll("[data-model-view]")
+  )) {
     button.addEventListener("click", () => {
-      selected[scope] = button.dataset.modelView;
+      if (button.dataset.modelView) selected[scope] = button.dataset.modelView;
       select();
     });
   }
@@ -328,24 +408,24 @@ function bindModelPreview(ship) {
     instance?.dispose();
   };
   showMode("3d");
+  /** @param {string} name */
   return (name) => instance?.setBackground(name);
 }
+/** @param {(name: string) => void} setModelBackground */
 function bindBackground(setModelBackground) {
-  const viewer = app.querySelector(".viewer");
-  const stage = viewer.querySelector(".viewer-stage");
-  viewer
-    .querySelector(".viewer-top")
-    .insertAdjacentHTML(
-      "beforeend",
-      `<label class="scene-picker">场景<select aria-label="背景场景"><option value="none">无</option><option value="asteroid-belt">小行星带</option></select></label>`,
-    );
+  const viewer = /** @type {HTMLElement} */ (app.querySelector(".viewer"));
+  const stage = /** @type {HTMLElement} */ (viewer.querySelector(".viewer-stage"));
+  /** @type {HTMLElement} */ (viewer.querySelector(".viewer-top")).insertAdjacentHTML(
+    "beforeend",
+    `<label class="scene-picker">场景<select aria-label="背景场景"><option value="none">无</option><option value="asteroid-belt">小行星带</option></select></label>`,
+  );
   stage.insertAdjacentHTML(
     "afterbegin",
     `<img class="scene-background" alt="" hidden><span class="scene-status" role="status" hidden></span>`,
   );
-  const select = viewer.querySelector(".scene-picker select");
-  const image = stage.querySelector(".scene-background");
-  const status = stage.querySelector(".scene-status");
+  const select = /** @type {HTMLSelectElement} */ (viewer.querySelector(".scene-picker select"));
+  const image = /** @type {HTMLImageElement} */ (stage.querySelector(".scene-background"));
+  const status = /** @type {HTMLElement} */ (stage.querySelector(".scene-status"));
   function apply() {
     const enabled = background !== "none";
     select.value = background;
@@ -374,32 +454,35 @@ function bindBackground(setModelBackground) {
   apply();
 }
 function bindImages() {
-  app.querySelectorAll(".asset:not([data-bound])").forEach((container) => {
-    container.dataset.bound = "true";
-    const img = container.querySelector("img");
-    const error = container.querySelector(".asset-error");
-    const fail = () => {
-      error.hidden = false;
-      img.hidden = true;
-    };
-    img.addEventListener("error", fail);
-    img.addEventListener("load", () => {
-      error.hidden = true;
-      img.hidden = false;
-    });
-    if (img.complete && !img.naturalWidth) fail();
-    container.querySelector(".retry").addEventListener("click", (event) => {
-      event.preventDefault();
-      error.hidden = true;
-      img.hidden = false;
-      // Explicit retry only. Production never substitutes a thumbnail for a failed CDN asset.
-      const url = img.src;
-      img.removeAttribute("src");
-      img.src = url;
-    });
-  });
+  /** @type {NodeListOf<HTMLElement>} */ (app.querySelectorAll(".asset:not([data-bound])")).forEach(
+    (container) => {
+      container.dataset.bound = "true";
+      const img = /** @type {HTMLImageElement} */ (container.querySelector("img"));
+      const error = /** @type {HTMLElement} */ (container.querySelector(".asset-error"));
+      const fail = () => {
+        error.hidden = false;
+        img.hidden = true;
+      };
+      img.addEventListener("error", fail);
+      img.addEventListener("load", () => {
+        error.hidden = true;
+        img.hidden = false;
+      });
+      if (img.complete && !img.naturalWidth) fail();
+      container.querySelector(".retry")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        error.hidden = true;
+        img.hidden = false;
+        // Explicit retry only. Production never substitutes a thumbnail for a failed CDN asset.
+        const url = img.src;
+        img.removeAttribute("src");
+        img.src = url;
+      });
+    },
+  );
 }
 let route = "";
+let initialized = false;
 function render() {
   const match = location.hash.match(/^#vessel\/([a-z0-9-]+)$/);
   const ship = match && fleet.find((item) => item.id === match[1]);
@@ -418,11 +501,15 @@ function render() {
       );
     route = next;
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    if (render.initialized) app.querySelector("#main").focus({ preventScroll: true });
+    if (initialized) {
+      /** @type {HTMLElement | null} */ (app.querySelector("#main"))?.focus({
+        preventScroll: true,
+      });
+    }
   }
   const anchor = !ship && location.hash.slice(1);
   if (anchor && /^[a-z-]+$/.test(anchor)) document.getElementById(anchor)?.scrollIntoView();
-  render.initialized = true;
+  initialized = true;
 }
 async function start() {
   try {
@@ -434,7 +521,7 @@ async function start() {
   } catch (error) {
     app.innerHTML =
       '<main class="section-pad"><h1>舰队档案暂时无法载入</h1><p class="fleet-note">档案索引连接中断，请重试。</p><button class="retry" type="button">重新载入 ↻</button></main>';
-    app.querySelector("button").addEventListener("click", () => location.reload());
+    app.querySelector("button")?.addEventListener("click", () => location.reload());
     console.error("Fleet manifest unavailable", error);
   }
 }

@@ -13,6 +13,7 @@ npm run hooks:install       # set git core.hooksPath to .githooks
 npm run dev                 # https://zeppelin.dev.hexly.ai -> 127.0.0.1:7052
 npm run check               # L1: validate catalogue/assets + Node tests
 npm run lint                # S2: Biome lint and format check
+npm run typecheck           # S1: TypeScript checkJs typecheck
 npm run build               # B1: validate + Vite build to dist/
 npm run deploy:check        # B1: Wrangler packaging dry run (.local/worker-bundle)
 npm run dev:worker          # local Worker at 127.0.0.1:17052 (after build)
@@ -27,14 +28,14 @@ npm run verify:production   # post-deploy live probe only (not routine doc valid
 - **External masters**: Blender sources stay in Google Drive and export masters outside the checkout; models and HD renders publish to `https://h.no.mt`, and the site reads CDN models directly.
 - **Git & bundle limits**: commit only source, config, receipts, and approved `<= 640x640` (`<= 100 KB`) WebP thumbnails; never commit GLB/Blender/HD files or bundle GLB into the Worker.
 - **Immutable records**: preserve published asset URLs, hashes, receipts, and historical changelog entries; keep known/unknown facts distinct (a planned vessel is not a completed model).
-- **Lean CI & scripts**: keep Actions focused on critical smoke checks (no full vessel/view/resolution matrix); `npm run lint` runs Biome, and no TypeScript script is configured.
+- **Lean CI & scripts**: keep Actions focused on critical smoke checks (no full vessel/view/resolution matrix); `npm run lint` runs Biome, and `npm run typecheck` runs `tsc --noEmit` (`checkJs`).
 - **Gates & releases**: preserve full 40-char SHA workflow pins; never bypass hooks, hide scanner failures, or use autofix gates. Main CI auto-deploys; releases and CDN/prod actions need authorization.
 
 ## Quality & Local Gates
 
-Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (called by [.github/workflows/ci.yml](.github/workflows/ci.yml); `quality / Z1: Gate` required on `main`). Enforced CI slots: `S2`, `S3`, `G1`, `G2`, `B1`, `L1` (no coverage floor), `Z1`. Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
+Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (called by [.github/workflows/ci.yml](.github/workflows/ci.yml); `quality / Z1: Gate` required on `main`). Enforced CI slots: `S1`, `S2`, `S3`, `G1`, `G2`, `B1`, `L1` (no coverage floor), `Z1`. Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
 
-- **N/A slots (static/tooling)**: `S1` (plain JS, no TypeScript), `P1` (Cloudflare Worker, not an npm package).
+- **N/A slots (static/tooling)**: `P1` (Cloudflare Worker, not an npm package).
 - **N/A slots (runtime/E2E)**: `L2`/`L3` (static site without server runtime or app API), `L4` (repository no longer actively maintained; browser E2E removed).
 - **Local hooks**: install via `npm run hooks:install` (`.githooks/`); `pre-commit` runs `node scripts/guard-files.mjs --staged` on the staged index. No tracked `pre-push` hook exists.
 

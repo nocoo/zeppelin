@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -7,36 +8,58 @@ import decoderJS from "three/addons/libs/draco/gltf/draco_wasm_wrapper.js?url";
 import decoderWasm from "three/addons/libs/draco/gltf/draco_decoder.wasm?url";
 
 // Source coordinates are Blender metres (+Z up, bow -Y). glTF is +Y up.
+/** @param {number[]} coords */
 const xyz = ([x, y, z]) => new THREE.Vector3(x, z, -y);
 
+/** @param {THREE.Object3D} root */
 function release(root) {
-  const geometries = new Set(),
-    materials = new Set(),
-    textures = new Set();
+  /** @type {Set<THREE.BufferGeometry>} */
+  const geometries = new Set();
+  /** @type {Set<THREE.Material>} */
+  const materials = new Set();
+  /** @type {Set<THREE.Texture>} */
+  const textures = new Set();
   root.traverse((object) => {
-    if (object.geometry) geometries.add(object.geometry);
-    for (const material of [].concat(object.material || [])) materials.add(material);
+    if ("geometry" in object && object.geometry instanceof THREE.BufferGeometry) {
+      geometries.add(object.geometry);
+    }
+    if ("material" in object && object.material) {
+      const list = Array.isArray(object.material) ? object.material : [object.material];
+      for (const material of list) materials.add(material);
+    }
   });
   for (const geometry of geometries) geometry.dispose();
   materials.forEach((material) => {
-    for (const value of Object.values(material)) if (value?.isTexture) textures.add(value);
+    for (const value of Object.values(material)) {
+      if (value && typeof value === "object" && "isTexture" in value && value.isTexture) {
+        textures.add(/** @type {THREE.Texture} */ (value));
+      }
+    }
     material.dispose();
   });
   for (const texture of textures) {
-    texture.source.data?.close?.();
+    const data = texture.source.data;
+    if (data && typeof data === "object" && "close" in data && typeof data.close === "function") {
+      data.close();
+    }
     texture.dispose();
   }
 }
 
+/**
+ * @param {HTMLElement} host
+ * @param {import("./models.js").ModelConfig} config
+ */
 export function createModelPreview(host, config) {
-  const { model, center, views } = config;
-  const length = config.span / 1.24;
-  const canvas = host.querySelector("canvas");
-  const status = host.querySelector(".model-status");
-  const message = status.querySelector("p");
-  const retry = status.querySelector("button");
-  const caption = host.querySelector(".model-caption strong");
-  const hint = host.querySelector(".model-hint");
+  const { model, center = [0, 0, 0], views } = config;
+  const length = (config.span ?? 1) / 1.24;
+  const canvas = /** @type {HTMLCanvasElement} */ (host.querySelector("canvas"));
+  const status = /** @type {HTMLElement} */ (host.querySelector(".model-status"));
+  const message = /** @type {HTMLElement} */ (status.querySelector("p"));
+  const retry = /** @type {HTMLButtonElement} */ (status.querySelector("button"));
+  const caption = /** @type {HTMLElement} */ (host.querySelector(".model-caption strong"));
+  const hint = /** @type {HTMLElement} */ (host.querySelector(".model-hint"));
+  const resetButton = /** @type {HTMLButtonElement} */ (host.querySelector(".model-reset"));
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
@@ -97,12 +120,14 @@ export function createModelPreview(host, config) {
   scene.environment = environment.texture;
   scene.environmentIntensity = 0.3;
   scene.add(new THREE.HemisphereLight(0xdce7f4, 0x343a38, 0.55));
-  for (const [position, intensity] of [
+  /** @type {Array<[number[], number]>} */
+  const lights = [
     [[-0.8, -1, 1.5], 3.5],
     [[1, -0.3, 0.5], 0.8],
     [[0.3, 1, 1], 2.5],
     [[-0.4, 0.2, -1], 1],
-  ]) {
+  ];
+  for (const [position, intensity] of lights) {
     const light = new THREE.DirectionalLight(0xffffff, intensity);
     light.position.copy(xyz(position).multiplyScalar(length));
     light.target.position.copy(xyz(center));
@@ -127,14 +152,16 @@ export function createModelPreview(host, config) {
     .setWorkerLimit(2);
   const loader = new GLTFLoader().setDRACOLoader(draco);
   const abort = new AbortController();
+  /** @type {Map<"detail" | "overview", Promise<THREE.Group | null>>} */
   const cache = new Map();
-  let disposed = false,
-    lost = false,
-    current = "three-quarter",
-    active,
-    generation = 0;
-  let baseDistance = 1,
-    lastAspect = 0;
+  let disposed = false;
+  let lost = false;
+  let current = "three-quarter";
+  /** @type {THREE.Group | undefined} */
+  let active;
+  let generation = 0;
+  let baseDistance = 1;
+  let lastAspect = 0;
 
   function draw() {
     if (disposed || lost || !host.clientWidth || !host.clientHeight) return;
@@ -146,9 +173,9 @@ export function createModelPreview(host, config) {
     renderer.render(scene, camera);
   }
   function pose(preserveZoom = false) {
-    const view = views[current],
-      detail = Boolean(view.target);
-    const span = view.span || config.span;
+    const view = views[current];
+    const detail = Boolean(view.target);
+    const span = view.span || config.span || 1;
     // Fit the narrower viewport dimension. This is framing on resize, never user zoom in details.
     const distance =
       span / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * Math.min(camera.aspect, 1));
@@ -184,6 +211,7 @@ export function createModelPreview(host, config) {
   const observer = new ResizeObserver(resize);
   observer.observe(host);
   controls.addEventListener("change", draw);
+  /** @param {KeyboardEvent} event */
   function keydown(event) {
     if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home"].includes(event.key)) return;
     event.preventDefault();
@@ -202,12 +230,14 @@ export function createModelPreview(host, config) {
     draw();
   }
   canvas.addEventListener("keydown", keydown);
+  /** @param {string} text */
   function fail(text) {
     status.hidden = false;
     message.textContent = text;
     retry.hidden = false;
     host.dataset.state = "error";
   }
+  /** @param {Event} event */
   function contextLost(event) {
     event.preventDefault();
     lost = true;
@@ -215,8 +245,9 @@ export function createModelPreview(host, config) {
   }
   canvas.addEventListener("webglcontextlost", contextLost);
 
+  /** @param {"detail" | "overview"} lod */
   async function getModel(lod) {
-    if (cache.has(lod)) return cache.get(lod);
+    if (cache.has(lod)) return cache.get(lod) ?? null;
     const pending = (async () => {
       const response = await fetch(model.assets[lod].url, { signal: abort.signal });
       if (!response.ok) throw new Error(`Model HTTP ${response.status}`);
@@ -229,10 +260,10 @@ export function createModelPreview(host, config) {
         return null;
       }
       gltf.scene.traverse((object) => {
-        if (!object.isMesh) return;
+        if (!(object instanceof THREE.Mesh)) return;
         object.castShadow = true;
         object.receiveShadow = true;
-        const material = object.material;
+        const material = /** @type {THREE.MeshPhysicalMaterial} */ (object.material);
         if (material.transparent || material.transmission > 0) object.castShadow = false;
         // Screen-space transmission blurs more than Cycles at the same roughness.
         if (material.transmission > 0.9) {
@@ -251,6 +282,7 @@ export function createModelPreview(host, config) {
       throw error;
     }
   }
+  /** @param {string} name */
   async function select(name) {
     if (disposed || !views[name]) return;
     current = name;
@@ -296,11 +328,12 @@ export function createModelPreview(host, config) {
   }
   const reset = () => pose();
   const reload = () => (lost ? location.reload() : select(current));
-  host.querySelector(".model-reset").addEventListener("click", reset);
+  resetButton.addEventListener("click", reset);
   retry.addEventListener("click", reload);
   resize();
   return {
     select,
+    /** @param {string} name */
     setBackground(name) {
       grid.visible = name === "none";
       draw();
@@ -312,14 +345,16 @@ export function createModelPreview(host, config) {
       controls.dispose();
       canvas.removeEventListener("keydown", keydown);
       canvas.removeEventListener("webglcontextlost", contextLost);
-      host.querySelector(".model-reset").removeEventListener("click", reset);
+      resetButton.removeEventListener("click", reset);
       retry.removeEventListener("click", reload);
       for (const pending of cache.values())
         pending.then((root) => root && release(root)).catch(() => {});
       Promise.allSettled(cache.values()).then(() => draco.dispose());
       environment.dispose();
       release(grid);
-      scene.traverse((object) => object.shadow?.dispose());
+      scene.traverse((object) => {
+        if (object instanceof THREE.DirectionalLight) object.shadow.dispose();
+      });
       renderer.dispose();
       renderer.forceContextLoss();
     },

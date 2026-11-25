@@ -2,6 +2,32 @@ import hw from "../docs/assets/hw-01/3d-v1.0.0.json" with { type: "json" };
 import ys01 from "../docs/assets/ys-01/3d-v1.0.0.json" with { type: "json" };
 import ys02 from "../docs/assets/ys-02/3d-v1.0.0.json" with { type: "json" };
 
+/**
+ * @typedef {{
+ *   label: string;
+ *   direction: number[];
+ *   target?: number[];
+ *   span?: number;
+ *   scene?: string;
+ * }} ModelView
+ *
+ * @typedef {{
+ *   model: string;
+ *   number: string;
+ *   source: { filename: string; sha256: string; scene: string; scenes?: string[] };
+ *   bounds?: { min: number[]; max: number[]; center: number[]; size: number[] };
+ *   assets: Record<"detail" | "overview", { url: string; bytes: number; [key: string]: unknown }>;
+ * }} ModelMetadata
+ *
+ * @typedef {{
+ *   model: ModelMetadata;
+ *   center?: number[];
+ *   span?: number;
+ *   views: Record<string, ModelView>;
+ * }} ModelConfig
+ */
+
+/** @type {Record<string, ModelView>} */
 const hwViews = {
   "three-quarter": { label: "全舰 · 三分之四", direction: [1, -1.35, 0.95] },
   front: { label: "全舰 · 船首", direction: [0, -1, 0] },
@@ -55,6 +81,7 @@ const hwViews = {
 };
 
 const overview = Object.fromEntries(Object.entries(hwViews).filter(([, view]) => !view.target));
+/** @type {Record<string, ModelConfig>} */
 export const models = {
   "hw-01": { model: hw, center: [0, -1.84, 4.545], span: 76, views: hwViews },
   "ys-01": {
@@ -108,6 +135,7 @@ export const models = {
   },
 };
 for (const config of Object.values(models)) {
+  if (!config.model.bounds) continue;
   config.center ??= config.model.bounds.center;
   config.span ??= Math.max(...config.model.bounds.size) * 1.24;
 }

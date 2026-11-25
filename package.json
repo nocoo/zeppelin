@@ -8,6 +8,7 @@
     "build": "node scripts/validate.mjs && vite build",
     "lint": "biome check --error-on-warnings .",
     "lint:fix": "biome check --write .",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview --host 127.0.0.1",
     "check": "node scripts/validate.mjs && node --test tests/*.test.mjs",
     "assets:verify": "node scripts/verify-cdn.mjs",
@@ -18,7 +19,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.8",
+    "@types/three": "^0.187.0",
     "sharp": "0.35.5",
+    "typescript": "^7.0.2",
     "vite": "^7.3.7",
     "wrangler": "^4.156.0"
   },

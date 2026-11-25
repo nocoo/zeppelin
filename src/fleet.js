@@ -658,6 +658,7 @@ export const fleet = [
   },
 ];
 
+/** @type {Record<string, [string, string]>} */
 export const viewLabels = {
   "three-quarter": ["三分之四", "PERSPECTIVE"],
   front: ["前视图", "FRONT"],
