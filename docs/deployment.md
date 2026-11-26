@@ -19,7 +19,7 @@
 - **Release**：main 的 CI 成功后自动触发；复用 `deploy-worker.yml`。共享工作流验证 CI 来源、成功状态和当前 main 提交，重新检出已验证 SHA 后构建部署。并发锁 `zeppelin-production` 串行发布，失败或过期 CI 不部署。
 - **生产验证**：发布后核对 `/api/live` 的项目名、版本、完整 revision 与 `no-store`，并验证首页、JS/CSS、舰队 Manifest；最多重试 12 次。
 
-[GitHub Repository Secrets](https://github.com/nocoo/zeppelin/settings/secrets/actions) 只需 `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`。Token 应限定目标账户的 Workers Scripts 编辑，以及 `hexly.ai` 的 Workers Routes 编辑和 Zone 读取；凭据不进入 Git。GitHub `production` environment 用于部署记录，可另行设置保护规则。
+GitHub `production` environment 配置 `CLOUDFLARE_API_TOKEN`（secret）与 `CLOUDFLARE_ACCOUNT_ID`（variable）。Token 应限定目标账户的 Workers Scripts 编辑，以及 `hexly.ai` 的 Workers Routes 编辑和 Zone 读取；凭据不进入 Git。GitHub `production` environment 另可设置保护规则。
 
 重试发布：进入 [Release](https://github.com/nocoo/zeppelin/actions/workflows/release.yml)，Run workflow，输入成功的**当前 main** CI run ID。新增提交正常通过 CI 即自动发布，无需本地手动 deploy。也可以：
 
