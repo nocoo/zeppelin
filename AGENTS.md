@@ -29,11 +29,11 @@ npm run verify:production   # post-deploy live probe only (not routine doc valid
 - **Git & bundle limits**: commit only source, config, receipts, and approved `<= 640x640` (`<= 100 KB`) WebP thumbnails; never commit GLB/Blender/HD files or bundle GLB into the Worker.
 - **Immutable records**: preserve published asset URLs, hashes, receipts, and historical changelog entries; keep known/unknown facts distinct (a planned vessel is not a completed model).
 - **Lean CI & scripts**: keep Actions focused on critical smoke checks (no full vessel/view/resolution matrix); `npm run lint` runs Biome, and `npm run typecheck` runs `tsc --noEmit` (`checkJs`).
-- **Gates & releases**: preserve full 40-char SHA workflow pins; never bypass hooks, hide scanner failures, or use autofix gates. Main CI auto-deploys; releases and CDN/prod actions need authorization.
+- **Gates & releases**: preserve full 40-char SHA workflow pins; never bypass hooks, hide scanner failures, or use autofix gates. Main push CI auto-deploys (`D1`–`D5` Worker deploy in [.github/workflows/pipeline.yml](.github/workflows/pipeline.yml), reusing `zeppelin-static-site`); releases and CDN/prod actions need authorization.
 
 ## Quality & Local Gates
 
-Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (called by [.github/workflows/ci.yml](.github/workflows/ci.yml); `quality / Z1: Gate` required on `main`). Enforced CI slots: `S1`, `S2`, `S3`, `G1`, `G2`, `B1`, `L1` (no coverage floor), `P1`, `Z1`. Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
+Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision (`3703a073693d598159e87f77f99587e586c14cfe`, `v2026.24`) live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (called by [.github/workflows/pipeline.yml](.github/workflows/pipeline.yml); `quality / Z1: Gate` required on `main`, gating `D1`–`D5` Worker deploy on `main` push or `workflow_dispatch` with `deploy=true`). Enforced CI slots: `S1`, `S2`, `S3`, `G1`, `G2`, `B1`, `L1` (no coverage floor), `P1`, `Z1`. Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
 
 - **N/A slots (runtime/E2E)**: `L2`/`L3` (static site without server runtime or app API), `L4` (repository no longer actively maintained; browser E2E removed).
 - **Local hooks**: install via `npm run hooks:install` (`.githooks/`); `pre-commit` runs `node scripts/guard-files.mjs --staged` on the staged index. No tracked `pre-push` hook exists.
